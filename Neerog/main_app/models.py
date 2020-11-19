@@ -3,41 +3,47 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Username and password will be in default User Model Provided by django
 # Create your models here.
+
+#Basic Details that we will take at registeration
 class UserDetails(models.Model):
-    username=models.CharField(primary_key=True, max_length=50)
-    firstname=models.CharField(max_length=100)
-    lastname=models.CharField(max_length=100)
-    email=models.EmailField(max_length=254, unique=True)
-    
-    phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], unique=True)
-
-    country=models.CharField(max_length=100, null=True, blank=False)
-    city=models.CharField(max_length=100, null=True, blank=False)
-
-    USER_TYPE_DEFAULT='Fitness Enthusiast'
+    userid = models.AutoField(primary_key=True)
+    USER_TYPE_DEFAULT='Patient'
     USER_TYPE_CHOICES = [
-        (USER_TYPE_DEFAULT, 'Fitness Enthusiast'),
-        ('Fitness Intstructor', 'Fitness Intstructor'),
-        ('Fitness Blogger', 'Fitness Blogger'),
-        ('Yoga Intstructor', 'Yoga Intstructor'),
-        ('Nutritionist', 'Nutritionist'),
-        ('Physiotherapist', 'Physiotherapist'),
-        ('Psychologist', 'Psychologist'),
-        ('Ayurvedic Doctor', 'Ayurvedic Doctor'),
-        ('Other Specialized Doctor', 'Other Specialized Doctor'),
+        (USER_TYPE_DEFAULT, 'Patient'),
+        ('Hospital', 'Hospital'),
+        ('Doctor', 'Doctor'),
+        ('Testing Lab', 'Testing Lab'),
     ]
-    user_type=models.CharField(max_length=50, choices=USER_TYPE_CHOICES, default=USER_TYPE_DEFAULT)
+    user_type=models.CharField(max_length=50, choices=USER_TYPE_CHOICES, default=USER_TYPE_DEFAULT)   
+    name = models.CharField(max_length=200)
+    email=models.EmailField(max_length=254, unique=True, blank=False, null=False)
+    phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], unique=True) 
+    created_at=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.userid)
+
+    class Meta:
+        verbose_name_plural='User Details'
+
     
+#Patient will be deleted if its Userid is deleted in UserDetails
+class Patient(models.Model):
+    # patientid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    patientid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    about=models.TextField(max_length=500)
+    country=models.CharField(max_length=50)
+    city=models.CharField(max_length=50)
+    address=models.CharField(max_length=200)
     DEFAULT_GENDER='U'
     GENDER_CHOICES = [
-        ('M', 'Male'),
-        ('F', 'Female'),
-        ('O', 'Others'),
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+        ('LGBTQ', 'LGBTQ'),
         (DEFAULT_GENDER, 'Unknown'),
     ]
-    gender=models.CharField(max_length=1, choices=GENDER_CHOICES, default=DEFAULT_GENDER)
-    
-    age=models.PositiveSmallIntegerField(validators=[MaxValueValidator(150),MinValueValidator(5)], null=True)
+    gender=models.CharField(max_length=10, choices=GENDER_CHOICES, default=DEFAULT_GENDER)
+    age=models.PositiveSmallIntegerField(validators=[MaxValueValidator(150),MinValueValidator(0)], null=True)
 
     DEFAULT_BLOOD='U'
     BLOOD_CHOICES = [
@@ -54,31 +60,100 @@ class UserDetails(models.Model):
         (DEFAULT_BLOOD, 'Unknown'),
     ]
     blood_group=models.CharField(max_length=5, choices=BLOOD_CHOICES, default=DEFAULT_BLOOD)
+    disability=models.CharField(max_length=50, default='None')
 
-    DEFAULT_RACE='U'
-    RACE_CHOICES = [
-        ('American Indian or Alaska Native', 'American Indian or Alaska Native'),
-        ('Asian', 'Asian'),
-        ('Black or African American', 'Black or African American'),
-        ('White or Caucasian', 'White or Caucasian'),
-        ('Hispanic or Latino', 'Hispanic or Latino'),
-        ('Native Hawaiian or Other Pacific Islander', 'Native Hawaiian or Other Pacific Islander'),
-        (DEFAULT_RACE, 'Unknown'),
-    ]
-    race=models.CharField(max_length=100, choices=RACE_CHOICES, default=DEFAULT_RACE)
-
-    height=models.FloatField(validators=[MaxValueValidator(120),MinValueValidator(20)], null=True)
-    weight=models.FloatField(validators=[MaxValueValidator(250),MinValueValidator(5)], null=True)
-
-    profile_pic=models.ImageField(upload_to="profile_pics/", null=True)
-
-    created_at=models.DateTimeField(auto_now=True)
-
-    total_points=models.IntegerField(default=100)
+    profile_pic=models.ImageField(upload_to="patient_profile_photo/", null=True)
 
     def __str__(self):
-        return self.username
+        return str(self.patientid)
+
+#Hospital will be deleted if its Userid is deleted in UserDetails
+class Hospital(models.Model):
+    # hospitalid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    hospitalid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    speciality = models.CharField(max_length=100)
+    about=models.TextField(max_length=2000)
+    country=models.CharField(max_length=50)
+    city=models.CharField(max_length=50)
+    address=models.CharField(max_length=200)
+    year_established=models.PositiveIntegerField(validators=[MinValueValidator(1700)], null=True)
+    hospital_logo=models.ImageField(upload_to="hospital_logo/", null=True)
+    pic1=models.ImageField(upload_to="hospital_photo/", null=True)
+    pic2=models.ImageField(upload_to="hospital_photo/", null=True)
+    pic3=models.ImageField(upload_to="hospital_photo/", null=True)
+    certificate=models.FileField(upload_to="hospital_certificate/", null=True)
+    verified = models.CharField(max_length=10, default="No")
+
+    def __str__(self):
+        return str(self.hospitalid)
+
+#Doctor will be deleted if its Userid is deleted in UserDetails
+class Doctor(models.Model):
+    # doctorid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    doctorid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    specialization = models.CharField(max_length=100)
+    about=models.TextField(max_length=500)
+    country=models.CharField(max_length=50)
+    city=models.CharField(max_length=50)
+    address=models.CharField(max_length=200)
+    DEFAULT_GENDER='U'
+    GENDER_CHOICES = [
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+        ('LGBTQ', 'LGBTQ'),
+        (DEFAULT_GENDER, 'Unknown'),
+    ]
+    gender=models.CharField(max_length=10, choices=GENDER_CHOICES, default=DEFAULT_GENDER)
+    experience=models.PositiveSmallIntegerField(validators=[MaxValueValidator(100),MinValueValidator(0)], null=True)
+    profile_pic=models.ImageField(upload_to="doctor_profile_photo/", null=True)
+    certificate=models.FileField(upload_to="doctor_certificate/", null=True)
+
+    #hospitalid will become null when a hospital is deleted
+    hospitalid = models.ForeignKey(Hospital, models.SET_NULL, blank=True, null=True)
+    clinic_name = models.CharField(max_length=100)
+    clinic_photo = models.ImageField(upload_to="clinic_photo/", null=True)
+    is_independent = models.CharField(max_length=10, default="Yes")
+    verified = models.CharField(max_length=10, default="No")
+
+    def __str__(self):
+        return str(self.doctorid)
+
+#TestingLab will be deleted if its Userid is deleted in UserDetails
+class TestingLab(models.Model):
+    # tlabid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    tlabid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    about=models.TextField(max_length=2000)
+    country=models.CharField(max_length=50)
+    city=models.CharField(max_length=50)
+    address=models.CharField(max_length=200)
+    year_established=models.PositiveIntegerField(validators=[MinValueValidator(1700)], null=True)
+    tlab_logo=models.ImageField(upload_to="testing_lab_logo/", null=True)
+    pic1=models.ImageField(upload_to="testing_lab_photo/", null=True)
+    certificate=models.FileField(upload_to="testing_lab_certificate/", null=True)
+    verified = models.CharField(max_length=10, default="No")
+
+    def __str__(self):
+        return str(self.tlabid)
+
+#The price will be deleted for a testing lab if it is deleted from TestingLab Model
+class TestPricing(models.Model):
+    tlabid = models.ForeignKey(TestingLab, on_delete=models.CASCADE)
+    testname = models.CharField(max_length=100)
+    price = models.PositiveIntegerField(null=True)
+
+    def __str__(self):
+        return str(self.tlabid)+" "+self.testname
 
     class Meta:
-        verbose_name_plural='User Details'
+        unique_together = ('tlabid', 'testname',)
 
+# Even if user or doctor gets deleted, this record shouldn't be deleted...
+# class Appointments(models.Model):
+#     appointmentid = models.AutoField(primary_key=True)
+#     doctoremail = models.EmailField(max_length=254, unique=True, blank=False, null=False)
+#     patientemail = models.EmailField(max_length=254, unique=True, blank=False, null=False)
+#     hospitalemail = models.EmailField(max_length=254, unique=True)
+#     amount_paid = models.PositiveIntegerField(unique=True)
+#     appointment_date
+#     appointment_time
+#     etc... complete according to requirements

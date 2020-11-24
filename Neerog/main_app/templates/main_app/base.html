@@ -1,5 +1,5 @@
 {% load static %}
-<!-- Signin or Login Page -->
+<!-- Basic Template of our webpage -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,19 +9,17 @@
 
     <!-- Link or CSS Tags -->
     {% include 'main_app/common_css.html' %}
-    <link rel="stylesheet" href="{% static 'accounts/css/signin_style.css' %}">
 
-    <title>Sign In - Neerog</title>
-
+    <title>Neerog - Remote Appointments and Consultancy</title>
 </head>
 <body>
+    <!-- Navbar -->
+    {% include 'main_app/navbar.html' %}
 
     <!-- Messages -->
     {% include 'main_app/show_messages.html' %}
-
-    Landing Page
-
+    
     <!-- JavaScript -->
     {% include 'main_app/common_js.html' %}
 </body>
-</html> 
+</html>

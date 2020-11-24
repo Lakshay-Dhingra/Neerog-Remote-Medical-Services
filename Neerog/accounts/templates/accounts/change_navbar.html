@@ -1,0 +1,12 @@
+<script>
+    
+    loginButton=document.getElementById("login_button");
+    loginButton.textContent="{{user.username}}";
+    loginButton.addEventListener("click", function(){
+        location.href = "https://www.google.com";
+    });
+
+    registerButton=document.getElementById("register_button");
+    registerButton.textContent="Logout";
+    registerButton.dataset.target = "#LogoutModal";
+</script>

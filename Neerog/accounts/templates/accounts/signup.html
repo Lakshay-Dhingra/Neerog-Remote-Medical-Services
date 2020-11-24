@@ -1,0 +1,126 @@
+{% load static %}
+<!-- Signin or Login Page -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    {% include 'main_app/common_meta.html' %}
+
+    <!-- Link or CSS Tags -->
+    {% include 'main_app/common_css.html' %}
+    <link rel="stylesheet" href="{% static 'accounts/css/signup_style.css' %}">
+
+    <title>Sign Up - Neerog</title>
+
+</head>
+<body>
+
+    <!-- Messages -->
+    {% include 'main_app/show_messages.html' %}
+
+    <form method="post" class="login-form" action="{% url 'register' %}">
+    {% csrf_token %}
+    <h1>Sign Up</h1>
+
+    <div class="textb">
+        <select name="user_type"  required>
+            <option value="">Select User Type</option>
+            <option value="Patient">Generic User</option>
+            <option value="Doctor">Doctor</option>
+            <option value="Hospital">Hospital</option>
+            <option value="Testing Lab">Testing Lab</option>
+        </select>
+    </div>
+
+    <div class="textb">
+        <input type="text" name="name" required>
+        <div class="placeholder">Name</div>
+    </div>
+
+    <div class="textb">
+        <input type="text" name="email" required>
+        <div class="placeholder">Email</div>
+    </div>
+
+    <!-- <div class="textb">
+        <input type="text" name="phone" required>
+        <div class="placeholder">Phone Number</div>
+    </div> -->
+
+    <div class="textb">
+        <input type="password" name="password" required>
+        <div class="placeholder">Password</div>
+        <div class="show-password fas fa-eye-slash"></div>
+    </div>
+
+    <div class="textb">
+        <input type="password" name="password2" required>
+        <div class="placeholder">Confirm Password</div>
+    </div>
+
+    <button class="btn " disabled>Register</button>
+    <a href="{% url 'signin' %}">Already Registered?</a>
+    </form>
+
+    <script>
+    var fields = document.querySelectorAll(".textb input");
+    var btn = document.querySelector(".btn");
+
+    function validateEmail(myemail) 
+    {
+        if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(myemail))
+        {
+            return (true)
+        }
+        return (false)
+    }
+
+    function validatePassword(mypassword) 
+    {
+        if (mypassword.length >= 8)
+        {
+            return (true)
+        }
+        return (false)
+    }
+
+    function check(){
+        if(validateEmail(email.value) == true && validatePassword(password.value) == true && usertype.value != "" && name.value != "" && password2.value == password.value)
+        {
+            btn.disabled = false;
+        }
+        else
+        {
+            btn.disabled = true;
+        }         
+    }
+
+    var usertype = document.querySelector(".textb select");
+    usertype.addEventListener("click",check);
+    myname=fields[0];
+    myname.addEventListener("keyup",check);
+    email=fields[1];
+    email.addEventListener("keyup",check);
+    password=fields[2];
+    password.addEventListener("keyup",check);
+    password2=fields[3];
+    password2.addEventListener("keyup",check);
+
+    document.querySelector(".show-password").addEventListener("click",function(){
+        if(this.classList[2] == "fa-eye-slash"){
+        this.classList.remove("fa-eye-slash");
+        this.classList.add("fa-eye");
+        password.type = "text";
+        }else{
+        this.classList.remove("fa-eye");
+        this.classList.add("fa-eye-slash");
+        password.type = "password";
+        }
+    });
+    </script>
+
+    <!-- JavaScript -->
+    {% include 'main_app/common_js.html' %}
+</body>
+</html> 

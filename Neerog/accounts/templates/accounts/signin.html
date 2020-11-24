@@ -1,0 +1,95 @@
+{% load static %}
+<!-- Signin or Login Page -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    {% include 'main_app/common_meta.html' %}
+
+    <!-- Link or CSS Tags -->
+    {% include 'main_app/common_css.html' %}
+    <link rel="stylesheet" href="{% static 'accounts/css/signin_style.css' %}">
+
+    <title>Sign In - Neerog</title>
+
+</head>
+<body>
+
+    <!-- Messages -->
+    {% include 'main_app/show_messages.html' %}
+
+    <form method="post" class="login-form" action="{% url 'login' %}">
+    {% csrf_token %}
+    <h1>Sign In</h1>
+    <div class="textb">
+        <input type="text" name="email" required>
+        <div class="placeholder">Email</div>
+    </div>
+
+    <div class="textb">
+        <input type="password" name="password" required>
+        <div class="placeholder">Password</div>
+        <div class="show-password fas fa-eye-slash"></div>
+    </div>
+
+    <div class="checkbox">
+        <input type="checkbox">
+        <div class="fas fa-check"></div>
+        Remember Me
+    </div>
+
+    <button class="btn " disabled>Sign In</button>
+    <a href="#">Forgot Password?</a>
+    <a href="{% url 'signup' %}">Create Account</a>
+    </form>
+
+    <script>
+    var fields = document.querySelectorAll(".textb input");
+    var btn = document.querySelector(".btn");
+
+    function validateEmail(myemail) 
+    {
+        if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(myemail))
+        {
+            return (true)
+        }
+        return (false)
+    }
+
+    function validatePassword(mypassword) 
+    {
+        if (mypassword.length >= 8)
+        {
+            return (true)
+        }
+        return (false)
+    }
+
+    function check(){
+        if(validateEmail(fields[0].value) == true && validatePassword(fields[1].value) == true)
+        btn.disabled = false;
+        else
+        btn.disabled = true;  
+    }
+
+    fields[0].addEventListener("keyup",check);
+    fields[1].addEventListener("keyup",check);
+
+    document.querySelector(".show-password").addEventListener("click",function(){
+        if(this.classList[2] == "fa-eye-slash"){
+        this.classList.remove("fa-eye-slash");
+        this.classList.add("fa-eye");
+        fields[1].type = "text";
+        }else{
+        this.classList.remove("fa-eye");
+        this.classList.add("fa-eye-slash");
+        fields[1].type = "password";
+        }
+    });
+    </script>
+
+    <!-- JavaScript -->
+    {% include 'main_app/common_js.html' %}
+</body>
+</html> 

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <title>Profile</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script>
+        $(document).ready(function()
+        {
+        $('.Appointment').css({"background-color":"lightblue","border":"none"});
+          $('.profile').click(function()
+          {
+             $('#appointment').css({"display":"none"});
+             $('.Appointment').css({"background-color":"white","border":"none"})
+             $('#profile').css({"display":"block"});
+             $('.profile').css({"background-color":"lightblue","border":"none"})
+          });
+          $('.Appointment').click(function()
+          {
+             $('#profile').css({"display":"none"});
+             $('.profile').css({"background-color":"white","border":"none"})
+             $('#appointment').css({"display":"block"});
+             $('.Appointment').css({"background-color":"lightblue","border":"none"})
+
+          });
+        })
+    </script>
+    <style>
+    @media only screen and (max-width: 360px) {
+        #profile_pic
+        {
+            height:200px;
+            width:300px;
+        }
+        #search
+        {
+          margin-left:530px;
+          }
+    }
+    #profile_pic
+        {
+            height:300px;
+            width:max-width;
+        }
+    #search
+        {
+          float:right;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <image src="{% static 'image3.jpeg' %}" height="300px" width="100%"></image>
+</div>
+<div style="margin-top:-150px;postion:absolute;">
+<button type="button" class="Appointment" style="border:none;">Appointments</button>
+<button type="button" class="profile" style="border:none;">Profile</button>
+</div>
+<div id="appointment" style="display:block;">
+    <div class="row">
+        <div class="col-md-12">
+    <div class="card" style="margin-top:50px;">
+        <div class="card-header text-center" ><i>List Of Appointments</i>
+        </div>
+        <div class="card-body" style="overflow:scroll;">
+        <input type="text" id="search" placeholder="Search">
+        <table class="table table-striped" style="margin-top:50px">
+
+            <thead style="background-color:lightgray">
+              <tr>
+                <th>Username</th>
+                <th>Appointment Id</th>
+                <th>Email Id</th>
+                <th>Appointment Time</th>
+                <th>Mode</th>
+                <th>Meeting url</th>
+              </tr>
+            </thead>
+        <tbody>
+          <tr>
+            <td>John</td>
+            <td>Doe</td>
+            <td>john@example.com</td>
+              <td>John</td>
+            <td>Doe</td>
+            <td>john@example.com</td>
+          </tr>
+          <tr>
+            <td>Mary</td>
+            <td>Moe</td>
+            <td>mary@example.com</td>
+          </tr>
+          <tr>
+            <td>July</td>
+            <td>Dooley</td>
+            <td>july@example.com</td>
+          </tr>
+        </tbody>
+  </table>
+    </div>
+</div>
+        </div>
+
+    </div>
+</div>
+<div id="profile" style="display:none">
+<div class="card" style="margin-top:50px;">
+        <div class="card-header text-center" ><i>User Profile</i>
+        </div>
+    <div style="margin-top:-70px,float:left,position:absolute;">
+        <button type="button" class="btn btn-success"onclick="window.print()"><i class="fa fa-edit" style="font-size:24px,float:left;"></i></button>
+        <button type="button" class="btn btn-success"onclick="window.print()"><i class="fa fa-print" style="font-size:24px,float:left;"></i></button>
+    </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{% static 'image1.jpeg' %}" id="profile_pic">
+                </div>
+        <div class="col-md-6">
+        <table class="table table-striped" style="margin-top:50px;">
+              <tr>
+                <th>Username</th>
+                  <td>Abhishek</td></tr>
+                <tr><th>Email Id</th>
+                    <td>a$bjbmbm</td></tr>
+                <tr><th>Mode</th>
+                <td>online</td>
+              </tr>
+  </table>
+    </div>
+</div>
+        </div>
+
+    </div>
+</div>
+</body>
+</div>
+</body>
+</html>

@@ -17,7 +17,6 @@ class UserDetails(models.Model):
     user_type=models.CharField(max_length=50, choices=USER_TYPE_CHOICES, default=USER_TYPE_DEFAULT)   
     name = models.CharField(max_length=200)
     email=models.EmailField(max_length=254, unique=True, blank=False, null=False)
-    phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], unique=True) 
     created_at=models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -31,6 +30,7 @@ class UserDetails(models.Model):
 class Patient(models.Model):
     # patientid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
     patientid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
     about=models.TextField(max_length=500)
     country=models.CharField(max_length=50)
     city=models.CharField(max_length=50)
@@ -39,7 +39,7 @@ class Patient(models.Model):
     GENDER_CHOICES = [
         ('Male', 'Male'),
         ('Female', 'Female'),
-        ('LGBTQ', 'LGBTQ'),
+        ('Trans', 'Trans'),
         (DEFAULT_GENDER, 'Unknown'),
     ]
     gender=models.CharField(max_length=10, choices=GENDER_CHOICES, default=DEFAULT_GENDER)
@@ -71,6 +71,7 @@ class Patient(models.Model):
 class Hospital(models.Model):
     # hospitalid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
     hospitalid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
     speciality = models.CharField(max_length=100)
     about=models.TextField(max_length=2000)
     country=models.CharField(max_length=50)
@@ -91,6 +92,7 @@ class Hospital(models.Model):
 class Doctor(models.Model):
     # doctorid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
     doctorid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
     specialization = models.CharField(max_length=100)
     about=models.TextField(max_length=500)
     country=models.CharField(max_length=50)
@@ -100,7 +102,7 @@ class Doctor(models.Model):
     GENDER_CHOICES = [
         ('Male', 'Male'),
         ('Female', 'Female'),
-        ('LGBTQ', 'LGBTQ'),
+        ('Trans', 'Trans'),
         (DEFAULT_GENDER, 'Unknown'),
     ]
     gender=models.CharField(max_length=10, choices=GENDER_CHOICES, default=DEFAULT_GENDER)
@@ -122,6 +124,7 @@ class Doctor(models.Model):
 class TestingLab(models.Model):
     # tlabid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
     tlabid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True)
     about=models.TextField(max_length=2000)
     country=models.CharField(max_length=50)
     city=models.CharField(max_length=50)

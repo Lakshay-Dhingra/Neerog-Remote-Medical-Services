@@ -1,0 +1,12 @@
+{% autoescape off %}
+Hi {{name}}!
+
+Thanks for signing up with Neerog! To activate your account, you have to follow this link:
+
+{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+Stay Healthy, feel free to contact us with your feedback or suggestions.
+
+Regards,
+Team Neerog
+{% endautoescape %}

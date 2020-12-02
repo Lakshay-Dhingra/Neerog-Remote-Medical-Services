@@ -1,0 +1,25 @@
+{% load static %}
+<!-- Basic Template of our webpage -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    {% include 'main_app/common_meta.html' %}
+
+    <!-- Link or CSS Tags -->
+    {% include 'main_app/common_css.html' %}
+
+    <title>Neerog - Remote Appointments and Consultancy</title>
+</head>
+<body>
+    <!-- Navbar -->
+    {% include 'main_app/navbar.html' %}
+
+    <!-- Messages -->
+    {% include 'main_app/show_messages.html' %}
+    
+    <!-- JavaScript -->
+    {% include 'main_app/common_js.html' %}
+</body>
+</html>

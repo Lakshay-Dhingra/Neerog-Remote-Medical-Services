@@ -17,7 +17,6 @@ import random
 # Create your views here.
 def index(request):
     return render(request,'main_app/index.html')
-
 def home(request):
     return render(request,'main_app/home.html')
 def doctor_dashboard(request):
@@ -100,3 +99,4 @@ def list_of_hospital(request):
     City=request.POST.get("city")
     State=request.POST.get("state")
     return HttpResponse(Country+City+State)
+

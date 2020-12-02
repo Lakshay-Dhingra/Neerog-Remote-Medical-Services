@@ -1,0 +1,5 @@
+<script>
+{% if not user.is_authenticated %}
+    location.href="{% url 'index' %}"
+{% endif %}
+</script>

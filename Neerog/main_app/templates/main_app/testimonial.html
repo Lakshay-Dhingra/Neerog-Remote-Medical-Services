@@ -1,0 +1,43 @@
+{% load static %}
+<section class="testimonial-section">
+    <div class="inner-width">
+      <h1>What Our Clients Say</h1>
+      <div class="testimonial-pics">
+        <img src="{% static 'main_app/images/P1.jpg' %}" alt="test-1" class="active">
+        <img src="{% static 'main_app/images/P2.jpg' %}" alt="test-2">
+        <img src="{% static 'main_app/images/P3.jpg' %}" alt="test-3">
+        <img src="{% static 'main_app/images/P4.jpg' %}" alt="test-4">
+      </div>
+  
+      <div class="testimonial-contents">
+        <div class="testimonial active" id="test-1">
+          <p>It is easy to use, and makes it very convinient to take appointments in hospitals from comfort of our home. We can even consult a doctor remotely which is also an amazing feature of this platform.</p>
+          <span class="description">Lakshay / Regular User</span>
+        </div>
+  
+        <div class="testimonial" id="test-2">
+          <p>Neerog makes it easy to take and manage our appointments and allows us to take give remote consultation to our patients which is much needed at the times of COVID-19.</p>
+          <span class="description">Dr. Prachi / Doctor</span>
+        </div>
+  
+        <div class="testimonial" id="test-3">
+          <p>Neerog is helping us in reducing the pressure and crowd in the hospitals by providing services like remote appointment and consultation, and makes it easy to manage and track appointments.</p>
+          <span class="description">Dr. D.K. Siwach / Hospital Head</span>
+        </div>
+  
+        <div class="testimonial" id="test-4">
+          <p>Neerog gives us a platform to provide our services, and makes it quite convinient to take appliations for medical tests and track them.</p>
+          <span class="description">J.K. Thomas / Testing Lab Specialist</span>
+        </div>
+      </div>
+    </div>
+</section>
+<script type="text/javascript">
+$('.testimonial-pics img').click(function(){
+    $(".testimonial-pics img").removeClass("active");
+    $(this).addClass("active");
+
+    $(".testimonial").removeClass("active");
+    $("#"+$(this).attr("alt")).addClass("active");
+});
+</script>

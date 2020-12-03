@@ -21,7 +21,7 @@ def home(request):
     return render(request,'main_app/home.html')
 def doctor_dashboard(request):
     lis_of_countries = geo_plug.all_CountryNames();
-    return render(request,'main_app/Hospital_Selection.html',context={'list_of_countries':lis_of_countries,'list_of_cities':lis_of_cities,'list_of_states':lis_of_states})
+    return render(request,'main_app/Hospital_Selection.html',context={'list_of_countries':lis_of_countries})
 
 def create_jwt_token():  # To create jwt token for zoom api
     start = int(time.time())

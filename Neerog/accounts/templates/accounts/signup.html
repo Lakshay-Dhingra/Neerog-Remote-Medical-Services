@@ -19,6 +19,9 @@
     <!-- Messages -->
     {% include 'main_app/show_messages.html' %}
 
+    <!-- Navbar -->
+    {% include 'main_app/navbar.html' %}
+
     <form method="post" class="login-form" action="{% url 'register' %}">
     {% csrf_token %}
     <h1>Sign Up</h1>

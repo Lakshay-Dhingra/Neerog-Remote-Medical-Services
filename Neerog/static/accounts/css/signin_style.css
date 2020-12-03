@@ -34,6 +34,7 @@ body{
   max-width: 500px;
   background-color: #fff;
   padding: 50px 40px;
+  margin-top: 30px;
 }
 
 .login-form h1{

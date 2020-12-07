@@ -2,10 +2,10 @@
   <div class="menu-icon">
   <span class="fas fa-bars"></span></div>
   <div class="logo">
-  Neerog</div>
+  <a href="{% url 'index' %}">Neerog</a></div>
   <div class="nav-items">
   <li><a href="{% url 'index' %}">Home</a></li>
-  <li><a href="#">About</a></li>
+  <li><a href="{% url 'index' %}#features_section">About</a></li>
   <li><a href="#">Contact</a></li>
   <li><a href="{% url 'signin' %}">Login</a></li>
   <li><a href="{% url 'signup' %}">Register</a></li>
@@ -26,11 +26,14 @@
   const cancelBtn = document.querySelector(".cancel-icon");
   const items = document.querySelector(".nav-items");
   const form = document.querySelector("form");
+  const navbar = document.querySelector("nav")
   menuBtn.onclick = ()=>{
     items.classList.add("active");
     menuBtn.classList.add("hide");
     searchBtn.classList.add("hide");
     cancelBtn.classList.add("show");
+    navbar.style.width = "320px";
+    navbar.style.left = "0px";
   }
   cancelBtn.onclick = ()=>{
     items.classList.remove("active");
@@ -39,6 +42,7 @@
     cancelBtn.classList.remove("show");
     form.classList.remove("active");
     cancelBtn.style.color = "#ff3d00";
+    navbar.style.width = "100%";
   }
   searchBtn.onclick = ()=>{
     form.classList.add("active");

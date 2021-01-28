@@ -7,6 +7,7 @@
      <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -38,10 +39,9 @@
             height:200px;
             width:300px;
         }
-        #search
-        {
-          margin-left:530px;
-          }
+        .card-body{
+               overflow:scroll;
+        }
     }
     #profile_pic
         {
@@ -51,6 +51,8 @@
     #search
         {
           float:right;
+          
+       
         }
 
     </style>
@@ -68,11 +70,16 @@
         <div class="col-md-12">
     <div class="card" style="margin-top:50px;">
         <div class="card-header text-center" ><i>List Of Appointments</i>
+        
         </div>
-        <div class="card-body" style="overflow:scroll;">
-        <input type="text" id="search" placeholder="Search">
-        <table class="table table-striped" style="margin-top:50px">
-
+        <div style="margin-top:20px;">
+            <form class="example" id="search"action="/action_page.php">
+                  <input type="text" placeholder="Search.." name="search">
+                          <button type="submit" class="btn-primary"style="margin-left:-20px;"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+        <div class="card-body">
+        <table class="table table-striped" style="margin-top:30px">
             <thead style="background-color:lightgray">
               <tr>
                 <th>Username</th>

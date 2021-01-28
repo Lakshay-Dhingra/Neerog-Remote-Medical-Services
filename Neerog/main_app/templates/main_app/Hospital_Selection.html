@@ -4,13 +4,100 @@
     {% load static %}
     <meta charset="UTF-8">
     <title>Hospital_Selection</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{% static 'Hospital_Selection.css' %}">
+    <!--<link rel="stylesheet" href="{% static 'Hospital_Selection.css' %}">-->
+    <style>
+    @media only screen and (max-width: 720px) {
+        #countries
+        {
+         margin-left:-110px;
+            width:80px;
+            height:30px;
+            border-radius:1px;
+            font-size:10px;
+        }
+        #states
+        {
+            margin-left:0px;
+            width:80px;
+            height:30px;
+            border-radius:1px;
+            font-size:10px;
+
+        }
+        #cities
+        {
+        margin-left:0px;
+            width:80px;
+            height:30px;
+            border-radius:1px;
+            font-size:10px;
+
+        }
+    #submit_form
+        {
+            font-size:10px !important;
+            width:60px !important;
+            height:30px !important;
+            margin-top:-28px !important;
+            margin-left:10px !important;
+
+        }
+    #div_form
+        {
+           position:absolute;
+           margin-top:-250px;
+           margin-left:30px;
+        }
+    .img1
+    {
+     height:50px;
+    }
+    .row
+    {
+    margin-left:5px;
+    }
+    .btn
+    {
+      font-size:10px;
+     }
+    .card
+    {
+       margin-left:0px;
+    }
+     th,td
+     {
+        font-size:10px;
+     }
+     }
+     .form_select
+        {
+            width:150px;
+            border-radius:3px;
+            margin-left:100px;
+            height:40px;
+        }
+        #div_form
+        {
+           position:absolute;
+           margin-top:-250px;
+           margin-left:100px;
+        }
+        #submit_form
+        {
+        font-size:15px;
+        width:100px;
+        height:40px;
+        margin-top:-8px;
+        margin-left:90px;
+        }
+     </style>
     <script>
         $(document).ready(function(){
         $("#countries").on("change",function(){
@@ -29,6 +116,7 @@
              {
              var states=JSON.stringify(data);
              var p=states.split(",");
+
              $("#states").empty();
              $("#states").append(`<option value="Select">
                                        Select State
@@ -59,8 +147,8 @@
              success:function(data)
              {
              var states=JSON.stringify(data);
-
              var p=states.split(",");
+
              $("#cities").empty();
              $("#cities").append(`<option value="Select">
                                        Select City
@@ -68,7 +156,10 @@
 
              for(var i=0;i<p.length;i++)
              {
-             var optionText=p[i].replace("\"","");
+             var k=p[i].replace("\[","")
+             var n=k.replace("\]","")
+             var optionText=n.slice(1,n.length-1)
+
                 $("#cities").append(`<option value="${optionText}">
                                        ${optionText}
                                   </option>`);
@@ -91,34 +182,37 @@
 </head>
 <body>
    <div>
-        <image src="{% static 'image3.jpeg' %}" width="100%" height="300px"></image>
+        <image src="{% static 'image1.jpeg' %}" width="100%" height="300px"></image>
     </div>
-<div class="card-body" id="div_form">
-<form action="{% url 'list_of_hospital' %}" method="post" id="form1">
+<div class="card-body" id="div_form" style="margin-top:-250px;position:absolute;">
+<form action="{% url 'list_of_hospital' %}" method="post">
    {% csrf_token %}
+
+
 {% if list_of_countries|length > 0 %}
-    <select class="form_select" id="countries" name="country">
+    <select id="countries" class="form_select"  name="country">
      <option value="Select">Select Country</option>
     {% for i in list_of_countries %}
             <option value="{{ i }}">{{ i }}</option>
     {% endfor %}
     </select>
 {% endif %}
-      {% if list_of_states|length > 0 %}
+
     <select id="states" class="form_select" name="state">
             <option value="Select">Select State</option>
     </select>
-{% endif %}
-    {% if list_of_cities|length > 0 %}
+
     <select id="cities" class="form_select" name="city">
         <option value="Select">Select City</option>
     </select>
-{% endif %}
-    <button type="submit" class="btn btn-success" id="submit_form"> Submit</button>
+
+    <button type="submit" class="btn-success" id="submit_form"> Submit</button>
+
 </form>
 </div>
+<div class="container-fluid">
 <div class="row" style="margin-top:-100px;">
-    <div class="col-sm-4">
+    <div class="col-lg-4 col-xs-1 ">
         <div class="card">
             <image src="{% static 'image2.jpeg' %}" class="img1"></image>
             <table class="table-stripped">
@@ -139,7 +233,7 @@
             <button class="btn btn-primary">Apply Now</button>
         </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-lg-4 col-xs-1">
         <div class="card">
             <image src="{% static 'image2.jpeg' %}" class="img1"></image>
             <table class="table-stripped">
@@ -159,7 +253,7 @@
             <button class="btn btn-primary">Apply Now</button>
         </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-lg-4 col-xs-1 col-md-4">
         <div class="card">
             <image src="{% static 'image2.jpeg' %}" class="img1"></image>
             <table class="table-stripped">
@@ -179,6 +273,70 @@
             <button class="btn btn-primary">Apply Now</button>
         </div>
     </div>
+</div>
+    <div class="row">
+    <div class="col-lg-4 col-xs-1 ">
+        <div class="card">
+            <image src="{% static 'image2.jpeg' %}" class="img1"></image>
+            <table class="table-stripped">
+                <tr>
+                    <th>Name:</th>
+                    <td>Aggarwal Hospital</td>
+                </tr>
+                <tr>
+                    <th>City:</th>
+                    <td>Kurukshetra</td>
+
+                </tr>
+                <tr>
+                    <th>Price:</th>
+                    <td>250</td>
+                </tr>
+            </table>
+            <button class="btn btn-primary">Apply Now</button>
+        </div>
+    </div>
+    <div class="col-lg-4 col-xs-1">
+        <div class="card">
+            <image src="{% static 'image2.jpeg' %}" class="img1"></image>
+            <table class="table-stripped">
+                <tr>
+                    <th>Name:</th>
+                    <td>Aggarwal Hospital</td>
+                </tr>
+                <tr>
+                    <th>City:</th>
+                    <td>Kurukshetra</td>
+                </tr>
+                <tr>
+                    <th>Price:</th>
+                    <td>250</td>
+                </tr>
+            </table>
+            <button class="btn btn-primary">Apply Now</button>
+        </div>
+    </div>
+    <div class="col-lg-4 col-xs-1">
+        <div class="card">
+            <image src="{% static 'image2.jpeg' %}" class="img1"></image>
+            <table class="table-stripped">
+                <tr>
+                    <th>Name:</th>
+                    <td>Aggarwal Hospital</td>
+                </tr>
+                <tr>
+                    <th>City:</th>
+                    <td>Kurukshetra</td>
+                </tr>
+                <tr>
+                    <th>Price:</th>
+                    <td>250</td>
+                </tr>
+            </table>
+            <button class="btn btn-primary">Apply Now</button>
+        </div>
+    </div>
+</div>
 </div>
 </body>
 </html>

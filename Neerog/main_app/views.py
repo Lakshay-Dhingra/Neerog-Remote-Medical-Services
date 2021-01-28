@@ -15,6 +15,9 @@ import random
 # return render(request,'page.html',context_var_dictionary)
 
 # Create your views here.
+replace_dictionary={"u0101":"a","u012b":"i","u016b":"u","u0100":"A","u016a":"u"}
+def profile(request):
+    return render(request,'main_app/Profile.html')
 def index(request):
     return render(request,'main_app/index.html')
 def home(request):
@@ -80,23 +83,32 @@ def list_of_states(request):
     for key, item in states.items():
         if (key == country):
             lis_of_states = item
+    print(lis_of_states)
     return JsonResponse(data=lis_of_states,safe=False)
 
 def list_of_city(request):
     state=request.GET.get("city")
     state=re.sub("\"","",state).strip()
     print(state)
+    list_of_cities=[]
     city = geo_plug.all_State_CityNames(str(state))
     k = city.split(":")
     trailing =re.sub("\"", "", k[1])
     trailing=re.sub("}","",re.sub("\]","",re.sub("\[","",trailing))).strip()
-    lis_of_cities = trailing[1:len(trailing) - 2].split(",")
-    lis_of_cities=re.sub("\]","",re.sub("\'","",re.sub("\[","",str(lis_of_cities))))
-    return JsonResponse(data=lis_of_cities, safe=False)
+    lis_of_cities = trailing[0:len(trailing)].split(",")
+    #lis_of_cities=list(re.sub("\]","",re.sub("\'","",re.sub("\[","",str(lis_of_cities)))))
+    t=0;
+    for i in lis_of_cities:
+        str1=i.replace("\\","");
+        #print(str1)
+        for key,value in replace_dictionary.items():
+            if(str1.find(key)!=-1):
+                str1=str1.replace(key,value)
+        list_of_cities.append(str1)
+    return JsonResponse(data=list_of_cities, safe=False)
 
 def list_of_hospital(request):
     Country=request.POST.get("country")
     City=request.POST.get("city")
     State=request.POST.get("state")
     return HttpResponse(Country+City+State)
-

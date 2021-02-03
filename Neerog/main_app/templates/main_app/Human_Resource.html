@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Human Resource Info</title>
+     {% include "main_app/header.html" %}
+    <style>
+        h5{
+          text-align:center;
+        }
+       .container{
+              background-color:	rgb(211,211,211);
+              padding:50px;"
+         }
+    </style>
+</head>
+<body>
+<div class="container-fluid p-3 mb-2 bg-light text-dark">
+    <h3 style="color:red;">Human Resource Information</h3>
+    <h4 style="text-align:center;">Enter the Details</h4>
+    <form>
+        <div class="container">
+        <div class="form-group">
+            <label for="Doctor_Name">Name:</label>
+            <input type="text" class="form-control" id="Doctor_Name" placeholder="Enter the Name">
+        </div>
+             <div class="form-group">
+            <label for="email">Email-Id:</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter the Email Id">
+        </div>
+            <div class="form-group">
+            <label for="Designation">Designation:</label>
+            <input type="text" class="form-control" id="Designation" placeholder="Enter the Designation">
+        </div>
+            Working Hours:
+            <div class="form-group row">
+
+             <div class="col-sm-6 col-lg-6">
+                 <input type="time" class="form-control" id="Working_Hours"></div>
+                <div class="col-sm-6 col-lg-6">
+                 <input type="time" class="form-control" id="Working_Hours1"></div>
+
+            </div>
+            <div class="form-group">
+            <label for="MobileNumber">Mobile Number:</label>
+            <input type="text" class="form-control" id="MobileNumber" placeholder="Enter the Mobile Number">
+        </div>
+        <center>
+            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="reset" class="btn btn-danger">Clear</button>
+        </center>
+        </div>
+    </form>
+        </div>
+
+
+
+
+</body>
+</html>

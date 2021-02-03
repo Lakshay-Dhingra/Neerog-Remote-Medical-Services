@@ -1,31 +1,48 @@
-@media only screen and (max-width: 360px) {
-    .form_select
+@media only screen and (max-width: 720px) {
+        #countries
         {
-            margin-left:10px;
-            width:10px;
-            height:50px;
+         margin-left:-110px;
+            width:80px;
+            height:30px;
             border-radius:1px;
+            font-size:10px;
+        }
+        #states
+        {
+            margin-left:0px;
+            width:80px;
+            height:30px;
+            border-radius:1px;
+            font-size:10px;
+
+        }
+        #cities
+        {
+        margin-left:0px;
+            width:80px;
+            height:30px;
+            border-radius:1px;
+            font-size:10px;
+
         }
     #submit_form
-    {
-      font-size:10px;
-      width:50px;
-      height:25px;
-      margin-top:-8px;
-     }
+        {
+            font-size:10px !important;
+            width:60px !important;
+            height:30px !important;
+            margin-top:-28px !important;
+            margin-left:10px !important;
+
+        }
     #div_form
         {
            position:absolute;
            margin-top:-250px;
            margin-left:30px;
         }
-    .col-lg-4
-        {
-          width:120px;
-         }
     .img1
     {
-     height:90px;
+     height:50px;
     }
     .row
     {
@@ -38,22 +55,18 @@
     .card
     {
        margin-left:0px;
-       }
-     th
+    }
+     th,td
      {
         font-size:10px;
-        }
-     td
-     {
-        font-size:10px;
-        }
+     }
      }
      .form_select
         {
             width:150px;
             border-radius:3px;
             margin-left:100px;
-            height:30px;
+            height:40px;
         }
         #div_form
         {
@@ -65,7 +78,7 @@
         {
         font-size:15px;
         width:100px;
-        height:30px;
+        height:40px;
         margin-top:-8px;
         margin-left:90px;
         }

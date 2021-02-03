@@ -16,6 +16,8 @@ import random
 
 # Create your views here.
 replace_dictionary={"u0101":"a","u012b":"i","u016b":"u","u0100":"A","u016a":"u"}
+Specialities=["Bartiaric Surgery","Cardiology","Dental","Kidney Transplant","Vascular Surgery","IVF"]
+Facilities=["ICU","CICU","MICU","LABORATORY","Eye Bank","Blood Bank"]
 def profile(request):
     return render(request,'main_app/Profile.html')
 def index(request):
@@ -112,3 +114,8 @@ def list_of_hospital(request):
     City=request.POST.get("city")
     State=request.POST.get("state")
     return HttpResponse(Country+City+State)
+def abc(request):
+    lis_of_countries = geo_plug.all_CountryNames();
+    return render(request,"main_app/Registration.html",context={'list_of_countries':lis_of_countries,"specialities":Specialities,"facilities":Facilities})
+def dashboard(request):
+    pass

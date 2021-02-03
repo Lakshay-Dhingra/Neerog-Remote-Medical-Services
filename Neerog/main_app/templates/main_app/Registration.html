@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+     {% include "main_app/header.html" %}
+     <script src="{% static 'Hospital_Selection.js' %}"></script>
+    <title>Registration</title>
+    <style>
+        h5{
+          text-align:center;
+        }
+       .container{
+              background-color:	rgb(211,211,211);
+              padding:50px;"
+         }
+    </style>
+</head>
+<body>
+<div class="container-fluid p-3 mb-2 bg-light text-dark">
+    <h3 style="color:red;">Hospital Registration</h3>
+    <h4 style="text-align:center;">Information</h4>
+    <form>
+        <div class="container">
+        <div class="form-group">
+            <label for="hospital_Name">Hospital Name:</label>
+            <input type="text" class="form-control" id="hospital_Name" placeholder="Enter the Hospital Name">
+        </div>
+            <div class="form-group">
+            <label for="about">About Hospital:</label>
+                 <textarea class="form-control" id="about" placeholder="Enter the Information about Hospital " row="3"></textarea>
+        </div>
+        <div class="form-group">
+            Hospital Care  Type:
+            <div class="form-check form-check-inline">
+            <input type="radio"  id="exampleRadios2" name="hospital_type" value="Government">
+            Government
+            </div>
+            <div class="form-check form-check-inline">
+            <input type="radio"  name="hospital_type" id="exampleRadios1" value="Private"><label for="exampleRadios1">Private</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="hospital_Name">Hospital Care Provider Type:</label>
+            <div class="form-check form-check-inline">
+                 <input class="form-check-input" type="checkbox" value="Clinic" id="defaultCheck1">
+                <label class="form-check-label" for="defaultCheck1">Clinic</label>
+            </div>
+        <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" value="Hospital" id="defaultCheck2" >
+        <label class="form-check-label" for="defaultCheck2">Hospital</label>
+        </div>
+            <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" value="Testing Lab" id="defaultCheck3" >
+        <label class="form-check-label" for="defaultCheck3">Testing Lab</label>
+        </div>
+        </div>
+         <div class="form-group">
+            <label for="Year_Established">Year_Established:</label>
+            <input type="text" class="form-control" id="Year_Established" placeholder="Enter the Year_Established">
+        </div>
+         <div class="form-group">
+            <label for="hospital_No">Hospital Registration Number:</label>
+            <input type="text" class="form-control" id="hospital_No" placeholder="Enter the Hospital Name">
+         </div>
+         <label for="hospital_No">Hospital Logo:</label>
+        <div class="custom-file">
+
+            <input type="file" class="custom-file-input" id="inputGroupFile05">
+            <label class="custom-file-label" for="inputGroupFile05">Choose file</label>
+        </div>
+        <label for="hospital_No">Registration Number Scanned Copy :</label>
+        <div class="custom-file">
+
+            <input type="file" class="custom-file-input" id="inputGroupFile01">
+            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+        </div>
+             <label for="hospital_No">Hospital Picture 1 :</label>
+            <div class="custom-file">
+            <input type="file" class="custom-file-input" id="inputGroupFile04">
+            <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
+        </div>
+            <label for="hospital_No">Hospital Picture 2 :</label>
+        <div class="custom-file">
+
+            <input type="file" class="custom-file-input" id="inputGroupFile02">
+            <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
+        </div>
+            <label for="hospital_No">Hospital Picture 3:</label>
+        <div class="custom-file">
+
+            <input type="file" class="custom-file-input" id="inputGroupFile03">
+            <label class="custom-file-label" for="inputGroupFile03">Choose file</label>
+        </div>
+            <div class="form-group">
+            <label for="Number_of_Doctors">No Of Doctors:</label>
+            <input type="text" class="form-control" id="Number_of_Doctors" placeholder="Enter No Of Doctors in Hospital">
+        </div>
+            <div class="form-group">
+            <label for="Number_of_Beds">Number of Beds:</label>
+            <input type="text" class="form-control" id="Number_of_Beds" placeholder="Enter the No Of Beds in Hospital">
+        </div>
+
+    </div>
+        <div class="container">
+            <h5>FOR OFFICE USE ONLY (THIS INFORMATION WILL NOT BE SHARED PUBLICLY)</h5>
+            <div class="form-group">
+            <label for="Nodal_person">Nodal Person for this Information - Name and Designation </label>
+            <input type="text" class="form-control" id="Nodal_person" placeholder="Enter the Hospital Name">
+        </div>
+             <div class="form-group">
+            <label for="Nodal_Tel">Telephone Number of the Nodal Person for this Information </label>
+            <input type="text" class="form-control" id="Nodal_Tel" placeholder="Enter the Hospital Name">
+        </div>
+             <div class="form-group">
+            <label for="Nodal_email">Nodal Person Email Id </label>
+            <input type="text" class="form-control" id="Nodal_email" placeholder="Enter the Hospital Name">
+        </div>
+        </div>
+        <div class="container">
+            <h5>Hospital Address</h5>
+             <div class="form-group">
+            <label for="address">Address</label>
+                 <textarea class="form-control" id="address" placeholder="Enter the Hospital Address" row="3"></textarea>
+        </div>
+                <div class="form-group">
+                {% if list_of_countries|length > 0 %}
+                 <label for="countries">Country</label>
+                <select class="form-control" aria-label="Default select example" id="countries" name="Country">
+                    <option value="Select">Select Country</option>
+                    {% for i in list_of_countries %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+                </div>
+                {% endif %}
+             <div class="form-group">
+                 <label for="states">State</label>
+                <select id="states" class="form-control" name="state">
+                    <option value="Select">Select State</option>
+                </select>
+              </div>
+              <div class="form-group">
+                  <label for="cities">City</label>
+                <select id="cities" class="form-control" name="city">
+                    <option value="Select">Select City</option>
+                </select>
+             </div>
+
+             <div class="form-group">
+            <label for="pincode">Pincode </label>
+            <input type="text" class="form-control" id="pincode" placeholder="Enter the Pincode">
+        </div>
+        </div>
+         <div class="container">
+            <h5>CONTACT / HELP DESK OF HOSPITAL (FOR PUBLIC DOMAIN)</h5>
+            <div class="form-group">
+            <label for="Mobile_No">Mobile Number </label>
+            <input type="text" class="form-control" id="Mobile_No" placeholder="Enter the Mobile Number">
+        </div>
+             <div class="form-group">
+            <label for="Email">Email-Id</label>
+            <input type="text" class="form-control" id="Email" placeholder="Enter the Hospital Email-id">
+        </div>
+             <div class="form-group">
+            <label for="Website">Website </label>
+            <input type="text" class="form-control" id="Website" placeholder="Enter the Hospital Website">
+        </div>
+        </div>
+        <div class="container">
+            <h5>Specialities</h5>
+            {% for i in specialities %}
+            <div class="form-check form-check-inline">
+                 <input class="form-check-input" type="checkbox" value="{{ i }}">{{ i }}
+            </div>
+            {% endfor %}
+        </div>
+         <div class="container">
+            <h5>Facilities</h5>
+            {% for i in facilities %}
+            <div class="form-check form-check-inline">
+                 <input class="form-check-input" type="checkbox" value="{{ i }}">{{ i }}
+            </div>
+             {% endfor %}<br><br><br>
+            <center>
+              <button type="submit" class="btn btn-success">Submit</button>
+               <button type="reset" class="btn btn-danger">Clear</button>
+                </center>
+        </div>
+    </form>
+</div>
+</body>
+</html>

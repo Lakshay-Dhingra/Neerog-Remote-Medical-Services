@@ -22,12 +22,17 @@ def profile(request):
     return render(request,'main_app/Profile.html')
 def index(request):
     return render(request,'main_app/index.html')
+
 def home(request):
     return render(request,'main_app/home.html')
+
 def doctor_dashboard(request):
-    lis_of_countries = geo_plug.all_CountryNames();
+    lis_of_countries = geo_plug.all_CountryNames()
     return render(request,'main_app/Hospital_Selection.html',context={'list_of_countries':lis_of_countries})
 
+def profile(request):
+    return render(request,'main_app/Profile.html')
+    
 def create_jwt_token():  # To create jwt token for zoom api
     start = int(time.time())
     end = start + 10
@@ -40,6 +45,7 @@ def create_jwt_token():  # To create jwt token for zoom api
     }
     encoded = jwt.encode(Payload, secret_settings.Api_Secret, algorithm='HS256')
     return encoded
+
 def create_zoom_meeting(request):
     url = "https://api.zoom.us/v2/users/"+secret_settings.email_host_user+"/meetings"
     password=random.randint(0,999999) #Password of Zoom meeting

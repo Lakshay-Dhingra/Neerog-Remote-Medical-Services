@@ -1,56 +1,54 @@
-    
-    <!-- Navbar-->
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light position-fixed nav_bg" id="main_navbar">
-            <a class="navbar-brand" href="{% url 'index' %}">Fit N' Fine</a>
-            <button class="navbar-toggler" type="button" onClick="navExpand()" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-                <ul class="navbar-nav">
-                  <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}#features_section">Features</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}#contact_section">Contact</a>
-                  </li>
-                  <li class="nav-item">
-                    <button type="button" id="login_button" class="btn btn-link" data-toggle="modal" data-target="#LoginModal">Login</button>
-                  </li>
-                  <li class="nav-item">
-                    <button type="button" id="register_button" class="btn btn-link" data-toggle="modal" data-target="#RegisterModal">Register</button>
-                  </li>
-                </ul>
-            </div>
-          </nav>
-    </header>
+<nav>
+  <div class="menu-icon">
+  <span class="fas fa-bars"></span></div>
+  <div class="logo">
+  <a href="{% url 'index' %}">Neerog</a></div>
+  <div class="nav-items">
+  <li><a href="{% url 'index' %}">Home</a></li>
+  <li><a href="{% url 'index' %}#features_section">About</a></li>
+  <li><a href="#">Contact</a></li>
+  <li><a href="{% url 'signin' %}">Login</a></li>
+  <li><a href="{% url 'signup' %}">Register</a></li>
+  </div>
+  <div class="search-icon">
+  <span class="fas fa-search"></span></div>
+  <div class="cancel-icon">
+  <span class="fas fa-times"></span></div>
+  <form action="#">
+    <input type="search" class="search-data" placeholder="Search" required>
+    <button type="submit" class="fas fa-search"></button>
+  </form>
+</nav>
 
-    {% if user.is_authenticated %}
-      {% include 'accounts/logout.html' %}
-      {% include 'accounts/change_navbar.html' %}
-    {% else %}
-      {% include 'accounts/login.html' %}
-      {% include 'accounts/register.html' %}
-    {% endif %}
-
-    <script>
-      const navbar = document.getElementById('main_navbar');
-      window.onscroll = () => {
-        if (window.scrollY > 250)
-        {
-          // navbar.style.background="rgba(255, 69,0, 0.8)";
-          navbar.style.background="rgba(255, 228, 196,0.9)";
-          navbar.style.height="7vh";
-        }
-        else
-        {
-          navbar.style.background="transparent";
-          navbar.style.height="8vh";
-        }
-      };
-    </script>
+<script>
+  const menuBtn = document.querySelector(".menu-icon span");
+  const searchBtn = document.querySelector(".search-icon");
+  const cancelBtn = document.querySelector(".cancel-icon");
+  const items = document.querySelector(".nav-items");
+  const form = document.querySelector("form");
+  const navbar = document.querySelector("nav")
+  menuBtn.onclick = ()=>{
+    items.classList.add("active");
+    menuBtn.classList.add("hide");
+    searchBtn.classList.add("hide");
+    cancelBtn.classList.add("show");
+    navbar.style.width = "320px";
+    navbar.style.left = "0px";
+  }
+  cancelBtn.onclick = ()=>{
+    items.classList.remove("active");
+    menuBtn.classList.remove("hide");
+    searchBtn.classList.remove("hide");
+    cancelBtn.classList.remove("show");
+    form.classList.remove("active");
+    cancelBtn.style.color = "#ff3d00";
+    navbar.style.width = "100%";
+  }
+  searchBtn.onclick = ()=>{
+    form.classList.add("active");
+    searchBtn.classList.add("hide");
+    cancelBtn.classList.add("show");
+  }
+</script>
 
     

@@ -20,7 +20,7 @@
 .prompt_content h2
 {
   margin-bottom: 40px;
-  font-size: 34px;
+  font-size: 32px;
   font-weight: 600;
 }
 
@@ -29,8 +29,8 @@
     color:rgb(52, 58, 84);
     background-color:rgba(255,255,255, 0.9);
     text-decoration: none;
-    padding: 12px 35px 15px 35px;
-    font-size: 23px;
+    padding: 12px 35px 14px 35px;
+    font-size: 20px;
     font-weight: 600;
     border:2px solid rgb(32, 38, 64);
     border-radius: 30px;

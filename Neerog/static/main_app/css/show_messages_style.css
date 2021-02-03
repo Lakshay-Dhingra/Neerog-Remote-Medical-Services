@@ -1,5 +1,19 @@
 /* For displaying messages */
 .mymessage
 {
-    background-color: rgba(100, 100, 255, 0.6);
+    background-color: rgba(235, 59, 0, 0.9);
+    position: fixed;
+    bottom: 0px;
+    right:2px;
+    width: 450px;
+    z-index: 100;
+}
+
+@media (max-width: 800px)
+{
+    .mymessage
+    {
+        width:100%;
+        bottom: -15px;
+    }
 }

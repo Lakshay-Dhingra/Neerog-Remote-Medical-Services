@@ -1,11 +1,12 @@
 from django.contrib.auth.models import User,auth
-from main_app.models import UserDetails
+from main_app.models import UserDetails, Doctor
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from . import tokens
+import sys
 
 def sendConfirmEmail(user,name,userEmail):
     template=render_to_string('accounts/email_template.html',
@@ -51,6 +52,24 @@ def register(name,user_type,password,email):
         sendConfirmEmail(user,name,email)
         return True
     except:
+        print(sys.exc_info()[0], "occurred!")
+        return False
+
+def registerDoctor(uid, phone, is_independent, gender, experience, specialization, institution, proof):
+    try:
+        clinic_name = ""
+        if(is_independent == "True"):
+            is_independent = True
+            clinic_name = institution
+        else:
+            is_independent = False
+            # hospitalid = hospital_object
+        userobj=UserDetails.objects.get(userid=uid-1)
+        doctor=Doctor(doctorid=userobj, phone=phone, is_independent=is_independent, gender=gender, experience=experience, specialization=specialization, certificate=proof, clinic_name=clinic_name)
+        doctor.save()
+        return True
+    except:
+        print(sys.exc_info())
         return False
 
 def hasRegisteredEmail(email):
@@ -60,9 +79,12 @@ def hasRegisteredEmail(email):
     except:
         return False
 
-def hasRegisteredPhone(phone):
+def hasRegisteredPhone(phone, user_type):
     try:
-        UserDetails.objects.get(phone=phone)
-        return True
+        if user_type=="doctor":
+            Doctor.objects.get(phone=phone)
+            return True
+        else:
+            return False
     except:
         return False

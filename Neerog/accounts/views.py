@@ -13,6 +13,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 def logout(request):
     auth.logout(request)
+    messages.info(request,"Logged Out Successfully!")
     return redirect("/")
 
 def signin(request):
@@ -21,9 +22,12 @@ def signin(request):
 def signup(request):
     return render(request,'accounts/signup.html')
 
+def signup_doctor(request):
+    return render(request,'accounts/signup_doctor.html')
+
 def login(request):
-    email=request.POST['email'];
-    password=request.POST['password'];
+    email=request.POST['email']
+    password=request.POST['password']
 
     #Validation checks
     if(len(email)>254):
@@ -48,7 +52,7 @@ def register(request):
     password=request.POST['password']
     password2=request.POST['password2']
     email=request.POST['email']
-    # phone=request.POST['phone']
+
 
     #Validation checks
     if(len(user_type)==0):
@@ -61,10 +65,6 @@ def register(request):
         messages.info(request,"Invalid Email! Email can't be empty.")
     elif(len(email)>254):
         messages.info(request,"Invalid Email! Email can't have more than 254 characters.")
-    # elif(len(phone)==0):
-    #     messages.info(request,"Invalid Phone Number! Phone Number can't be empty.")
-    # elif(len(phone)>10):
-    #     messages.info(request,"Invalid Phone Number! Phone Number can't have more than 10 characters.")
     elif(len(password)<8):
         messages.info(request,"Invalid Password! Password can't have less than 8 characters.")
     elif(len(password)>50):
@@ -84,6 +84,34 @@ def register(request):
             else:
                 messages.info(request,"Registeration Failed!")
     return redirect("/accounts/signup")
+
+def register_doctor(request):
+    phone=request.POST['phone']
+    is_independent=request.POST['is_independent']
+    gender=request.POST['gender']
+    experience=request.POST['experience']
+    specialization=request.POST['specialization']
+    institution=request.POST['institution']
+    proof=request.POST['proof']
+
+    #Validation checks
+    if(len(phone)==0):
+        messages.info(request,"Invalid Phone Number! Phone Number can't be empty.")
+    elif(len(phone)>10):
+        messages.info(request,"Invalid Phone Number! Phone Number can't have more than 10 characters.")
+    elif(authenticate.hasRegisteredPhone(phone, "doctor")):
+        messages.info(request,'This Phone is already registered!')
+    else:
+        if(request.user.is_authenticated):
+            uid=request.user.id
+            if(authenticate.registerDoctor(uid, int(phone), is_independent, gender, int(experience), specialization, institution, proof)):
+                messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
+                return redirect("/")
+            else:
+                messages.info(request,"Registeration Failed!")
+        else:
+            messages.info(request,"Please Login Before Submitting Details!")
+    return redirect("/accounts/signup/doctor")
 
 def activate(request, uidb64, token):
     User = get_user_model()

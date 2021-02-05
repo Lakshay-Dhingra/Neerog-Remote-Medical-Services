@@ -91,7 +91,7 @@ class Hospital(models.Model):
 #Doctor will be deleted if its Userid is deleted in UserDetails
 class Doctor(models.Model):
     # doctorid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
-    doctorid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
+    doctorid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True, related_name="Doctor_set")
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
     specialization = models.CharField(max_length=100)
     about=models.TextField(max_length=500)
@@ -114,7 +114,7 @@ class Doctor(models.Model):
     hospitalid = models.ForeignKey(Hospital, models.SET_NULL, blank=True, null=True)
     clinic_name = models.CharField(max_length=100)
     clinic_photo = models.ImageField(upload_to="clinic_photo/", null=True)
-    is_independent = models.CharField(max_length=10, default="Yes")
+    is_independent = models.BooleanField()
     verified = models.CharField(max_length=10, default="No")
 
     def __str__(self):

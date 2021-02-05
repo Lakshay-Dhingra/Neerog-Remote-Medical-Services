@@ -1,0 +1,167 @@
+{% load static %}
+<!-- Signin or Login Page -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    {% include 'main_app/common_meta.html' %}
+
+    <!-- Link or CSS Tags -->
+    {% include 'main_app/common_css.html' %}
+    <link rel="stylesheet" href="{% static 'accounts/css/signup_style.css' %}">
+
+    <title>Sign Up - Neerog</title>
+
+</head>
+<body>
+
+    <!-- Messages -->
+    {% include 'main_app/show_messages.html' %}
+
+    <!-- Navbar -->
+    {% include 'main_app/navbar.html' %}
+
+    <form method="post" class="login-form" action="{% url 'register_doctor' %}">
+    {% csrf_token %}
+    <h1>Sign Up - Doctor</h1>
+
+    <div class="textb">
+        <select name="is_independent" class="is_independent" required>
+            <option value="True" selected>I'm Independent or Own A Clinic</option>
+            <option value="False">I Work With A Hospital</option>
+        </select>
+    </div>
+
+    <div class="textb">
+        <input type="text" name="phone" required>
+        <div class="placeholder">Phone or Mobile</div>
+    </div>
+
+    <div class="textb" style="width: 48%; float: left; height: 70px; ">
+        <select name="gender" class="gender" required style="height: 70px;">
+            <option value="Unknown" selected>Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Trans">Transgender</option>
+        </select>
+    </div>
+
+    <div class="textb" style="width: 48%; float: right;">
+        <input type="text" name="experience" required>
+        <div class="placeholder">Years Of Experience</div>
+    </div>
+
+    <div class="textb" style="clear: left;">
+        <input type="text" name="specialization" required>
+        <div class="placeholder">Specialized In</div>
+    </div>
+
+    <div class="textb">
+        <input type="text" name="institution" required>
+        <div class="placeholder" id="institution_placeholder">Clinic Name</div>
+    </div>
+
+    <div class="textb">
+        <label for="proof" class="file_label">Proof of claimed qualification</label>
+        <input type="file" class="file_input" name="proof" required>
+    </div>
+    
+
+    <button class="btn" disabled>Submit</button>
+    </form>
+
+    <script>
+
+    function validateNumber(mynumber) 
+    {
+        if (/^\d+$/.test(mynumber))
+        {
+            return (true)
+        }
+        return (false)
+    }
+
+    function validatePhone(myphone)
+    {
+        if(myphone.length == 10 && validateNumber(myphone) == true)
+        {
+            return (true)
+        }
+        return (false)
+    }
+
+    function validateExperience(myexp)
+    {
+        if(myexp.length < 3 && myexp.length > 0 && validateNumber(myexp) == true)
+        {
+            return (true)
+        }
+        return (false)
+    }
+
+    function validateFile(filePath)
+    {
+        var allowedExtensions =  /(\.doc|\.docx|\.odt|\.pdf|\.jpeg|\.jpg|\.rtf|\.png)$/i;     
+        if (!allowedExtensions.exec(filePath)) 
+        { 
+            filePath = '';
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    var fields = document.querySelectorAll(".textb input");
+    var btn = document.querySelector(".btn");
+
+    phone=fields[0];
+    phone.addEventListener("keyup",check);
+
+    specialization=fields[2];
+    specialization.addEventListener("keyup",check);
+
+    experience=fields[1];
+    experience.addEventListener("keyup",check);
+
+    institution=fields[3];
+    institution.addEventListener("keyup",check);
+
+    var fileInput =  document.querySelector('.file_input');
+    fileInput.addEventListener("change",check);
+
+    function check(){
+        if(validatePhone(phone.value) == true && validateExperience(experience.value) == true && specialization.value != "" && institution.value != "" && validateFile(fileInput.value))
+        {
+            btn.disabled = false;
+        }
+        else
+        {
+            btn.disabled = true;
+        }         
+    }
+
+    var is_independent=document.querySelector(".textb .is_independent");
+    is_independent.addEventListener("click",changeInstitute);
+
+    function changeInstitute()
+    {
+        if(is_independent.value == 'True')
+        {
+            document.getElementById("institution_placeholder").innerHTML = "Clinic Name";
+        }
+        else
+        {
+            document.getElementById("institution_placeholder").innerHTML = "Hospital Id";
+        }
+    } 
+
+
+    </script>
+
+    <!-- JavaScript -->
+    {% include 'main_app/common_js.html' %}
+</body>
+</html> 

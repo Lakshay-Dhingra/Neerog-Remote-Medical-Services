@@ -6,6 +6,7 @@
     color:white;
     display: table;
     font-family: 'Noto Serif';
+    z-index: 0;
 }
 
 .prompt_content

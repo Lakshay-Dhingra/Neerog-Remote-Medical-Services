@@ -1,7 +1,7 @@
 /* For displaying messages */
 .mymessage
 {
-    background-color: rgba(235, 59, 0, 0.9);
+    background-color: orangered;
     position: fixed;
     bottom: 0px;
     right:2px;

@@ -22,7 +22,7 @@
     <!-- Navbar -->
     {% include 'main_app/navbar.html' %}
 
-    <form method="post" class="login-form" action="{% url 'register_doctor' %}">
+    <form method="post" class="login-form" action="{% url 'register_patient' %}">
     {% csrf_token %}
     <h1>Register - User</h1>
 
@@ -65,12 +65,12 @@
 
     <div class="textb" style="clear: left;">
         <input type="text" name="disability" required>
-        <div class="placeholder">Disability or Chronic Illness (If Any)</div>
+        <div class="placeholder">Chronic Illness (Enter 'No' Otherwise)</div>
     </div>
 
     <div class="textb">
         <label for="profilepic" class="file_label">Profile Picture (Optional)</label>
-        <input type="file" class="file_input" name="profilepic">
+        <input type="file" class="file_input" name="profilepic" onchange="return validateFile()">
     </div>
     
 
@@ -106,12 +106,15 @@
         return (false)
     }
 
-    function validateFile(filePath)
+    function validateFile()
     {
+        var fileInput = document.querySelector('.file_input'); 
+        var filePath = fileInput.value;
         var allowedExtensions =  /(\.jpeg|\.jpg|\.gif|\.png)$/i;     
         if (!allowedExtensions.exec(filePath)) 
         { 
-            filePath = '';
+            fileInput.value = '';
+            //Invalid File
             return false;
         }
         else
@@ -123,19 +126,23 @@
     var fields = document.querySelectorAll(".textb input");
     var btn = document.querySelector(".btn");
 
-    phone=fields[0];
+    var country = document.querySelectorAll(".textb select")[0];
+    country.addEventListener("click",check);
+
+    var city = document.querySelectorAll(".textb select")[1];
+    city.addEventListener("click",check);
+
+    var phone=fields[0];
     phone.addEventListener("keyup",check);
 
-    age=fields[1];
+    var age=fields[1];
     age.addEventListener("keyup",check);
 
-    var fileInput =  document.querySelector('.file_input');
-    fileInput.addEventListener("change",check);
+    var disability=fields[2];
+    disability.addEventListener("keyup",check);
 
     function check(){
-        //add country and city also in check()
-        //add file validate on selection... 
-        if(validatePhone(phone.value) == true && validateAge(age.value) == true)
+        if(validatePhone(phone.value) == true && validateAge(age.value) == true && country.value != "" && city.value != "" && disability.value != "")
         {
             btn.disabled = false;
         }

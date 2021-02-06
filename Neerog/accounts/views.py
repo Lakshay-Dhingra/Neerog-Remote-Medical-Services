@@ -138,6 +138,34 @@ def register_doctor(request):
             messages.info(request,"Please Login Before Submitting Details!")
     return redirect("/accounts/signup/doctor")
 
+def register_patient(request):
+    phone=request.POST['phone']
+    country=request.POST['country']
+    city=request.POST['city']
+    gender=request.POST['gender']
+    age=request.POST['age']
+    disability=request.POST['disability']
+    profilepic=request.POST['profilepic']
+
+    #Validation checks
+    if(len(phone)==0):
+        messages.info(request,"Invalid Phone Number! Phone Number can't be empty.")
+    elif(len(phone)>10):
+        messages.info(request,"Invalid Phone Number! Phone Number can't have more than 10 characters.")
+    elif(authenticate.hasRegisteredPhone(phone, "Patient")):
+        messages.info(request,'This Phone is already registered!')
+    else:
+        if(request.user.is_authenticated):
+            uid=request.user.id
+            if(authenticate.registerPatient(uid, int(phone), country, city, gender, int(age), disability, profilepic)):
+                messages.info(request,'Registeration Successful! Your account is fully activated.')
+                return redirect("/")
+            else:
+                messages.info(request,"Registeration Failed!")
+        else:
+            messages.info(request,"Please Login Before Submitting Details!")
+    return redirect("/accounts/signup/doctor")
+
 def activate(request, uidb64, token):
     User = get_user_model()
     try:

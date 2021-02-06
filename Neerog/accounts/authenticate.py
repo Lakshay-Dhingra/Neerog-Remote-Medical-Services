@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User,auth
-from main_app.models import UserDetails, Doctor
+from main_app.models import UserDetails, Doctor, Patient
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -26,7 +26,7 @@ def isVerifiedUser(uid):
             return False
     elif(user_type == "Patient"):
         try:
-            patientobj=Patient.objects.get(doctorid=uid-1)
+            patientobj=Patient.objects.get(patientid=uid-1)
             return True
         except:
             return False
@@ -96,6 +96,16 @@ def registerDoctor(uid, phone, is_independent, gender, experience, specializatio
         print(sys.exc_info())
         return False
 
+def registerPatient(uid, phone, country, city, gender, age, disability, profilepic):
+    try:
+        userobj=UserDetails.objects.get(userid=uid-1)
+        patient=Patient(patientid=userobj, phone=phone, country=country, city=city, gender=gender, age=age, disability=disability, profile_pic=profilepic)
+        patient.save()
+        return True
+    except:
+        print(sys.exc_info())
+        return False
+
 def hasRegisteredEmail(email):
     try:
         UserDetails.objects.get(email=email)
@@ -107,6 +117,9 @@ def hasRegisteredPhone(phone, user_type):
     try:
         if user_type=="Doctor":
             Doctor.objects.get(phone=phone)
+            return True
+        elif user_type=="Patient":
+            Patient.objects.get(phone=phone)
             return True
         else:
             return False

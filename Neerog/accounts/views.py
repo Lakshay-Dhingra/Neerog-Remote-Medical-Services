@@ -22,8 +22,33 @@ def signin(request):
 def signup(request):
     return render(request,'accounts/signup.html')
 
+def signup_redirect(request):
+    if(authenticate.getUserType(request.user.id) == "Doctor"):
+        return redirect("/accounts/signup/doctor")
+    elif(authenticate.getUserType(request.user.id) == "Patient"):
+        return redirect("/accounts/signup/patient")
+
 def signup_doctor(request):
-    return render(request,'accounts/signup_doctor.html')
+    if(authenticate.getUserType(request.user.id) == "Doctor"):
+        if(authenticate.isVerifiedUser(request.user.id)):
+            messages.info(request,"You're Details Have Already Been Submitted!")
+            return redirect("/")
+        else:
+            return render(request,'accounts/signup_doctor.html')
+    else:
+        messages.info(request,"You Can't Access This Page!")
+        return redirect("/")
+
+def signup_patient(request):
+    if(authenticate.getUserType(request.user.id) == "Patient"):
+        if(authenticate.isVerifiedUser(request.user.id)):
+            messages.info(request,"You're Details Have Already Been Submitted!")
+            return redirect("/")
+        else:
+            return render(request,'accounts/signup_patient.html')
+    else:
+        messages.info(request,"You Can't Access This Page!")
+        return redirect("/")
 
 def login(request):
     email=request.POST['email']
@@ -99,7 +124,7 @@ def register_doctor(request):
         messages.info(request,"Invalid Phone Number! Phone Number can't be empty.")
     elif(len(phone)>10):
         messages.info(request,"Invalid Phone Number! Phone Number can't have more than 10 characters.")
-    elif(authenticate.hasRegisteredPhone(phone, "doctor")):
+    elif(authenticate.hasRegisteredPhone(phone, "Doctor")):
         messages.info(request,'This Phone is already registered!')
     else:
         if(request.user.is_authenticated):

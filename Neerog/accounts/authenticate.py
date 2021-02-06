@@ -8,6 +8,30 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from . import tokens
 import sys
 
+
+def getUserType(uid):
+    userobj=UserDetails.objects.get(userid=uid-1)
+    return str(userobj.user_type)
+
+def isVerifiedUser(uid):
+    user_type=getUserType(uid)
+    if(user_type == "Doctor"):
+        try:
+            doctorobj=Doctor.objects.get(doctorid=uid-1)
+            if(str(doctorobj.verified) == "No"):
+                return False
+            else:
+                return True
+        except:
+            return False
+    elif(user_type == "Patient"):
+        try:
+            patientobj=Patient.objects.get(doctorid=uid-1)
+            return True
+        except:
+            return False
+
+
 def sendConfirmEmail(user,name,userEmail):
     template=render_to_string('accounts/email_template.html',
         {
@@ -81,7 +105,7 @@ def hasRegisteredEmail(email):
 
 def hasRegisteredPhone(phone, user_type):
     try:
-        if user_type=="doctor":
+        if user_type=="Doctor":
             Doctor.objects.get(phone=phone)
             return True
         else:

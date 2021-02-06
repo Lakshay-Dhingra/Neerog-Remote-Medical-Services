@@ -1,0 +1,153 @@
+{% load static %}
+<!-- Signin or Login Page -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    {% include 'main_app/common_meta.html' %}
+
+    <!-- Link or CSS Tags -->
+    {% include 'main_app/common_css.html' %}
+    <link rel="stylesheet" href="{% static 'accounts/css/signup_style.css' %}">
+
+    <title>Sign Up - Neerog</title>
+
+</head>
+<body>
+
+    <!-- Messages -->
+    {% include 'main_app/show_messages.html' %}
+
+    <!-- Navbar -->
+    {% include 'main_app/navbar.html' %}
+
+    <form method="post" class="login-form" action="{% url 'register_doctor' %}">
+    {% csrf_token %}
+    <h1>Register - User</h1>
+
+    <div class="textb" style="width: 48%; float: left; height: 60px; ">
+        <select name="country" class="country" required style="height: 60px;">
+            <option value="">Select Country</option>
+            <option value="India">India</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div class="textb" style="width: 48%; float: right; height: 60px; ">
+        <select name="city" class="city" required style="height: 60px;">
+            <option value="">Select City</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Other">Mumbai</option>
+            <option value="Other">Kolkata</option>
+            <option value="Other">Chennai</option>
+        </select>
+    </div>
+
+    <div class="textb" style="clear: left;">
+        <input type="text" name="phone" required>
+        <div class="placeholder">Phone or Mobile</div>
+    </div>
+
+    <div class="textb" style="width: 48%; float: left; height: 70px; ">
+        <select name="gender" class="gender" required style="height: 70px;">
+            <option value="Unknown" selected>Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Trans">Transgender</option>
+        </select>
+    </div>
+
+    <div class="textb" style="width: 48%; float: right;">
+        <input type="text" name="age" required>
+        <div class="placeholder">Age</div>
+    </div>
+
+    <div class="textb" style="clear: left;">
+        <input type="text" name="disability" required>
+        <div class="placeholder">Disability or Chronic Illness (If Any)</div>
+    </div>
+
+    <div class="textb">
+        <label for="profilepic" class="file_label">Profile Picture (Optional)</label>
+        <input type="file" class="file_input" name="profilepic">
+    </div>
+    
+
+    <button class="btn" disabled>Submit</button>
+    </form>
+
+    <script>
+
+    function validateNumber(mynumber) 
+    {
+        if (/^\d+$/.test(mynumber))
+        {
+            return (true)
+        }
+        return (false)
+    }
+
+    function validatePhone(myphone)
+    {
+        if(myphone.length == 10 && validateNumber(myphone) == true)
+        {
+            return (true)
+        }
+        return (false)
+    }
+
+    function validateAge(myexp)
+    {
+        if(myexp.length < 3 && myexp.length > 0 && validateNumber(myexp) == true)
+        {
+            return (true)
+        }
+        return (false)
+    }
+
+    function validateFile(filePath)
+    {
+        var allowedExtensions =  /(\.jpeg|\.jpg|\.gif|\.png)$/i;     
+        if (!allowedExtensions.exec(filePath)) 
+        { 
+            filePath = '';
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    var fields = document.querySelectorAll(".textb input");
+    var btn = document.querySelector(".btn");
+
+    phone=fields[0];
+    phone.addEventListener("keyup",check);
+
+    age=fields[1];
+    age.addEventListener("keyup",check);
+
+    var fileInput =  document.querySelector('.file_input');
+    fileInput.addEventListener("change",check);
+
+    function check(){
+        //add country and city also in check()
+        //add file validate on selection... 
+        if(validatePhone(phone.value) == true && validateAge(age.value) == true)
+        {
+            btn.disabled = false;
+        }
+        else
+        {
+            btn.disabled = true;
+        }         
+    }
+
+    </script>
+
+    <!-- JavaScript -->
+    {% include 'main_app/common_js.html' %}
+</body>
+</html> 

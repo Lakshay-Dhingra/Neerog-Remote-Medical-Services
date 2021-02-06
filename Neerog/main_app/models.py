@@ -28,7 +28,6 @@ class UserDetails(models.Model):
     
 #Patient will be deleted if its Userid is deleted in UserDetails
 class Patient(models.Model):
-    # patientid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
     patientid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
     about=models.TextField(max_length=500)
@@ -61,7 +60,6 @@ class Patient(models.Model):
     ]
     blood_group=models.CharField(max_length=5, choices=BLOOD_CHOICES, default=DEFAULT_BLOOD)
     disability=models.CharField(max_length=50, default='None')
-
     profile_pic=models.ImageField(upload_to="patient_profile_photo/", null=True)
 
     def __str__(self):

@@ -31,13 +31,13 @@ nav .logo{
 nav .logo a
 {
   text-decoration: none;
-  color: rgb(37, 69, 69);
+  color:  rgb(27, 59, 59);
 }
 
 nav .logo a:hover
 {
   text-decoration: none;
-  color: rgba(30, 30, 30);
+  color: rgba(20, 20, 20);
 }
 
 nav .nav-items{
@@ -50,13 +50,13 @@ nav .nav-items li{
   padding: 0 15px;
 }
 nav .nav-items li a{
-  color: rgb(37, 69, 69);
+  color: rgb(27, 59, 59);
   font-size: 20px;
   font-weight: 600;
   text-decoration: none;
 }
 nav .nav-items li a:hover{
-  color:  rgba(30, 30, 30);
+  color:  rgba(20, 20, 20);
 }
 nav form{
   display: flex;
@@ -79,7 +79,7 @@ nav form .search-data{
 }
 nav form .search-data::placeholder
 {
-  color: rgb(37, 69, 69);
+  color: rgb(27, 59, 59);
   opacity: 1;
 }
 nav form button{

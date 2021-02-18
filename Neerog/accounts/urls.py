@@ -5,6 +5,7 @@ urlpatterns = [
     path('signin/', views.signin, name='signin'),
     path('signup/', views.signup, name='signup'),
     path('signup/doctor/', views.signup_doctor, name='signup_doctor'),
+    path('signup/hospital/', views.signup_hospital, name='signup_hospital'),
     path('signup/patient/', views.signup_patient, name='signup_patient'),
     path('signup/redirect/', views.signup_redirect, name='signup_redirect'),
     path('login/', views.login, name='login'),

@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User,auth
-from main_app.models import UserDetails, Doctor, Patient
+from main_app.models import UserDetails, Doctor, Patient, Hospital
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -24,12 +24,22 @@ def isVerifiedUser(uid):
                 return True
         except:
             return False
+    elif(user_type == "Hospital"):
+        try:
+            hospitalobj=Hospital.objects.get(hospitalid=uid-1)
+            if(str(hospitalobj.verified) == "No"):
+                return False
+            else:
+                return True
+        except:
+            return False
     elif(user_type == "Patient"):
         try:
             patientobj=Patient.objects.get(patientid=uid-1)
             return True
         except:
             return False
+
 
 
 def sendConfirmEmail(user,name,userEmail):

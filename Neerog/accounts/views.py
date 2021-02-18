@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User,auth
 from . import tokens
 from . import authenticate
-
+from main_app import medical_speciality
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes
@@ -34,7 +34,18 @@ def signup_doctor(request):
             messages.info(request,"You're Details Have Already Been Submitted!")
             return redirect("/")
         else:
-            return render(request,'accounts/signup_doctor.html')
+            return render(request,'accounts/signup_doctor.html',{'specialities':medical_speciality.get_specialities()})
+    else:
+        messages.info(request,"You Can't Access This Page!")
+        return redirect("/")
+
+def signup_hospital(request):
+    if(authenticate.getUserType(request.user.id) == "Hospital"):
+        if(authenticate.isVerifiedUser(request.user.id)):
+            messages.info(request,"You're Details Have Already Been Submitted!")
+            return redirect("/")
+        else:
+            return render(request,'accounts/signup_hospital.html')
     else:
         messages.info(request,"You Can't Access This Page!")
         return redirect("/")

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <title>Book Appointment</title>
+     {% include "main_app/header.html" %}
+    <link rel="stylesheet" href="{% static 'Hospital_Selection.css' %}">
+    <style>
+     .card
+     {
+       margin-top:10px;
+     }
+     card:hover
+     {
+        color:green;
+     }
+    </style>
+    <script>
+        $(document).ready(function(){
+        $(".btn").on("click",function(){
+        var id1=$(this).attr('id');
+        alert(id1)
+        $("#mode").val(id1);
+        });
+        });
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"></image>
+        <h3>{{ Hospital_Details.hospitalid.name }}</h3>
+    </div>
+    <div class="jumbotron">
+        {% if list_of_Doctors|length > 0 %}
+    <h3 style="color:#3291a8;">Select Doctor </h3>
+    <div class="row">
+        {% for i in list_of_Doctors %}
+             <div class="col-lg-4 col-md-2">
+                 <div class="card">
+                     <center>
+            <image src="{{ i.profile_pic.url }}" width="200px" height="200px"></image></center>
+            <table class="table-stripped">
+                <tr>
+                    <th>Name:</th>
+                    <td>{{ i.doctorid.name }}</td>
+                </tr>
+                <tr>
+                    <th>Speciality:</th>
+                    <td>{{ i.specialization }}</td>
+
+                </tr>
+                <tr>
+                    <th>Hospital Name:</th>
+                    <td>{{ i.hospitalid.hospitalid.name }}</td>
+                </tr>
+                <tr>
+                    <form action="{% url 'Appointment_Details_Submission' %}"  id="form1" method="post">
+                        {% csrf_token %}
+                        <input type="text" hidden value="{{ i.doctorid }}" name="doctorid">
+                        <input type="text" hidden value="" name="mode" id="mode">
+                    <th><button class="btn btn-primary" id="Online" type="submit">Book Online Appointment</button></th>
+                <td><button class="btn btn-primary" id="Remote" type="submit">Book Remote Appointment</button></td>
+                </form>
+                </tr>
+            </table>
+        </div>
+             </div>
+        {% endfor %}
+    </div>
+        {% else %}
+        <center>
+        <h3 style="color:#3291a8;">No Doctors Available</h3></center>
+        {% endif %}
+</div>
+</div>
+</body>
+</html>

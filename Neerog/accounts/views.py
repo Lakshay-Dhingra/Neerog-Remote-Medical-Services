@@ -13,6 +13,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 def logout(request):
     auth.logout(request)
+    for key in request.session.keys():
+        del request.session[key]
     messages.info(request,"Logged Out Successfully!")
     return redirect("/")
 
@@ -66,6 +68,7 @@ def login(request):
     else:
         if(authenticate.login(request, email, password)):
             messages.info(request,'Login Successful!')
+            request.session['email']=email
             return redirect("/")
         else:
             messages.info(request,"Wrong Email or password!")

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+     {% include "main_app/header.html" %}
+    <title>Receipt</title>
+</head>
+<body class="jumbotron" onkeydown="return (event.keyCode != 116)">
+<h5 style="text-align:center;color:#3291a8;">Receipt</h5>
+<div class="card">
+        <table class="table table-striped container" style="margin-top:30px">
+              <tr>
+                <th>Appointment Id</th>
+                  <td>{{ Appointment_Details.appointmentid }}</td></tr>
+              <tr>
+              <tr>
+                <th>Patient Name</th>
+                  <td>{{ Appointment_Details.patientname }}</td></tr>
+              <tr>
+                  <th>Doctor Email</th>
+              <td>{{ Appointment_Details.doctoremail }}</td></tr>
+             <tr>
+            <th>Appointment Date</th>
+                 <td>{{ Appointment_Details.appointment_date }}</td>
+              </tr>
+            {% if Appointment_Details.meeting_url  %}
+               <tr>
+            <th>Meeting Url</th>
+                 <td>{{ Appointment_Details.meeting_url }}</td>
+              </tr>
+            {% endif %}
+             <tr>
+            <th>Appointment Time</th>
+                 <td>{{ Appointment_Details.appointment_time }}</td>
+              </tr>
+             <tr>
+            <th>Mode</th>
+                 <td>{{ Appointment_Details.mode_of_meeting }}</td>
+              </tr>
+            <tr>
+            <th>Fee</th>
+                 <td>{{ Appointment_Details.amount_paid }}</td>
+              </tr>
+  </table>
+    <center>
+        <button type="button" class="btn btn-success"onclick="window.print()">Print Receipt</button>
+    </center>
+    </div>
+
+
+</body>
+</html>

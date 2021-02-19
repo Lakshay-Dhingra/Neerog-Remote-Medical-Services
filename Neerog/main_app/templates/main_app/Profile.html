@@ -82,33 +82,39 @@
         <table class="table table-striped" style="margin-top:30px">
             <thead style="background-color:lightgray">
               <tr>
-                <th>Username</th>
                 <th>Appointment Id</th>
-                <th>Email Id</th>
+                <th>Patient Name</th>
+                <th>Patient Email Id</th>
+                <th>Appointment Date</th>
                 <th>Appointment Time</th>
-                <th>Mode</th>
+                <th>Mode Of Meeting</th>
                 <th>Meeting url</th>
+                  <th>Prescription</th>
               </tr>
-            </thead>
-        <tbody>
+           <tbody>
+        {% for i,j in list_of_Appointments.items %}
           <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-              <td>John</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
+              <td>{{ i.appointmentid }}</td>
+            <td>{{ i.patientname }}</td>
+            <td>{{ i.patientemail }}</td>
+              <td>{{ i.appointment_date }}</td>
+              <td>{{ i.appointment_time }}</td>
+            <td>{{ i.mode_of_meeting }}</td>
+            <td>{{ i.meeting_url }}</td>
+            <td>
+                {% ifequal j "Upload Prescription" %}
+                <form action="{% url 'prescription' %}" method="post">
+                    {% csrf_token %}
+                    <input type="email" name="Email" hidden value="{{ i.patientemail }}">
+                     <button type="submit" class="btn btn-success"> Upload Prescription</button>
+                   </form>
+                {% else %}
+                <button class="btn btn-success"><a href='{{ j.Prescription.url }}' style="color:white;" download> Download Prescription</a></button>
+               {% endifequal %}
+
+            </td>
           </tr>
-          <tr>
-            <td>Mary</td>
-            <td>Moe</td>
-            <td>mary@example.com</td>
-          </tr>
-          <tr>
-            <td>July</td>
-            <td>Dooley</td>
-            <td>july@example.com</td>
-          </tr>
+        {% endfor %}
         </tbody>
   </table>
     </div>
@@ -128,17 +134,26 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <img src="{% static 'image1.jpeg' %}" id="profile_pic">
+                    <img src="{{ User_Details.profile_pic.url }}" id="profile_pic">
                 </div>
         <div class="col-md-6">
         <table class="table table-striped" style="margin-top:50px;">
               <tr>
                 <th>Username</th>
-                  <td>Abhishek</td></tr>
+                  <td>{{ User_Details.doctorid.name }} </td></tr>
                 <tr><th>Email Id</th>
-                    <td>a$bjbmbm</td></tr>
-                <tr><th>Mode</th>
-                <td>online</td>
+                    <td>{{ User_Details.doctorid.email }}</td></tr>
+                <tr>
+                    <th>Specilaisation</th>
+                <td>{{ User_Details.specialization }}</td>
+              </tr>
+            <tr>
+                    <th>Phone</th>
+                <td>{{ User_Details.phone }}</td>
+              </tr>
+            <tr>
+                    <th>Address</th>
+                <td>{{ User_Details.address }}</td>
               </tr>
   </table>
     </div>

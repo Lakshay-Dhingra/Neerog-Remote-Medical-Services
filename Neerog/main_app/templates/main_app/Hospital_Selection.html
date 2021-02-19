@@ -16,8 +16,6 @@
 <div class="card-body" id="div_form" style="margin-top:-250px;position:absolute;">
 <form action="{% url 'list_of_hospital' %}" method="post">
    {% csrf_token %}
-
-
 {% if list_of_countries|length > 0 %}
     <select id="countries" class="form_select"  name="country">
      <option value="Select">Select Country</option>
@@ -30,7 +28,6 @@
     <select id="states" class="form_select" name="state">
             <option value="Select">Select State</option>
     </select>
-
     <select id="cities" class="form_select" name="city">
         <option value="Select">Select City</option>
     </select>
@@ -40,132 +37,37 @@
 </form>
 </div>
 <div class="container-fluid">
+    {% if list_of_hospitals|length > 0 %}
 <div class="row" style="margin-top:-100px;">
+    {% for i in list_of_hospitals %}
     <div class="col-lg-4 col-xs-1 ">
         <div class="card">
-            <image src="{% static 'image2.jpeg' %}" class="img1"></image>
+            <image src="{{ i.pic1.url }}" class="img1" alt="{{ i.hospitalid.name }}"></image>
             <table class="table-stripped">
                 <tr>
                     <th>Name:</th>
-                    <td>Aggarwal Hospital</td>
+                    <td>{{ i.hospitalid.name }}</td>
                 </tr>
                 <tr>
                     <th>City:</th>
-                    <td>Kurukshetra</td>
+                    <td>{{ i.city }}</td>
 
                 </tr>
-                <tr>
-                    <th>Price:</th>
-                    <td>250</td>
-                </tr>
             </table>
-            <button class="btn btn-primary">Apply Now</button>
+            <button class="btn btn-primary" onclick="location.href='{% url 'Selected' hospital_id=i.hospitalid  %}'">Apply Now</button>
         </div>
     </div>
-    <div class="col-lg-4 col-xs-1">
-        <div class="card">
-            <image src="{% static 'image2.jpeg' %}" class="img1"></image>
-            <table class="table-stripped">
-                <tr>
-                    <th>Name:</th>
-                    <td>Aggarwal Hospital</td>
-                </tr>
-                <tr>
-                    <th>City:</th>
-                    <td>Kurukshetra</td>
-                </tr>
-                <tr>
-                    <th>Price:</th>
-                    <td>250</td>
-                </tr>
-            </table>
-            <button class="btn btn-primary">Apply Now</button>
+    {% endfor %}
         </div>
-    </div>
-    <div class="col-lg-4 col-xs-1 col-md-4">
-        <div class="card">
-            <image src="{% static 'image2.jpeg' %}" class="img1"></image>
-            <table class="table-stripped">
-                <tr>
-                    <th>Name:</th>
-                    <td>Aggarwal Hospital</td>
-                </tr>
-                <tr>
-                    <th>City:</th>
-                    <td>Kurukshetra</td>
-                </tr>
-                <tr>
-                    <th>Price:</th>
-                    <td>250</td>
-                </tr>
-            </table>
-            <button class="btn btn-primary">Apply Now</button>
-        </div>
-    </div>
-</div>
-    <div class="row">
-    <div class="col-lg-4 col-xs-1 ">
-        <div class="card">
-            <image src="{% static 'image2.jpeg' %}" class="img1"></image>
-            <table class="table-stripped">
-                <tr>
-                    <th>Name:</th>
-                    <td>Aggarwal Hospital</td>
-                </tr>
-                <tr>
-                    <th>City:</th>
-                    <td>Kurukshetra</td>
 
-                </tr>
-                <tr>
-                    <th>Price:</th>
-                    <td>250</td>
-                </tr>
-            </table>
-            <button class="btn btn-primary">Apply Now</button>
-        </div>
+    {% else %}
+    <div>
+        <center>
+        No Hospitals Registered In this Area
+        </center>
     </div>
-    <div class="col-lg-4 col-xs-1">
-        <div class="card">
-            <image src="{% static 'image2.jpeg' %}" class="img1"></image>
-            <table class="table-stripped">
-                <tr>
-                    <th>Name:</th>
-                    <td>Aggarwal Hospital</td>
-                </tr>
-                <tr>
-                    <th>City:</th>
-                    <td>Kurukshetra</td>
-                </tr>
-                <tr>
-                    <th>Price:</th>
-                    <td>250</td>
-                </tr>
-            </table>
-            <button class="btn btn-primary">Apply Now</button>
-        </div>
+    {% endif %}
     </div>
-    <div class="col-lg-4 col-xs-1">
-        <div class="card">
-            <image src="{% static 'image2.jpeg' %}" class="img1"></image>
-            <table class="table-stripped">
-                <tr>
-                    <th>Name:</th>
-                    <td>Aggarwal Hospital</td>
-                </tr>
-                <tr>
-                    <th>City:</th>
-                    <td>Kurukshetra</td>
-                </tr>
-                <tr>
-                    <th>Price:</th>
-                    <td>250</td>
-                </tr>
-            </table>
-            <button class="btn btn-primary">Apply Now</button>
-        </div>
-    </div>
-</div>
-</div>
 </body>
+
 </html>

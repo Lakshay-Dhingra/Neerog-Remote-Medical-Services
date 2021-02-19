@@ -58,6 +58,7 @@ class Patient(models.Model):
         ('HH-ve', 'HH-ve'),
         (DEFAULT_BLOOD, 'Unknown'),
     ]
+    Prescription = models.ImageField(upload_to="Prescriptions/", null=True)
     blood_group=models.CharField(max_length=5, choices=BLOOD_CHOICES, default=DEFAULT_BLOOD)
     disability=models.CharField(max_length=50, default='None')
     profile_pic=models.ImageField(upload_to="patient_profile_photo/", null=True)
@@ -70,7 +71,7 @@ class Hospital(models.Model):
     # hospitalid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
     hospitalid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
-    speciality = models.CharField(max_length=100)
+    speciality = models.CharField(max_length=200)
     about=models.TextField(max_length=2000)
     country=models.CharField(max_length=50)
     city=models.CharField(max_length=50)
@@ -126,6 +127,7 @@ class TestingLab(models.Model):
     about=models.TextField(max_length=2000)
     country=models.CharField(max_length=50)
     city=models.CharField(max_length=50)
+    fee=models.IntegerField(default=100)
     address=models.CharField(max_length=200)
     year_established=models.PositiveIntegerField(validators=[MinValueValidator(1700)], null=True)
     tlab_logo=models.ImageField(upload_to="testing_lab_logo/", null=True)
@@ -149,12 +151,25 @@ class TestPricing(models.Model):
         unique_together = ('tlabid', 'testname',)
 
 # Even if user or doctor gets deleted, this record shouldn't be deleted...
-# class Appointments(models.Model):
-#     appointmentid = models.AutoField(primary_key=True)
-#     doctoremail = models.EmailField(max_length=254, unique=True, blank=False, null=False)
-#     patientemail = models.EmailField(max_length=254, unique=True, blank=False, null=False)
-#     hospitalemail = models.EmailField(max_length=254, unique=True)
-#     amount_paid = models.PositiveIntegerField(unique=True)
-#     appointment_date
-#     appointment_time
+class Appointments(models.Model):
+   appointmentid = models.AutoField(primary_key=True)
+   doctoremail = models.EmailField(max_length=254, blank=False, null=False)
+   patientname=models.CharField(max_length=254, blank=False, null=False)
+   patientemail = models.EmailField(max_length=254, blank=False, null=False)
+   hospitalemail = models.EmailField(max_length=254,null=True)
+   amount_paid = models.PositiveIntegerField()
+   appointment_date=models.CharField(max_length=254, blank=False, null=False)
+   appointment_time=models.TimeField(blank=False, null=False)
+   DEFAULT_MODE_OF_MEETING = 'Remote'
+   MEETING_CHOICES = [
+       ('Online', 'Online'),
+       ('Remote', 'Remote'),
+   ]
+   mode_of_meeting = models.CharField(max_length=10, choices=MEETING_CHOICES, default=DEFAULT_MODE_OF_MEETING)
+   meeting_url=models.CharField(max_length=300,unique=True,null=True)
 #     etc... complete according to requirements
+class Appointment_slots(models.Model):
+    doctorid=models.ForeignKey(Doctor, models.SET_NULL, blank=True, null=True)
+    date=models.DateTimeField()
+    Slots_Booked=models.IntegerField(default=0)
+

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     {% load static %}
+     {% include "main_app/header.html" %}
+     <script src="{% static 'Hospital_Selection.js' %}"></script>
+    <title>Appointment Booking</title>
+    <style>
+        h4{
+         color:#3291a8;
+         }
+    </style>
+    <script>
+        $(document).ready(function(){
+        $("#Speciality").on("change",function(){
+        var speciality=$("#Speciality").val();
+        if(speciality=="Select")
+             alert("Select Appropriate Speciality");
+        $.ajax(
+        {
+             type:"get",
+             url:"/book_appointment/speciality/",
+             data:
+             {
+              speciality:$("#Speciality").val(),
+              date:$("#Appointment_Date").val()
+             },
+             success:function(data)
+             {
+             var doctor_list=JSON.stringify(data);
+             var p=doctor_list.split(",");
+
+             $("#Select_Doctor").empty();
+             $("#Select_Doctor").append(`<option value="Select">
+                                       Select State
+                                  </option>`);
+
+             for(var i=0;i<p.length;i++)
+             {
+             var k=p[i].replace("\[","")
+             var n=k.replace("\]","")
+             var Text=n.slice(2,n.length-1)
+             var list=Text.split(":");
+             var optionText=list[0].slice(0,list[0].length-1);
+             var optionValue=list[1];
+
+
+                $("#Select_Doctor").append(`<option value="${optionValue}">
+                                       ${optionText}
+                                  </option>`);
+             }
+             }
+        });
+        });
+        });
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+    <h3 style="color:#3291a8;">Appointment Booking</h3>
+    <h4 style="text-align:center;">Fill the Details</h4>
+    <form class="jumbotron container" action="{% url 'Appointment_Details_Submission' %}" method="post">
+        {% csrf_token %}
+        <div class="container">
+        <div class="form-group">
+            <label for="patient_Name">Patient Name:</label>
+            <input type="text" required class="form-control" id="patient_Name" placeholder="Enter the Patient Name" name="Name">
+        </div>
+           <div class="form-group">
+            <label for="patient_Email">Patient Email:</label>
+            <input type="email" required class="form-control" id="patient_Email" placeholder="Enter the Patient Email Id" name="Email">
+        </div>
+            <div class="form-group">
+                <label for="Appointment_Date">Date Of Appointment:</label>
+                <input type="date" required class="form-control" id="Appointment_Date" name="date">
+            </div>
+            <div class="form-group">
+                {% if specialities|length > 0 %}
+                 <label for="Speciality">Select Speciality</label>
+                <select class="form-control" required aria-label="Default select example" id="Speciality" name="Speciality">
+                    <option value="Select">Select Speciality:</option>
+                    {% for i in specialities %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+                {% endif %}
+                </div>
+             <div class="form-group">
+                {% if Doctor|length > 0 %}
+                 <label for="Select_Doctor">Select Doctor:</label>
+                <select class="form-control" required aria-label="Default select example" id="Select_Doctor" name="Doctor_Name">
+                    <option value="Select">Select Doctor</option>
+                </select>
+                 {% endif %}
+                </div>
+
+            <div class="form-group">
+                 <label for="mode">Mode Of Appointment:</label>
+                <select class="form-control" required aria-label="Default select example" id="mode" name="Mode Of Appointment">
+                     <option value="Select_mode">Select Mode Of Appointment</option>
+                    <option value="Online">Online/Video Consultation</option>
+                    <option value="Remote">Remote</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Charges">Fee:</label>
+                <input type="number" required class="form-control" id="Charges" name="fee"><br>
+                <center>
+              <button type="submit" class="btn btn-success">Proceed to Print Receipt</button>
+               <button type="reset" class="btn btn-danger">Clear</button>
+                </center>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

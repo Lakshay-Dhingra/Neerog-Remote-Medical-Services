@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+     {% include "main_app/header.html" %}
+     <script src="{% static 'Hospital_Selection.js' %}"></script>
+    <title>Add Prescription</title>
+</head>
+<body>
+<div class="container-fluid">
+    <h3 style="color:#3291a8;">Add Prescription</h3>
+    <h4 style="text-align:center;">Information</h4>
+    <form action="submit_Prescription" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="container jumbotron">
+        <div class="form-group">
+            <label for="Patient Email">Patient Email Id:</label>
+            <input type="email" class="form-control" value="{{ Patient_Email }}" id="Patient Email" name="Email">
+        </div>
+        Add Prescription:
+        <div class="custom-file">
+            <input type="file"  id="File01" name="prescription">
+            <!--<label class="custom-file-label" for="File01">Choose file</label>-->
+        </div><br><br>
+            <center>
+              <button type="submit" class="btn btn-success">Submit</button>
+                <button type="reset" class="btn btn-danger">Clear</button>
+            </center>
+        </div>
+    </form>
+</div>
+</body>
+</html>

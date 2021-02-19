@@ -11,7 +11,7 @@
     {% include 'main_app/common_css.html' %}
     <link rel="stylesheet" href="{% static 'accounts/css/signup_style.css' %}">
 
-    <title>Neerog - Doctor Registeration</title>
+    <title>Neerog - Hospital Registeration</title>
 
 </head>
 <body>
@@ -24,7 +24,7 @@
 
     <form method="post" class="login-form" action="{% url 'register_doctor' %}">
     {% csrf_token %}
-    <h1>Register - Doctor</h1>
+    <h1>Register - Hospital</h1>
 
     <div class="textb">
         <select name="is_independent" class="is_independent" required>
@@ -53,12 +53,8 @@
     </div>
 
     <div class="textb" style="clear: left;">
-        <select name="specialization" required>
-            <option value="">Select Specialization</option>
-            {% for sp in specialities%}
-            <option value="{{sp}}">{{sp}}</option>            
-            {% endfor %}
-        </select>
+        <input type="text" name="specialization" required>
+        <div class="placeholder">Specialized In</div>
     </div>
 
     <div class="textb">
@@ -130,7 +126,7 @@
     experience=fields[1];
     experience.addEventListener("keyup",check);
 
-    institution=fields[2];
+    institution=fields[3];
     institution.addEventListener("keyup",check);
 
     var fileInput =  document.querySelector('.file_input');

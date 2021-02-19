@@ -91,12 +91,12 @@ class Hospital(models.Model):
 class Doctor(models.Model):
     # doctorid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
     doctorid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True, related_name="Doctor_set")
-    phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
+    phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)]) 
     specialization = models.CharField(max_length=100)
-    about=models.TextField(max_length=500)
-    country=models.CharField(max_length=50)
-    city=models.CharField(max_length=50)
-    address=models.CharField(max_length=200)
+    about=models.TextField(max_length=500, blank=True)
+    country=models.CharField(max_length=50, blank=True)
+    city=models.CharField(max_length=50, blank=True)
+    address=models.CharField(max_length=200, blank=True)
     DEFAULT_GENDER='U'
     GENDER_CHOICES = [
         ('Male', 'Male'),
@@ -105,16 +105,28 @@ class Doctor(models.Model):
         (DEFAULT_GENDER, 'Unknown'),
     ]
     gender=models.CharField(max_length=10, choices=GENDER_CHOICES, default=DEFAULT_GENDER)
-    experience=models.PositiveSmallIntegerField(validators=[MaxValueValidator(100),MinValueValidator(0)], null=True)
-    profile_pic=models.ImageField(upload_to="doctor_profile_photo/", null=True)
-    certificate=models.FileField(upload_to="doctor_certificate/", null=True)
+    experience=models.PositiveSmallIntegerField(validators=[MaxValueValidator(100),MinValueValidator(0)])
+    profile_pic=models.ImageField(upload_to="doctor_profile_photo/", blank=True, null=True)
+    certificate=models.FileField(upload_to="doctor_certificate/")
 
     #hospitalid will become null when a hospital is deleted
     hospitalid = models.ForeignKey(Hospital, models.SET_NULL, blank=True, null=True)
-    clinic_name = models.CharField(max_length=100)
-    clinic_photo = models.ImageField(upload_to="clinic_photo/", null=True)
+    clinic_name = models.CharField(max_length=100, blank=True)
+    clinic_photo = models.ImageField(upload_to="clinic_photo/", blank=True, null=True)
     is_independent = models.BooleanField()
     verified = models.CharField(max_length=10, default="No")
+
+    nullable_strings=[about, country, city, address, clinic_name]
+    nullable_non_strings=[profile_pic, hospitalid, clinic_photo]
+
+    def save(self, *args, **kwargs):
+        for i in self.nullable_non_strings:
+            if not i:
+                self.i = None
+        for i in self.nullable_non_strings:
+            if not i:
+                self.i = None
+        super(Doctor, self).save(*args, **kwargs)
 
     def __str__(self):
         return str(self.doctorid)

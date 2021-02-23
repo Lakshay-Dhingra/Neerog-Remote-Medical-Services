@@ -29,6 +29,8 @@ def signup_redirect(request):
         return redirect("/accounts/signup/doctor")
     elif(authenticate.getUserType(request.user.id) == "Patient"):
         return redirect("/accounts/signup/patient")
+    elif(authenticate.getUserType(request.user.id) == "Hospital"):
+        return redirect("/accounts/signup/hospital")
 
 def signup_doctor(request):
     if(authenticate.getUserType(request.user.id) == "Doctor"):

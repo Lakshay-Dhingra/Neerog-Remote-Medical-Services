@@ -26,44 +26,44 @@
     {% csrf_token %}
     <h1>Register - Hospital</h1>
 
-    <div class="textb">
-        <select name="is_independent" class="is_independent" required>
-            <option value="True" selected>I'm Independent or Own A Clinic</option>
-            <option value="False">I Work With A Hospital</option>
+    <div class="textb" style="width: 48%; float: left; height: 60px; ">
+        <select name="country" class="country" required style="height: 60px;">
+            <option value="">Select Country</option>
+            <option value="India">India</option>
+            <option value="Other">Other</option>
         </select>
     </div>
 
-    <div class="textb">
+    <div class="textb" style="width: 48%; float: right; height: 60px; ">
+        <select name="city" class="city" required style="height: 60px;">
+            <option value="">Select City</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Other">Mumbai</option>
+            <option value="Other">Kolkata</option>
+            <option value="Other">Chennai</option>
+        </select>
+    </div>
+
+    <div class="textb" style="clear: left;">
         <input type="text" name="phone" required>
         <div class="placeholder">Phone or Mobile</div>
     </div>
 
-    <div class="textb" style="width: 48%; float: left; height: 70px; ">
-        <select name="gender" class="gender" required style="height: 70px;">
-            <option value="Unknown" selected>Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Trans">Transgender</option>
-        </select>
+    <div class="checkbox">
+        <input type="checkbox">
+        <div class="fas fa-check"></div>
+        Remember Me
+        <input type="checkbox">
+        <div class="fas fa-check"></div>
+        Remember Me
     </div>
-
-    <div class="textb" style="width: 48%; float: right;">
-        <input type="text" name="experience" required>
-        <div class="placeholder">Years Of Experience</div>
-    </div>
-
-    <div class="textb" style="clear: left;">
-        <input type="text" name="specialization" required>
-        <div class="placeholder">Specialized In</div>
+    <div class="textb">
+        <label for="profilepic" class="file_label">Hospital Image</label>
+        <input type="file" class="file_input" name="profilepic" onchange="return validateFile()">
     </div>
 
     <div class="textb">
-        <input type="text" name="institution" required>
-        <div class="placeholder" id="institution_placeholder">Clinic Name</div>
-    </div>
-
-    <div class="textb">
-        <label for="proof" class="file_label">Proof of claimed qualification</label>
+        <label for="proof" class="file_label">License or Certification Of Hospital</label>
         <input type="file" class="file_input" name="proof" required>
     </div>
     

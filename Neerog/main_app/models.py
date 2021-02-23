@@ -30,10 +30,10 @@ class UserDetails(models.Model):
 class Patient(models.Model):
     patientid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
-    about=models.TextField(max_length=500)
-    country=models.CharField(max_length=50)
-    city=models.CharField(max_length=50)
-    address=models.CharField(max_length=200)
+    about=models.TextField(max_length=500, blank=True)
+    country=models.CharField(max_length=50, blank=True)
+    city=models.CharField(max_length=50, blank=True)
+    address=models.CharField(max_length=200, blank=True)
     DEFAULT_GENDER='U'
     GENDER_CHOICES = [
         ('Male', 'Male'),
@@ -58,17 +58,29 @@ class Patient(models.Model):
         ('HH-ve', 'HH-ve'),
         (DEFAULT_BLOOD, 'Unknown'),
     ]
-    Prescription = models.ImageField(upload_to="Prescriptions/", null=True)
+    Prescription = models.ImageField(upload_to="Prescriptions/", blank=True, null=True)
     blood_group=models.CharField(max_length=5, choices=BLOOD_CHOICES, default=DEFAULT_BLOOD)
-    disability=models.CharField(max_length=50, default='None')
-    profile_pic=models.ImageField(upload_to="patient_profile_photo/", null=True)
+    disability=models.CharField(max_length=50, default='NO')
+    profile_pic=models.ImageField(upload_to="patient_profile_photo/", blank=True, null=True)
+
+    nullable_strings=[about, country, city, address, blood_group]
+    nullable_non_strings=[profile_pic, Prescription]
 
     def __str__(self):
         return str(self.patientid)
 
+    def save(self, *args, **kwargs):
+        for i in self.nullable_non_strings:
+            if not i:
+                self.i = None
+        for i in self.nullable_strings:
+            if not i:
+                self.i = ""
+        super(Patient, self).save(*args, **kwargs)
+
+
 #Hospital will be deleted if its Userid is deleted in UserDetails
 class Hospital(models.Model):
-    # hospitalid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
     hospitalid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
     speciality = models.CharField(max_length=200)
@@ -76,12 +88,12 @@ class Hospital(models.Model):
     country=models.CharField(max_length=50)
     city=models.CharField(max_length=50)
     address=models.CharField(max_length=200)
-    year_established=models.PositiveIntegerField(validators=[MinValueValidator(1700)], null=True)
+    year_established=models.PositiveIntegerField(validators=[MinValueValidator(1500)], null=True)
     hospital_logo=models.ImageField(upload_to="hospital_logo/", null=True)
     pic1=models.ImageField(upload_to="hospital_photo/", null=True)
     pic2=models.ImageField(upload_to="hospital_photo/", null=True)
     pic3=models.ImageField(upload_to="hospital_photo/", null=True)
-    certificate=models.FileField(upload_to="hospital_certificate/", null=True)
+    certificate=models.FileField(upload_to="hospital_certificate/")
     verified = models.CharField(max_length=10, default="No")
 
     def __str__(self):
@@ -89,7 +101,6 @@ class Hospital(models.Model):
 
 #Doctor will be deleted if its Userid is deleted in UserDetails
 class Doctor(models.Model):
-    # doctorid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
     doctorid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True, related_name="Doctor_set")
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)]) 
     specialization = models.CharField(max_length=100)
@@ -123,9 +134,9 @@ class Doctor(models.Model):
         for i in self.nullable_non_strings:
             if not i:
                 self.i = None
-        for i in self.nullable_non_strings:
+        for i in self.nullable_strings:
             if not i:
-                self.i = None
+                self.i = ""
         super(Doctor, self).save(*args, **kwargs)
 
     def __str__(self):

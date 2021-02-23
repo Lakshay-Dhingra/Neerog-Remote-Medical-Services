@@ -39,21 +39,18 @@ def profile(request):
     if (user_type == 'Doctor'):
         for i in Doctor.objects.all():
             #print(type(i.doctorid.userid))
-            if(i.doctorid.userid==10):
-                print(i.doctorid)
+            if(i.doctorid==user):
                 User_Profile=i
                 list_of_Appointments = Appointments.objects.filter(doctoremail=i.doctorid.email)
                 break;
     print(list_of_Appointments)
     for i in list_of_Appointments:
-            p = UserDetails.objects.get(email=i.patientemail)
-            #print("userdetails",p)
-            #k = Patient.objects.get(patientid=p)
-            #print(k.Prescription)
-            #if (k.Prescription != None):
-            #    dict[i] = k
-            #else:
+        print(i.Prescription)
+        if (i.Prescription!=""):
+            dict[i] = i
+        else:
             dict[i] = "Upload Prescription"
+    print(dict)
     return render(request, 'main_app/Profile.html',
                       context={"list_of_Appointments": dict, "User_Details": User_Profile})
 
@@ -183,36 +180,39 @@ def Book_Appointment(request):
 def Add_Prescription(request):
 
     Patient_Email=request.POST['Email']
+    Appointment_Id=request.POST['id']
 
-    return render(request,"main_app/Prescription.html",context={"Patient_Email":Patient_Email})
+    return render(request,"main_app/Prescription.html",context={"Patient_Email":Patient_Email,'Appointment_Id':Appointment_Id})
 
 def submit_Prescription(request):
     email = request.POST['Email']
+    Appointment_Id=request.POST['Appointment_Id']
     dict={}
     prescription = request.FILES['prescription']
-    print(prescription)
     #b1 = Patient.objects.filter(doctorid=doctor_details).filter(date=request.session['date'])
-    for i in Patient.objects.all():
+    b1=Appointments.objects.get(appointmentid=int(Appointment_Id))
+    b1.Prescription=prescription
+    b1.save()
+    """for i in Patient.objects.all():
         if(i.patientid.email=="ram12@gmail.com"):
             b1 = Patient.objects.filter(patientid=12)
-            b1.update(Prescription=prescription)
+            b1.update(Prescription=prescription)"""
     for i in Doctor.objects.all():
         # print(type(i.doctorid.userid))
-        if (i.doctorid.userid == 10):
-            print(i.doctorid)
+        if (i.doctorid.email == request.session['email']):
             Doctor_Details = i
             list_of_Appointments = Appointments.objects.filter(doctoremail=i.doctorid.email)
             break;
     for i in list_of_Appointments:
-        p=UserDetails.objects.get(email=i.patientemail)
-        k=Patient.objects.get(patientid=12)
-        if(k.Prescription!=None):
-            dict[i]=k
+        #p=UserDetails.objects.get(email=i.patientemail)
+        #k=Patient.objects.get(patientid=12)
+        print(i.Prescription)
+        if(i.Prescription!=''):
+            dict[i]=i
         else:
             dict[i] = "Upload Prescription"
 
     return render(request,"main_app/Profile.html",context={"list_of_Appointments":dict})
-
 def Appointment_Details_Submission(request):
     try:
         a1=Appointments()
@@ -226,7 +226,7 @@ def Appointment_Details_Submission(request):
         a1.Speciality=request.session['speciality']
         for i in Doctor.objects.all():
             #print(type(i.doctorid.userid))
-            if(i.doctorid.userid==10):
+            if(i.doctorid.userid==int(doctorid)):
                 a1.doctoremail=i.doctorid.email
                 doctor_details=i;
         a1.amount_paid=250
@@ -273,7 +273,7 @@ def select_speciality(request):
     return render(request,"main_app/List_Of_Speciality.html",context={"specialities":Specialities,"Hospital_Details":p})
 
 def book_appointment1(request,speciality):
-    p=Doctor.objects.filter(specialization=speciality)
+    p=Doctor.objects.filter(specialization=speciality).filter(hospitalid=request.session['Hospital_Id'])
     #t=Appointment_slots. vfv,mflv.filter(date=request.session['date']).filter(Slots_Booked < 16)
     list_of_doctors=[]
     for i in p:

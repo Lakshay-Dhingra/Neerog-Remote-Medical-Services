@@ -80,6 +80,7 @@
         </div>
         <div class="card-body">
         <table class="table table-striped" style="margin-top:30px">
+            {% if list_of_Appointments %}
             <thead style="background-color:lightgray">
               <tr>
                 <th>Appointment Id</th>
@@ -102,20 +103,35 @@
             <td>{{ i.mode_of_meeting }}</td>
             <td>{{ i.meeting_url }}</td>
             <td>
+                {% if User_Details.doctorid %}
                 {% ifequal j "Upload Prescription" %}
                 <form action="{% url 'prescription' %}" method="post">
                     {% csrf_token %}
+                    <input type="text" name="id" hidden value="{{ i.appointmentid }}">
                     <input type="email" name="Email" hidden value="{{ i.patientemail }}">
                      <button type="submit" class="btn btn-success"> Upload Prescription</button>
                    </form>
                 {% else %}
                 <button class="btn btn-success"><a href='{{ j.Prescription.url }}' style="color:white;" download> Download Prescription</a></button>
                {% endifequal %}
+                {% else %}
+                {% ifequal j "Upload Prescription" %}
+                <button  class="btn btn-success"> No Prescription Uploaded</button>
+                {% else %}
+                <button class="btn btn-success"><a href='{{ j.Prescription.url }}' style="color:white;" download> Download Prescription</a></button>
+               {% endifequal %}
+                {% endif %}
+
+
+
 
             </td>
           </tr>
         {% endfor %}
         </tbody>
+            {% else %}
+            <center>No Appointments Availaible</center>
+            {% endif %}
   </table>
     </div>
 </div>
@@ -138,6 +154,7 @@
                 </div>
         <div class="col-md-6">
         <table class="table table-striped" style="margin-top:50px;">
+            {% if User_Details.doctorid %}
               <tr>
                 <th>Username</th>
                   <td>{{ User_Details.doctorid.name }} </td></tr>
@@ -147,6 +164,13 @@
                     <th>Specilaisation</th>
                 <td>{{ User_Details.specialization }}</td>
               </tr>
+            {% else %}
+            <tr>
+                <th>Username</th>
+                  <td>{{ User_Details.patientid.name }} </td></tr>
+                <tr><th>Email Id</th>
+                    <td>{{ User_Details.patientid.email }}</td></tr>
+             {% endif %}
             <tr>
                     <th>Phone</th>
                 <td>{{ User_Details.phone }}</td>

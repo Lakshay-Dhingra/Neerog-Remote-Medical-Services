@@ -102,7 +102,7 @@ class Hospital(models.Model):
 #Doctor will be deleted if its Userid is deleted in UserDetails
 class Doctor(models.Model):
     doctorid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True, related_name="Doctor_set")
-    phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)]) 
+    phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)])
     specialization = models.CharField(max_length=100)
     about=models.TextField(max_length=500, blank=True)
     country=models.CharField(max_length=50, blank=True)
@@ -179,6 +179,7 @@ class Appointments(models.Model):
    doctoremail = models.EmailField(max_length=254, blank=False, null=False)
    patientname=models.CharField(max_length=254, blank=False, null=False)
    patientemail = models.EmailField(max_length=254, blank=False, null=False)
+   Prescription = models.ImageField(upload_to="Prescriptions/", null=True)
    hospitalemail = models.EmailField(max_length=254,null=True)
    amount_paid = models.PositiveIntegerField()
    appointment_date=models.CharField(max_length=254, blank=False, null=False)

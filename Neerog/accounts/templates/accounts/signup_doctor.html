@@ -71,6 +71,7 @@
         <input type="file" class="file_input" name="proof" required>
     </div>
     
+    <div class="textb form_feedback"></div>
 
     <button class="btn" disabled>Submit</button>
     </form>
@@ -125,7 +126,7 @@
     phone.addEventListener("keyup",check);
 
     specialization=fields[2];
-    specialization.addEventListener("keyup",check);
+    specialization.addEventListener("click",check);
 
     experience=fields[1];
     experience.addEventListener("keyup",check);
@@ -136,19 +137,56 @@
     var fileInput =  document.querySelector('.file_input');
     fileInput.addEventListener("change",check);
 
-    function check(){
-        if(validatePhone(phone.value) == true && validateExperience(experience.value) == true && specialization.value != "" && institution.value != "" && validateFile(fileInput.value))
+    var feedback = document.querySelector(".form_feedback")
+    function check()
+    {
+        if(institution.value != "")
         {
-            btn.disabled = false;
+            if(validateFile(fileInput.value))
+            {
+                if(validatePhone(phone.value) == true)
+                {
+                    if(validateExperience(experience.value) == true)
+                    {
+                        if(specialization.value != "")
+                        {
+                            feedback.innerHTML = "";
+                            btn.disabled = false;
+                        }
+                        else
+                        {
+                            feedback.innerHTML = "*Please Select Your Specialization.";
+                            btn.disabled = true;
+                        }
+                    }
+                    else
+                    {
+                        feedback.innerHTML = "*Please Enter Your Experience (In Years).";
+                        btn.disabled = true;
+                    }
+                }
+                else
+                {
+                    feedback.innerHTML = "*Please Enter A Valid Phone Number!";
+                    btn.disabled = true;
+                }
+            }
+            else
+            {
+                feedback.innerHTML = "*Please Submit Proof Of Claimed Qualification.";
+                btn.disabled = true;
+            }
         }
         else
         {
+            feedback.innerHTML = "*Please Enter Your "+document.getElementById("institution_placeholder").innerHTML;
             btn.disabled = true;
-        }         
+        }       
     }
 
     var is_independent=document.querySelector(".textb .is_independent");
     is_independent.addEventListener("click",changeInstitute);
+    is_independent.addEventListener("click",check);
 
     function changeInstitute()
     {

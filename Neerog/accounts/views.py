@@ -49,7 +49,7 @@ def signup_hospital(request):
             messages.info(request,"You're Details Have Already Been Submitted!")
             return redirect("/")
         else:
-            return render(request,'accounts/signup_hospital.html')
+            return render(request,'accounts/signup_hospital.html',{'specialities':medical_speciality.get_specialities()})
     else:
         messages.info(request,"You Can't Access This Page!")
         return redirect("/")
@@ -154,6 +154,36 @@ def register_doctor(request):
             messages.info(request,"Please Login Before Submitting Details!")
     return redirect("/accounts/signup/doctor")
 
+def register_hospital(request):
+    phone=request.POST['phone']
+    country=request.POST['country']
+    city=request.POST['city']
+    area=request.POST['area']
+    pic1=request.POST['pic1']
+    specialization=request.POST['specialization']
+    certificate=request.POST['proof']
+
+    print(specialization)
+    #Validation checks
+    # if(len(phone)==0):
+    #     messages.info(request,"Invalid Phone Number! Phone Number can't be empty.")
+    # elif(len(phone)>10):
+    #     messages.info(request,"Invalid Phone Number! Phone Number can't have more than 10 characters.")
+    # elif(authenticate.hasRegisteredPhone(phone, "Doctor")):
+    #     messages.info(request,'This Phone is already registered!')
+    # else:
+    #     if(request.user.is_authenticated):
+    #         uid=request.user.id
+    #         if(authenticate.registerDoctor(uid, int(phone), is_independent, gender, int(experience), specialization, institution, proof)):
+    #             messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
+    #             return redirect("/")
+    #         else:
+    #             messages.info(request,"Registeration Failed!")
+    #     else:
+    #         messages.info(request,"Please Login Before Submitting Details!")
+    return redirect("/accounts/signup/hospital")
+
+
 def register_patient(request):
     phone=request.POST['phone']
     country=request.POST['country']
@@ -180,7 +210,7 @@ def register_patient(request):
                 messages.info(request,"Registeration Failed!")
         else:
             messages.info(request,"Please Login Before Submitting Details!")
-    return redirect("/accounts/signup/doctor")
+    return redirect("/accounts/signup/patient")
 
 def activate(request, uidb64, token):
     User = get_user_model()

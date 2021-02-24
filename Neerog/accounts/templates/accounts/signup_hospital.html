@@ -22,7 +22,7 @@
     <!-- Navbar -->
     {% include 'main_app/navbar.html' %}
 
-    <form method="post" class="login-form" action="{% url 'register_doctor' %}">
+    <form method="post" class="login-form" action="{% url 'register_hospital' %}">
     {% csrf_token %}
     <h1>Register - Hospital</h1>
 
@@ -44,22 +44,36 @@
         </select>
     </div>
 
-    <div class="textb" style="clear: left;">
+    <div class="textb area" style="clear: left;">
+        <input type="text" name="area" required>
+        <div class="placeholder">Area, Road or Street</div>
+    </div>
+
+    <div class="textb phone">
         <input type="text" name="phone" required>
         <div class="placeholder">Phone or Mobile</div>
     </div>
 
-    <div class="checkbox">
-        <input type="checkbox">
-        <div class="fas fa-check"></div>
-        Remember Me
-        <input type="checkbox">
-        <div class="fas fa-check"></div>
-        Remember Me
+    <div class="specialization">
+        <div class="textb">
+        <label for="specialization" class="file_label">Select Hospital Specializations</label>
+        </div>
+        {% for sp in specialities%}         
+        <div class="checkbox" style="width: 48%; float: left; padding-left: 15px; height: 10px; ">
+            <input type="checkbox" name="specialization" value="{{sp}}">
+            <div class="fas fa-check"></div>
+            {{sp}}
+        </div>
+        {% endfor %}
+        <div class="checkbox" style="padding-left: 15px; clear: left; height: 30px; ">
+            <input type="checkbox" name="specialization" value="Others">
+            <div class="fas fa-check"></div>
+            Others (If Any)
+        </div>
     </div>
     <div class="textb">
-        <label for="profilepic" class="file_label">Hospital Image</label>
-        <input type="file" class="file_input" name="profilepic" onchange="return validateFile()">
+        <label for="pic1" class="file_label">Hospital Image</label>
+        <input type="file" class="file_input" name="pic1" required>
     </div>
 
     <div class="textb">
@@ -67,6 +81,7 @@
         <input type="file" class="file_input" name="proof" required>
     </div>
     
+    <div class="textb form_feedback"></div>
 
     <button class="btn" disabled>Submit</button>
     </form>
@@ -91,18 +106,9 @@
         return (false)
     }
 
-    function validateExperience(myexp)
-    {
-        if(myexp.length < 3 && myexp.length > 0 && validateNumber(myexp) == true)
-        {
-            return (true)
-        }
-        return (false)
-    }
-
     function validateFile(filePath)
     {
-        var allowedExtensions =  /(\.doc|\.docx|\.odt|\.pdf|\.jpeg|\.jpg|\.rtf|\.png)$/i;     
+        let allowedExtensions =  /(\.doc|\.docx|\.odt|\.pdf|\.jpeg|\.jpg|\.rtf|\.png)$/i;     
         if (!allowedExtensions.exec(filePath)) 
         { 
             filePath = '';
@@ -114,51 +120,108 @@
         }
     }
 
-    var fields = document.querySelectorAll(".textb input");
-    var btn = document.querySelector(".btn");
-
-    phone=fields[0];
-    phone.addEventListener("keyup",check);
-
-    specialization=fields[2];
-    specialization.addEventListener("keyup",check);
-
-    experience=fields[1];
-    experience.addEventListener("keyup",check);
-
-    institution=fields[3];
-    institution.addEventListener("keyup",check);
-
-    var fileInput =  document.querySelector('.file_input');
-    fileInput.addEventListener("change",check);
-
-    function check(){
-        if(validatePhone(phone.value) == true && validateExperience(experience.value) == true && specialization.value != "" && institution.value != "" && validateFile(fileInput.value))
-        {
-            btn.disabled = false;
+    function validateImage(filePath)
+    {
+        let allowedExtensions =  /(\.jpeg|\.jpg|\.gif\.png)$/i;     
+        if (!allowedExtensions.exec(filePath)) 
+        { 
+            filePath = '';
+            return false;
         }
         else
         {
-            btn.disabled = true;
-        }         
+            return true;
+        }
     }
 
-    var is_independent=document.querySelector(".textb .is_independent");
-    is_independent.addEventListener("click",changeInstitute);
+    var btn = document.querySelector(".btn");
 
-    function changeInstitute()
+    var area=document.querySelectorAll(".area input")[0];
+    area.addEventListener("keyup",check);
+
+    var phone=document.querySelectorAll(".phone input")[0];
+    phone.addEventListener("keyup",check);
+
+    var specialization=document.querySelectorAll(".specialization input[type='checkbox']");
+    for(sp of specialization)
     {
-        if(is_independent.value == 'True')
+        sp.addEventListener("click",check);
+    }
+
+    var country=document.querySelector(".country");
+    country.addEventListener("click",check);
+
+    var city=document.querySelector(".city");
+    city.addEventListener("click",check);
+
+    var hospital_pic =  document.querySelectorAll('.file_input')[0];
+    hospital_pic.addEventListener("change",check);
+
+    var certificate =  document.querySelectorAll('.file_input')[1];
+    certificate.addEventListener("change",check);
+
+    var feedback = document.querySelector(".form_feedback")
+    function check(){
+        var checked = document.querySelectorAll(".specialization input[type='checkbox']:checked");
+        if(country.value != "")
         {
-            document.getElementById("institution_placeholder").innerHTML = "Clinic Name";
+            if(city.value != "")
+            {
+                if(area.value != "")
+                {
+                    if(validatePhone(phone.value) == true)
+                    {
+                        if(checked.length > 0)
+                        {
+                            if(validateImage(hospital_pic.value))
+                            {
+                                if(validateFile(certificate.value))
+                                {
+                                    feedback.innerHTML = "";
+                                    btn.disabled = false;
+                                }
+                                else
+                                {
+                                    feedback.innerHTML = "*Please Submit A Valid License of the Hospital.";
+                                    btn.disabled = true;
+                                }
+                            }
+                            else
+                            {
+                                feedback.innerHTML = "*Please Submit an Image of the Hospital.";
+                                btn.disabled = true;
+                            }
+                        }
+                        else
+                        {
+                            feedback.innerHTML = "*Please Select Atleast One Medical Speciality.";
+                            btn.disabled = true;
+                        }
+                    }
+                    else
+                    {
+                        feedback.innerHTML = "*Please Enter a Valid Phone Number.";
+                        btn.disabled = true;
+                    }
+                }
+                else
+                {
+                    feedback.innerHTML = "*Please Enter the Area or Locality of the Hospital.";
+                    btn.disabled = true;
+                }
+            }
+            else
+            {
+                feedback.innerHTML = "*Please Select A City.";
+                btn.disabled = true;
+            }
         }
         else
         {
-            document.getElementById("institution_placeholder").innerHTML = "Hospital Id";
-        }
-    } 
-
-
+            feedback.innerHTML = "*Please Select A Country.";
+            btn.disabled = true;
+        } 
+    }
     </script>
 
     <!-- JavaScript -->

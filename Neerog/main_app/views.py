@@ -33,8 +33,8 @@ def profile(request):
     if(user_type=='Patient'):
         for i in Patient.objects.all():
             if (i.patientid==user):
-                User_Profile=i;
-                break;
+                User_Profile=i
+                break
         list_of_Appointments = Appointments.objects.filter(patientemail=email)
     if (user_type == 'Doctor'):
         for i in Doctor.objects.all():
@@ -42,7 +42,7 @@ def profile(request):
             if(i.doctorid==user):
                 User_Profile=i
                 list_of_Appointments = Appointments.objects.filter(doctoremail=i.doctorid.email)
-                break;
+                break
     print(list_of_Appointments)
     for i in list_of_Appointments:
         print(i.Prescription)
@@ -84,7 +84,7 @@ def create_jwt_token():  # To create jwt token for zoom api
 def create_zoom_meeting(date,time):
     url = "https://api.zoom.us/v2/users/"+secret_settings.email_host_user+"/meetings"
     password=random.randint(0,999999) #Password of Zoom meeting
-    duration=30; # Duration of Zoom meeting
+    duration=30 # Duration of Zoom meeting
     #k=datetime.datetime.now()
     start_time=date+"T"+time # StartTime for zoom meeting
     print(start_time)
@@ -102,7 +102,7 @@ def create_zoom_meeting(date,time):
         }
     }
     data_json = json.dumps(data)
-    encoded = create_jwt_token();
+    encoded = create_jwt_token()
     encoded = encoded.decode('ASCII')
     headers = {
         "Authorization": "Bearer " + str(encoded), "Accept": "application/json", "content-type": "application/json"}
@@ -115,7 +115,6 @@ def create_zoom_meeting(date,time):
 
 def list_of_states(request):
     list1 = geo_plug.all_Country_StateNames()[1:].split("},")
-    l=0;
     states={}
     country=request.GET.get("country")
     for i in list1:
@@ -142,9 +141,8 @@ def list_of_city(request):
     trailing=re.sub("}","",re.sub("\]","",re.sub("\[","",trailing))).strip()
     lis_of_cities = trailing[0:len(trailing)].split(",")
     #lis_of_cities=list(re.sub("\]","",re.sub("\'","",re.sub("\[","",str(lis_of_cities)))))
-    t=0;
     for i in lis_of_cities:
-        str1=i.replace("\\","");
+        str1=i.replace("\\","")
         #print(str1)
         for key,value in replace_dictionary.items():
             if(str1.find(key)!=-1):
@@ -202,7 +200,7 @@ def submit_Prescription(request):
         if (i.doctorid.email == request.session['email']):
             Doctor_Details = i
             list_of_Appointments = Appointments.objects.filter(doctoremail=i.doctorid.email)
-            break;
+            break
     for i in list_of_Appointments:
         #p=UserDetails.objects.get(email=i.patientemail)
         #k=Patient.objects.get(patientid=12)
@@ -228,11 +226,11 @@ def Appointment_Details_Submission(request):
             #print(type(i.doctorid.userid))
             if(i.doctorid.userid==int(doctorid)):
                 a1.doctoremail=i.doctorid.email
-                doctor_details=i;
+                doctor_details=i
         a1.amount_paid=250
         a1.appointment_date=request.session["date"]
         t = Appointment_slots.objects.filter(doctorid=doctorid).filter(date=request.session['date'])
-        no_of_slots_booked_already=0;
+        no_of_slots_booked_already=0
 
         if len(t) > 0:
             no_of_slots_booked_already=t[0].Slots_Booked

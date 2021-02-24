@@ -58,13 +58,12 @@ class Patient(models.Model):
         ('HH-ve', 'HH-ve'),
         (DEFAULT_BLOOD, 'Unknown'),
     ]
-    Prescription = models.ImageField(upload_to="Prescriptions/", blank=True, null=True)
     blood_group=models.CharField(max_length=5, choices=BLOOD_CHOICES, default=DEFAULT_BLOOD)
     disability=models.CharField(max_length=50, default='NO')
     profile_pic=models.ImageField(upload_to="patient_profile_photo/", blank=True, null=True)
 
     nullable_strings=[about, country, city, address, blood_group]
-    nullable_non_strings=[profile_pic, Prescription]
+    nullable_non_strings=[profile_pic]
 
     def __str__(self):
         return str(self.patientid)
@@ -83,21 +82,44 @@ class Patient(models.Model):
 class Hospital(models.Model):
     hospitalid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
-    speciality = models.CharField(max_length=200)
     about=models.TextField(max_length=2000)
     country=models.CharField(max_length=50)
     city=models.CharField(max_length=50)
-    address=models.CharField(max_length=200)
+    area=models.CharField(max_length=200)
     year_established=models.PositiveIntegerField(validators=[MinValueValidator(1500)], null=True)
-    hospital_logo=models.ImageField(upload_to="hospital_logo/", null=True)
-    pic1=models.ImageField(upload_to="hospital_photo/", null=True)
-    pic2=models.ImageField(upload_to="hospital_photo/", null=True)
-    pic3=models.ImageField(upload_to="hospital_photo/", null=True)
+    hospital_logo=models.ImageField(upload_to="hospital_logo/", null=True, blank=True)
+    pic1=models.ImageField(upload_to="hospital_photo/")
+    pic2=models.ImageField(upload_to="hospital_photo/", null=True, blank=True)
+    pic3=models.ImageField(upload_to="hospital_photo/", null=True, blank=True)
     certificate=models.FileField(upload_to="hospital_certificate/")
     verified = models.CharField(max_length=10, default="No")
 
+    nullable_strings=[about]
+    nullable_non_strings=[hospital_logo, pic2, pic3, year_established]
+
+    def save(self, *args, **kwargs):
+        for i in self.nullable_non_strings:
+            if not i:
+                self.i = None
+        for i in self.nullable_strings:
+            if not i:
+                self.i = ""
+        super(Hospital, self).save(*args, **kwargs)
+
     def __str__(self):
         return str(self.hospitalid)
+
+#Hospital will be deleted if its Userid is deleted in UserDetails
+class HospitalSpeciality(models.Model):
+    hospitalid = models.ForeignKey(Hospital, on_delete=models.CASCADE)
+    speciality = models.CharField(max_length=200, blank=False, null=False)
+    price = models.PositiveIntegerField(null=True)
+
+    def __str__(self):
+        return str(self.hospitalid)+" "+self.speciality
+
+    class Meta:
+        unique_together = ('hospitalid', 'speciality',)
 
 #Doctor will be deleted if its Userid is deleted in UserDetails
 class Doctor(models.Model):
@@ -119,7 +141,6 @@ class Doctor(models.Model):
     experience=models.PositiveSmallIntegerField(validators=[MaxValueValidator(100),MinValueValidator(0)])
     profile_pic=models.ImageField(upload_to="doctor_profile_photo/", blank=True, null=True)
     certificate=models.FileField(upload_to="doctor_certificate/")
-
     #hospitalid will become null when a hospital is deleted
     hospitalid = models.ForeignKey(Hospital, models.SET_NULL, blank=True, null=True)
     clinic_name = models.CharField(max_length=100, blank=True)
@@ -144,7 +165,6 @@ class Doctor(models.Model):
 
 #TestingLab will be deleted if its Userid is deleted in UserDetails
 class TestingLab(models.Model):
-    # tlabid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, primary_key=True)
     tlabid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True)
     about=models.TextField(max_length=2000)
@@ -192,6 +212,7 @@ class Appointments(models.Model):
    mode_of_meeting = models.CharField(max_length=10, choices=MEETING_CHOICES, default=DEFAULT_MODE_OF_MEETING)
    meeting_url=models.CharField(max_length=300,unique=True,null=True)
 #     etc... complete according to requirements
+
 class Appointment_slots(models.Model):
     doctorid=models.ForeignKey(Doctor, models.SET_NULL, blank=True, null=True)
     date=models.DateTimeField()

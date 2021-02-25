@@ -186,11 +186,14 @@
     color: #333;
     text-transform: capitalize;
     margin: 20px 0;
+    word-wrap: break-word;
   }
   
   .checkbox input{
     width: 24px;
     height: 24px;
+    min-height:24px;
+    min-width:24px;
     -webkit-appearance: none;
     background-color: #ededed;
     border-radius: 4px;
@@ -203,6 +206,7 @@
     color: #fff;
     font-size: 14px;
     width: 24px;
+    min-width:24px;
     text-align: center;
     user-select: none;
     pointer-events: none;
@@ -222,4 +226,25 @@
       color: #9d9d9d;
       font-size: 15px;
       padding-left: 10px;
+  }
+
+  .price input
+    {
+      font-size: 17px;
+    }
+    .price .placeholder
+    {
+      font-size: 13px;
+    }
+
+  @media (max-width: 600px)
+  {
+    .price input
+    {
+      font-size: 16px;
+    }
+    .price .placeholder
+    {
+      font-size: 12px;
+    }
   }

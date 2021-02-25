@@ -119,7 +119,7 @@ class HospitalSpeciality(models.Model):
         return str(self.hospitalid)+" "+self.speciality
 
     class Meta:
-        unique_together = ('hospitalid', 'speciality',)
+        unique_together = ('hospitalid', 'speciality')
 
 #Doctor will be deleted if its Userid is deleted in UserDetails
 class Doctor(models.Model):

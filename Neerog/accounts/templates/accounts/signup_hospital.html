@@ -59,18 +59,19 @@
         <label for="specialization" class="file_label">Select Hospital Specializations</label>
         </div>
         {% for sp in specialities%}         
-        <div class="checkbox" style="width: 48%; float: left; padding-left: 15px; height: 10px; ">
+        <div class="checkbox" style="width: 45%; float: left; padding-left: 10px; height: 20px; clear: left;">
             <input type="checkbox" name="specialization" value="{{sp}}">
             <div class="fas fa-check"></div>
             {{sp}}
         </div>
-        {% endfor %}
-        <div class="checkbox" style="padding-left: 15px; clear: left; height: 30px; ">
-            <input type="checkbox" name="specialization" value="Others">
-            <div class="fas fa-check"></div>
-            Others (If Any)
+        <div class="textb price" style="width: 53%; float: right; height: 20px; ">
+            <input type="text" name="{{sp}}" id="{{sp}}" disabled>
+            <div class="placeholder">Pricing In Rupees</div>
         </div>
+        {% endfor %}
     </div>
+    <div style="padding-top: 20px; clear: left;"></div>
+    
     <div class="textb">
         <label for="pic1" class="file_label">Hospital Image</label>
         <input type="file" class="file_input" name="pic1" required>
@@ -145,6 +146,7 @@
     var specialization=document.querySelectorAll(".specialization input[type='checkbox']");
     for(sp of specialization)
     {
+        sp.addEventListener("click",enableInput);
         sp.addEventListener("click",check);
     }
 
@@ -161,8 +163,9 @@
     certificate.addEventListener("change",check);
 
     var feedback = document.querySelector(".form_feedback")
-    function check(){
-        var checked = document.querySelectorAll(".specialization input[type='checkbox']:checked");
+    function check()
+    {
+        let checked = document.querySelectorAll(".specialization input[type='checkbox']:checked");
         if(country.value != "")
         {
             if(city.value != "")
@@ -173,24 +176,41 @@
                     {
                         if(checked.length > 0)
                         {
-                            if(validateImage(hospital_pic.value))
+                            let priceverified = true;
+                            for(ch of checked)
                             {
-                                if(validateFile(certificate.value))
+                                let pricebox=document.getElementById(ch.value);
+                                if(!validateNumber(pricebox.value))
                                 {
-                                    feedback.innerHTML = "";
-                                    btn.disabled = false;
+                                    priceverified = false;
+                                }
+                            }
+                            if(priceverified)
+                            {
+                                if(validateImage(hospital_pic.value))
+                                {
+                                    if(validateFile(certificate.value))
+                                    {
+                                        feedback.innerHTML = "";
+                                        btn.disabled = false;
+                                    }
+                                    else
+                                    {
+                                        feedback.innerHTML = "*Please Submit A Valid License of the Hospital.";
+                                        btn.disabled = true;
+                                    }
                                 }
                                 else
                                 {
-                                    feedback.innerHTML = "*Please Submit A Valid License of the Hospital.";
+                                    feedback.innerHTML = "*Please Submit an Image of the Hospital.";
                                     btn.disabled = true;
                                 }
                             }
                             else
                             {
-                                feedback.innerHTML = "*Please Submit an Image of the Hospital.";
+                                feedback.innerHTML = "*Please Enter Numeric Price for All Selected Specialities.";
                                 btn.disabled = true;
-                            }
+                            }    
                         }
                         else
                         {
@@ -221,6 +241,18 @@
             feedback.innerHTML = "*Please Select A Country.";
             btn.disabled = true;
         } 
+    }
+
+
+    function enableInput()
+    {
+        let checked = document.querySelectorAll(".specialization input[type='checkbox']:checked");
+        for(ch of checked)
+        {
+            let pricebox=document.getElementById(ch.value);
+            pricebox.disabled = false;
+            pricebox.addEventListener("keyup",check);
+        }
     }
     </script>
 

@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User,auth
-from main_app.models import UserDetails, Doctor, Patient, Hospital
+from main_app.models import UserDetails, Doctor, Patient, Hospital, HospitalSpeciality
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -106,6 +106,19 @@ def registerDoctor(uid, phone, is_independent, gender, experience, specializatio
         print(sys.exc_info())
         return False
 
+def registerHospital(uid, phone, country, city, area, speciality_pricing, pic1, certificate):
+    try:
+        userobj=UserDetails.objects.get(userid=uid-1)
+        hospital=Hospital(hospitalid=userobj, phone=phone, country=country, city=city, area=area, pic1=pic1, certificate=certificate)
+        hospital.save()
+        for sp in speciality_pricing:
+            hospitalspeciality = HospitalSpeciality(hospitalid=hospital, speciality = sp, price=speciality_pricing[sp])
+            hospitalspeciality.save()
+        return True
+    except:
+        print(sys.exc_info())
+        return False
+
 def registerPatient(uid, phone, country, city, gender, age, disability, profilepic):
     try:
         userobj=UserDetails.objects.get(userid=uid-1)
@@ -127,6 +140,9 @@ def hasRegisteredPhone(phone, user_type):
     try:
         if user_type=="Doctor":
             Doctor.objects.get(phone=phone)
+            return True
+        elif user_type=="Hospital":
+            Hospital.objects.get(phone=phone)
             return True
         elif user_type=="Patient":
             Patient.objects.get(phone=phone)

@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+
 # render syntax:
 # return render(request,'page.html',context_var_dictionary)
 
@@ -29,6 +30,8 @@ def signup_redirect(request):
         return redirect("/accounts/signup/doctor")
     elif(authenticate.getUserType(request.user.id) == "Patient"):
         return redirect("/accounts/signup/patient")
+    elif(authenticate.getUserType(request.user.id) == "Hospital"):
+        return redirect("/accounts/signup/hospital")
 
 def signup_doctor(request):
     if(authenticate.getUserType(request.user.id) == "Doctor"):
@@ -47,7 +50,7 @@ def signup_hospital(request):
             messages.info(request,"You're Details Have Already Been Submitted!")
             return redirect("/")
         else:
-            return render(request,'accounts/signup_hospital.html')
+            return render(request,'accounts/signup_hospital.html',{'specialities':medical_speciality.get_specialities()})
     else:
         messages.info(request,"You Can't Access This Page!")
         return redirect("/")
@@ -152,6 +155,39 @@ def register_doctor(request):
             messages.info(request,"Please Login Before Submitting Details!")
     return redirect("/accounts/signup/doctor")
 
+def register_hospital(request):
+    phone=request.POST['phone']
+    country=request.POST['country']
+    city=request.POST['city']
+    area=request.POST['area']
+    pic1=request.POST['pic1']
+    specialization=request.POST.getlist('specialization')
+    certificate=request.POST['proof']
+
+    speciality_pricing=dict()
+    for sp in specialization:
+        speciality_pricing[sp]=request.POST[sp]
+
+    # Validation checks
+    if(len(phone)==0):
+        messages.info(request,"Invalid Phone Number! Phone Number can't be empty.")
+    elif(len(phone)>10):
+        messages.info(request,"Invalid Phone Number! Phone Number can't have more than 10 characters.")
+    elif(authenticate.hasRegisteredPhone(phone, "Hospital")):
+        messages.info(request,'This Phone is already registered!')
+    else:
+        if(request.user.is_authenticated):
+            uid=request.user.id
+            if(authenticate.registerHospital(uid, int(phone), country, city, area, speciality_pricing, pic1, certificate)):
+                messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
+                return redirect("/")
+            else:
+                messages.info(request,"Registeration Failed!")
+        else:
+            messages.info(request,"Please Login Before Submitting Details!")
+    return redirect("/accounts/signup/hospital")
+
+
 def register_patient(request):
     phone=request.POST['phone']
     country=request.POST['country']
@@ -178,7 +214,7 @@ def register_patient(request):
                 messages.info(request,"Registeration Failed!")
         else:
             messages.info(request,"Please Login Before Submitting Details!")
-    return redirect("/accounts/signup/doctor")
+    return redirect("/accounts/signup/patient")
 
 def activate(request, uidb64, token):
     User = get_user_model()

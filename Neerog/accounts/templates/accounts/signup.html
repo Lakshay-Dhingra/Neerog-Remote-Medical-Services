@@ -46,11 +46,6 @@
         <div class="placeholder">Email</div>
     </div>
 
-    <!-- <div class="textb">
-        <input type="text" name="phone" required>
-        <div class="placeholder">Phone Number</div>
-    </div> -->
-
     <div class="textb">
         <input type="password" name="password" required>
         <div class="placeholder">Password</div>
@@ -61,6 +56,8 @@
         <input type="password" name="password2" required>
         <div class="placeholder">Confirm Password</div>
     </div>
+
+    <div class="textb form_feedback"></div>
 
     <button class="btn " disabled>Register</button>
     <a href="{% url 'signin' %}">Already Registered?</a>
@@ -88,13 +85,49 @@
         return (false)
     }
 
-    function check(){
-        if(validateEmail(email.value) == true && validatePassword(password.value) == true && usertype.value != "" && name.value != "" && password2.value == password.value)
+    var feedback = document.querySelector(".form_feedback")
+    function check()
+    {
+        if(myname.value != "")
         {
-            btn.disabled = false;
+            if(validateEmail(email.value) == true)
+            {
+                if(usertype.value != "")
+                {
+                    if(validatePassword(password.value) == true)
+                    {
+                        if(password2.value == password.value)
+                        {
+                            feedback.innerHTML = ""
+                            btn.disabled = false;
+                        }
+                        else
+                        {
+                            feedback.innerHTML = "*Password and Confirm Password Doesn't Match!"
+                            btn.disabled = true;
+                        }
+                    }
+                    else
+                    {
+                        feedback.innerHTML = "*Password must be of atleast 8 characters long."
+                        btn.disabled = true;
+                    }
+                }
+                else
+                {
+                    feedback.innerHTML = "*Please Select User Type..."
+                    btn.disabled = true;
+                }
+            }
+            else
+            {
+                feedback.innerHTML = "*Please Enter A Valid Email!"
+                btn.disabled = true;
+            }
         }
         else
         {
+            feedback.innerHTML = "*Name Can't Be Empty!"
             btn.disabled = true;
         }         
     }

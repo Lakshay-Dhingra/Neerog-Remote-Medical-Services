@@ -63,8 +63,8 @@
       {% endif %}
   </div>
 </div>
-    <h2 style="color:#3291a8;">Our Mission....</h2>
-    <p>To inspire hope and contribute to health and well-being by providing the best care to every patient through integrated clinical practice, education and research.</p>
+    <h2 style="color:#3291a8;">About Us....</h2>
+    <p>{{ Hospital_Details.about }}</p>
     <h3 style="text-align:center;">Our Specialities</h3>
     <div class="row jumbotron">
         {% for key,item in specialities.items %}
@@ -75,7 +75,7 @@
             </div>
         {% endfor %}
     </div>
-    <h3 style="text-align:center;">News and Events</h3>
+    <!--<h3 style="text-align:center;">News and Events</h3>
     <div class="row jumbotron">
         {% for key,item in specialities.items %}
             <div class="col-lg-3 col-sm-3">
@@ -84,22 +84,8 @@
                 <div><h6>{{ key }}</h6></div>
             </div>
         {% endfor %}
-    </div>
+    </div>-->
 
 </div>
 </body>
 </html>
-<!--
-  <img alt="Microbiology" class="media-object" src="https://www.narayanahealth.org/sites/default/files/microbiology-lab-services.png" >
-                <img alt="Radiology" class="media-object" src="https://www.narayanahealth.org/sites/default/files/Radiology.png">
-                <img alt="General Surgery" class="media-object" src="https://www.narayanahealth.org/sites/default/files/general-surgery.png">
-                <img alt="Gastroenterology - Medical" class="media-object" src="https://www.narayanahealth.org/sites/default/files/gastroenterology-surgical_0.png">
-                <img alt="Electrophysiology" class="media-object" src="https://www.narayanahealth.org/sites/default/files/electrophysiology-procedure.png" >
-                <img alt="Gastroenterology - Surgical" class="media-object" src="https://www.narayanahealth.org/sites/default/files/surgical-gastroenterology.png">
-                <img alt="Uro - Oncology" class="media-object" src="https://www.narayanahealth.org/sites/default/files/uro-oncology.png">
-                <img alt="Orthopaedics" class="media-object" src="https://www.narayanahealth.org/sites/default/files/orthopaedic-services.png">
-                <img alt="Kidney Transplant - Adult" class="media-object" src="https://www.narayanahealth.org/sites/default/files/adult-kidney-transplant.png">
-                <img alt="Diabetology" class="media-object" src="https://www.narayanahealth.org/sites/default/files/diabetes-treatment-india_0.png">
-                <img alt="Reproductive Medicine" class="media-object" src="https://www.narayanahealth.org/sites/default/files/reproductive-medicine.png" >
-                <img class="media-object" src="https://www.narayanahealth.org/sites/all/themes/nh_default_theme/images/appointment.png" alt="Consult Now">
--->

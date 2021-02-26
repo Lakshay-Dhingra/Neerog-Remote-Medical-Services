@@ -73,6 +73,7 @@
         <input type="file" class="file_input" name="profilepic" onchange="return validateFile()">
     </div>
     
+    <div class="textb form_feedback"></div>
 
     <button class="btn" disabled>Submit</button>
     </form>
@@ -141,13 +142,48 @@
     var disability=fields[2];
     disability.addEventListener("keyup",check);
 
+    var feedback = document.querySelector(".form_feedback")
     function check(){
-        if(validatePhone(phone.value) == true && validateAge(age.value) == true && country.value != "" && city.value != "" && disability.value != "")
+        if(country.value != "")
         {
-            btn.disabled = false;
+            if(city.value != "")
+            {
+                if(validatePhone(phone.value) == true)
+                {
+                    if(validateAge(age.value) == true)
+                    {
+                        if(disability.value != "")
+                        {
+                            feedback.innerHTML = ""
+                            btn.disabled = false;
+                        }
+                        else
+                        {
+                            feedback.innerHTML = "*Please Fill Chronic Illness Field..."
+                            btn.disabled = true;
+                        }
+                    }
+                    else
+                    {
+                        feedback.innerHTML = "*Please Enter A Valid Age..."
+                        btn.disabled = true;
+                    }
+                }
+                else
+                {
+                    feedback.innerHTML = "*Please Enter A Valid Phone Number!"
+                    btn.disabled = true;
+                }
+            }
+            else
+            {
+                feedback.innerHTML = "*Please Select Your City..."
+                btn.disabled = true;
+            }
         }
         else
         {
+            feedback.innerHTML = "*Please Select Your Country..."
             btn.disabled = true;
         }         
     }

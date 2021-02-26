@@ -26,6 +26,15 @@ class HospitalAdmin(admin.ModelAdmin):
 
 admin.site.register(Hospital,HospitalAdmin)
 
+class HospitalSpecialityAdmin(admin.ModelAdmin):
+    #columns which will be displayed in outer view
+    list_display = ('hospitalid','speciality','price')
+    #columns that have  a filter-by option
+    list_filter=['speciality','price']
+
+admin.site.register(HospitalSpeciality,HospitalSpecialityAdmin)
+
+
 class DoctorAdmin(admin.ModelAdmin):
     #columns which will be displayed in outer view
     list_display = ('doctorid','city','country','gender','experience','verified')

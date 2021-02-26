@@ -12,6 +12,27 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
+    $(document).ready(function()
+        {
+       $("#filters").on("change",function(){
+        var filter=$("#filters").val();
+        if(filter=="Select")
+             alert("Select Appropriate Filter");
+        else
+        {
+            if(filter=="Date"){
+            $("#search_value").empty();
+            $("#search_value").append(`<input type="date" id="Date" class="form-control" required name="search_values">
+                                  </input>`);}
+            else{
+             $("#search_value").empty();
+            $("#search_value").append(`<input type="text" class="form-control" required name="search_values">
+                                  </input>`);}
+                                  }
+                                  });
+                                  });
+    </script>
+    <script>
         $(document).ready(function()
         {
         $('.Appointment').css({"background-color":"lightblue","border":"none"});
@@ -51,15 +72,14 @@
     #search
         {
           float:right;
-          
-       
+
         }
 
     </style>
 </head>
 <body>
 <div>
-    <image src="{% static 'image3.jpeg' %}" height="300px" width="100%"></image>
+    <image src="{% static 'image6.jpeg' %}" height="300px" width="100%"></image>
 </div>
 <div style="margin-top:-150px;postion:absolute;">
 <button type="button" class="Appointment" style="border:none;">Appointments</button>
@@ -73,10 +93,36 @@
         
         </div>
         <div style="margin-top:20px;">
-            <form class="example" id="search"action="/action_page.php">
-                  <input type="text" placeholder="Search.." name="search">
-                          <button type="submit" class="btn-primary"style="margin-left:-20px;"><i class="fa fa-search"></i></button>
-            </form>
+            <form action="{% url 'search_appointments' %}" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-6 form-group"></div>
+                    <div class="col-lg-1 col-sm-1">
+                        <label for="filters" style="float:right;">Filter By:</label></div>
+
+                    <div class="col-lg-1 col-sm-1 form-group">
+
+                <select id="filters" name="filter" class="form-control" style="float:right;"required>
+
+                    <option value="Date" checked>Date</option>
+                    {% if User_Details.doctorid %}
+                    <option value="Patient Name">Patient Name</option>
+                    {% else %}
+                    <option value="Doctor Name">Doctor Name</option>
+                    {% endif %}
+
+                </select>
+                </div>
+                <div class="col-lg-2 col-sm-2" id="search_value">
+                <input type="date" id="Date" class="form-control" required name="search_values">
+                                  </div>
+
+                <div class="col-lg-2 col-sm-2">
+                    <button type="submit"  value="submit" class="form-control btn btn-success">Submit</button>
+
+                </div>
+                    </div>
+                 </form>
         </div>
         <div class="card-body">
         <table class="table table-striped" style="margin-top:30px">
@@ -85,7 +131,11 @@
               <tr>
                 <th>Appointment Id</th>
                 <th>Patient Name</th>
+                  {% if User_Details.doctorid %}
                 <th>Patient Email Id</th>
+                  {% else %}
+                <th>Doctor Email Id</th>
+                  {% endif %}
                 <th>Appointment Date</th>
                 <th>Appointment Time</th>
                 <th>Mode Of Meeting</th>
@@ -95,9 +145,13 @@
            <tbody>
         {% for i,j in list_of_Appointments.items %}
           <tr>
-              <td>{{ i.appointmentid }}</td>
+              <td><a href="{% url 'Appointment_Details' appointment_id=i.appointmentid %}">{{ i.appointmentid }}</a></td>
             <td>{{ i.patientname }}</td>
+            {% if User_Details.doctorid %}
             <td>{{ i.patientemail }}</td>
+              {% else %}
+            <td>{{ i.doctoremail }}</td>
+              {% endif %}
               <td>{{ i.appointment_date }}</td>
               <td>{{ i.appointment_time }}</td>
             <td>{{ i.mode_of_meeting }}</td>
@@ -121,10 +175,6 @@
                 <button class="btn btn-success"><a href='{{ j.Prescription.url }}' style="color:white;" download> Download Prescription</a></button>
                {% endifequal %}
                 {% endif %}
-
-
-
-
             </td>
           </tr>
         {% endfor %}

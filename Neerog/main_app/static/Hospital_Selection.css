@@ -74,6 +74,10 @@
            margin-top:-250px;
            margin-left:100px;
         }
+        image
+        {
+           height:10px;
+        }
         #submit_form
         {
         font-size:15px;

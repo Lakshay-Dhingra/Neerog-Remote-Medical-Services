@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     {% load static %}
      {% include "main_app/header.html" %}
+    {% if Details %}
+    <title>Appointment Details</title>
+    {% else %}
     <title>Receipt</title>
+    {% endif %}
 </head>
 <body class="jumbotron" onkeydown="return (event.keyCode != 116)">
 <h5 style="text-align:center;color:#3291a8;">Receipt</h5>

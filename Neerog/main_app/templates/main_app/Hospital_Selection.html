@@ -8,41 +8,194 @@
     {% include "main_app/header.html" %}
     <link rel="stylesheet" href="{% static 'Hospital_Selection.css' %}">
     <script src="{% static 'Hospital_Selection.js' %}"></script>
+    <script>
+        $(document).ready(function(){
+        $(".mode").on("click",function(){
+        var id1=$(this).attr('id');
+        //alert(id1)
+        $("#mode").val(id1);
+        });
+        });
+        </script>
+    <script>
+        function validate()
+        {
+        var date=document.getElementById("Appointment_Date").value;
+        //alert(date);
+        var d=new Date();
+        if(!Date.parse(date) || new Date(date)<= d){
+            alert('Please Select Appropriate Date');
+            return false;
+        }
+        }
+    </script>
+    <script>
+    $(document).ready(function()
+        {
+         var filter=$("#filters").val();
+         if(filter=="Location")
+            {
+
+            $('#filter_type').val(filter);
+            $('#form2').css({"display":"none"});
+            $("#search_value").empty();
+                 $('#form1').css({"display":"block"});
+            }
+       $("#filters").on("change",function(){
+        var filter=$("#filters").val();
+        if(filter=="")
+             alert("Select Appropriate Filter");
+        else
+        {
+            if(filter=="Location")
+            {
+
+            $('#filter_type').val(filter);
+            $('#form2').css({"display":"none"});
+            $("#search_value").empty();
+                 $('#form1').css({"display":"block"});
+            }
+            else{
+             $("#search_value").empty();
+             $('#filter_type1').val(filter);
+             var string1='Enter the '+filter
+             $('#label1').html(string1)
+             $('#form1').css({"display":"none"});
+            $('#form2').css({"display":"block"});
+            $("#search_value").append(`<input type="text" class="form-control" width="100%"required name="search_values">
+                                  </input>`);
+                                  }
+                                  }
+                                  });
+                                  });
+    </script>
+    <script>
+    $(document).ready(function()
+        {
+        var filter_value=$(".filter_value").val();
+        if(filter_value!=""){
+            var str1="#"+filter_value
+            $(str1).attr("selected","selected");
+            }
+       $("#sort").on("change",function(){
+        var filter=$("#sort").val();
+        $("#search_value").empty();
+         $("#form6").submit();
+                                  });
+                                  });
+    </script>
 </head>
-<body>
-   <div>
-        <image src="{% static 'image1.jpeg' %}" width="100%" height="300px"></image>
+<body style="background-image:url({% static 'image3.jpeg' %}); width:100%;">
+<!--<div class="row">
+
+        <div class="col-lg-3" style="float:right;">
+            <label for="filters1"><h1>Filter By:</h1></label></div>
+        <div class="col-lg-3"  style="float:right;">
+                <select id="filters1"  name="filter" required>
+                    <option value="Location" >Location</option>
+                    <option value="Hospital_Name" >Hospital_Name</option>
+                    <option value="Doctor_Name">Doctor Name</option>
+                    <option value="Clinic_Name">Clinic Name</option>
+                    <option value="Testing_Lab">Testing Lab Name</option>
+                </select>
     </div>
-<div class="card-body" id="div_form" style="margin-top:-250px;position:absolute;">
-<form action="{% url 'list_of_hospital' %}" method="post">
-   {% csrf_token %}
-{% if list_of_countries|length > 0 %}
-    <select id="countries" class="form_select"  name="country">
-     <option value="Select">Select Country</option>
-    {% for i in list_of_countries %}
-            <option value="{{ i }}">{{ i }}</option>
-    {% endfor %}
-    </select>
-{% endif %}
+        <div class="col-lg-3" style="float:right;">
+            <label for="sort1"><h1>Sort By:</h1></label></div>
+        <div class="col-lg-3"  style="float:right;">
+                <select id="sort1" class="form_select" name="filter" required>
+                    <option value="Hospitals" >Hospitals</option>
+                    <option value="Clinics" >Clinics</option>
+                    <option value="Testing Labs">Testing Labs</option>
+                </select>
+    </div>
+    </div>-->
+   <!--<div>
+        <image src="{% static 'image1.jpeg' %}" width="100%" height="300px"></image>
+    </div>-->
+    <div class="row" >
+        <div class="col-lg-3">
+            <label for="filters" style="float:right;"><b>Filter By:</b></label></div>
+        <div class="col-lg-3"  style="float:right;">
+                <select id="filters"  name="filter" class="form-control" required>
+                    <option value="Location" selected>Location</option>
+                    <option value="Hospital_Name" >Hospital_Name</option>
+                    <option value="Doctor_Name">Doctor Name</option>
+                    <option value="Clinic_Name">Clinic Name</option>
+                    <option value="Testing_Lab">Testing Lab Name</option>
+                </select>
+    </div>
+        <div class="col-lg-3" >
+            <label for="sort" style="float:right;"><b>Sort By:</b></label></div>
+        <div class="col-lg-3"  style="float:right;">
+            <form action="{% url 'list_of_hospital' %}" id="form6"  style="display:block;" method="post">
+              {% csrf_token %}
+                {% if filter %}
+                <input type="text" hidden class="filter_value" value="{{ filter }}">
+                {% else %}
+                 <input type="text" hidden class="filter_value" value="">
+                {% endif %}
+                <select id="sort" class="form-control" name="filter" required >
+                    <option value="Hospitals" id="Hospitals">Hospitals</option>
+                    <option value="Clinics" id="Clinics">Clinics</option>
+                    <option value="Testing_Labs" id="Testing_Labs">Testing Labs</option>
+                </select>
+            </form>
+    </div>
 
-    <select id="states" class="form_select" name="state">
-            <option value="Select">Select State</option>
-    </select>
-    <select id="cities" class="form_select" name="city">
-        <option value="Select">Select City</option>
-    </select>
+    </div>
 
-    <button type="submit" class="btn-success" id="submit_form"> Submit</button>
+   <div style="margin-top:50px;">
+        <form action="{% url 'list_of_hospital' %}" id="form1" style="display:block;" method="post">
+            {% csrf_token %}
+            {% if list_of_countries|length > 0 %}
+            <div class="row">
+                <div class="col-lg-2">
+             <input type="text" hidden id="filter_type" name="filter"></div>
+                <div class="col-lg-2">
+                <select id="countries" class="form-control"  name="country">
+                 <option value="Select">Select Country</option>
+                {% for i in list_of_countries %}
+                        <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+                </select></div>
+            {% endif %}
+                <div class="col-lg-2">
+                <select id="states" class="form-control"   name="state">
+                        <option value="Select">Select State</option>
+                </select></div>
+                <div class="col-lg-2">
+                <select id="cities" class="form-control"   name="city">
+                    <option value="Select">Select City</option>
+                </select></div>
+                <div class="col-lg-2">
+                <button type="submit" class="btn-success form-control" id="submit_form"> Submit</button></div>
+                </div>
+            </form>
 
-</form>
+        <form  action="{% url 'list_of_hospital' %}" id="form2" style="display:none" method="post">
+                {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-3">
+                 <input type="text" hidden id="filter_type1" name="filter"></div>
+                <div class="col-lg-3" id="label1">
+                </div>
+                <div  id="search_value" class="col-lg-3" style="float:right;">
+
+                    </div>
+                <div class="col-lg-3">
+                <button type="submit"  value="submit" class=" btn btn-success">Submit</button></div>
+</div>
+
+
+                 </form>
 </div>
 <div class="container-fluid">
     {% if list_of_hospitals|length > 0 %}
-<div class="row" style="margin-top:-100px;">
+<div class="row" style="margin-top:50px;">
     {% for i in list_of_hospitals %}
-    <div class="col-lg-4 col-xs-1 ">
+    <div class="col-lg-3 col-xs-1 ">
         <div class="card">
-            <image src="{{ i.pic1.url }}" class="img1" alt="{{ i.hospitalid.name }}"></image>
+            <image src="{{ i.pic1.url }}" height=100px  class="img1" alt="{{ i.hospitalid.name }}"></image>
             <table class="table-stripped">
                 <tr>
                     <th>Name:</th>
@@ -63,7 +216,85 @@
     {% else %}
     <div>
         <center>
-        No Hospitals Registered In this Area
+             {% ifequal filter "Hospital" %}
+
+                No Hospitals Registered In this Area
+            {% endifequal %}
+        </center>
+    </div>
+    {% endif %}
+    </div>
+
+<div class="container-fluid">
+    {% if list_of_doctors|length > 0 %}
+
+<div class="row" style="margin-top:50px;">
+    {% for i in list_of_doctors %}
+    <div class="col-lg-3 col-xs-3 ">
+        <div class="card">
+            <image src="{{ i.profile_pic.url }}" height=100px class="img1" alt="{{ i.hospitalid.name }}"></image>
+            <table class="table-stripped">
+                <tr>
+                    <th>Hospital Name:</th>
+                    <td>{{ i.hospitalid.hospitalid.name }}</td>
+                </tr>
+                <tr>
+                    <th>Name:</th>
+                    <td>{{ i.doctorid.name }}</td>
+                </tr>
+                <tr>
+                    <th>City:</th>
+                    <td>{{ i.city }}</td>
+                </tr>
+                <tr>
+                    <th>Specialisation:</th>
+                    <td>{{ i.specialization }}</td>
+
+                </tr>
+                <tr>
+
+                        <th>   <button class="btn btn-primary mode" id="Online"  data-toggle="modal" data-target="#exampleModal">Book Online Appointment</button></th>
+                <td><button class="btn btn-primary mode"  id="Remote"  data-toggle="modal" data-target="#exampleModal">Book Remote Appointment</button></td>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Choose Date</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <form role="form" action="{% url 'Appointment_Details_Submission' %}"   onsubmit="return validate()" id="form4" method="post">
+                        {% csrf_token %}
+      <div class="modal-body">
+
+                        <input type="text" hidden value="{{ i.doctorid }}" name="doctorid">
+                        <input type="text" hidden value="" name="mode" id="mode">
+                <input type="date" name="date" id="Appointment_Date">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Book Appointment</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+                </tr>
+            </table>
+            </div>
+    </div>
+    {% endfor %}
+        </div>
+    {% else %}
+    <div>
+        <center>
+         {% ifequal filter "Doctor" %}
+                No Doctors Registered In this Area
+            {% endifequal %}
         </center>
     </div>
     {% endif %}
@@ -71,3 +302,21 @@
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div style="margin-top:20px;">
+
+        </div>-->

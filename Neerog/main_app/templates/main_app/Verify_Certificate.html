@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Verify Certificate</title>
+    {% include "main_app/header.html" %}
+    <link rel="stylesheet" href="{% static 'Hospital_Selection.css' %}">
+</head>
+<body>
+ <image src="{% static 'image6.jpeg' %}" height="300px" width="100%"></image>
+ <h1 style="position:absolute;margin-top:-200px;">Verify Certificate</h1>
+<div class="card-body">
+
+        <table class="table table-striped" style="margin-top:30px">
+            {% if list_of_certificates %}
+
+            <thead style="background-color:lightgray">
+              <tr>
+                <th> Id</th>
+                <th>Name</th>
+                  <th> Email</th>
+                  <th>User Type</th>
+                  <th>Mobile</th>
+                  <th>Certificate</th>
+                  <th>Verify Certificate</th>
+              </tr>
+           <tbody>
+        {% for i,j in list_of_certificates.items %}
+        {% for k in j %}
+          <tr>
+              {% ifequal i "Hospital" %}
+              <td>{{ k.hospitalid }}</td>
+            <td>{{  k.hospitalid.name }}</td>
+            <td>{{  k.hospitalid.email }}</td>
+               <td>Hospital</td>
+              <td>{{  k.phone }}</td>
+
+              <td><a href="{{ k.certificate.url }}">{{ k.certificate }}</a></td>
+              {% ifequal k.verified "No" %}
+            <td><button onclick="loaction.href='{% url 'verify_certificate' id=k.hospitalid %}">Verify Certificate</button></td>
+              {% else %}
+              <td>Certificate Verified</td>
+              {% endifequal %}
+               {% endifequal %}
+               {% ifequal i "Doctor" %}
+              <td>{{ k.doctorid }}</td>
+            <td>{{  k.doctorid.name }}</td>
+            <td>{{  k.doctorid.email }}</td>
+              <td>Doctor</td>
+              <td>{{  k.phone }}</td>
+              <td><a href="{{ k.certificate.url }}">{{ k.certificate }}</a></td>
+              {% ifequal k.verified "No" %}
+            <td><button onclick="loaction.href='{% url 'verify_certificate' id=k.doctorid %}">Verify Certificate</button></td>
+              {% else %}
+              <td>Certificate Verified</td>
+              {% endifequal %}
+               {% endifequal %}
+               {% ifequal i "Testing_Lab" %}
+              <td>{{ k.tlabid }}</td>
+            <td>{{  k.tlabid.name }}</td>
+            <td>{{  k.tlabid.email }}</td>
+              <td>{{  k.phone }}</td>
+              <td>Testing Lab</td>
+              <td><a href="{{ k.certificate.url }}">{{ k.certificate }}</a></td>
+              {% ifequal k.verified "No" %}
+            <td><button onclick="loaction.href='{% url 'verify_certificate'  id=k.tlabid %}">Verify Certificate</button></td>
+              {% else %}
+              <td>Certificate Verified</td>
+              {% endifequal %}
+               {% endifequal %}
+
+          </tr>
+        {% endfor %}
+        </tbody>
+            {% endfor %}
+            {% else %}
+            <center>No Certificate to Verify Availaible</center>
+            {% endif %}
+  </table>
+    </div>
+</body>
+</html>

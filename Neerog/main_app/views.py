@@ -1,5 +1,6 @@
 import time
-from main_app.models import *;
+from main_app.models import*;
+from django.contrib import messages
 from django.contrib.auth.models import User,auth
 import requests
 import datetime
@@ -20,6 +21,44 @@ import random
 # Create your views here.
 
 replace_dictionary={"u0101":"a","u012b":"i","u016b":"u","u0100":"A","u016a":"u"}
+def verify(request):
+    #email = request.session['email']
+    user=UserDetails.objects.get(email=request.session['email'])
+    p=dict()
+    if(user.user_type=='Moderator'):
+        p['Hospital']=Hospital.objects.filter(verified="No")
+    #p['Clinic']=Hospital.objects.filter(verified="No").filter(clinic_name=)
+        p['Doctor']=Doctor.objects.filter(verified="No")
+        p['Testing_Lab']=TestingLab.objects.filter(verified="No")
+        return render(request,"main_app/Verify_Certificate.html",context={'list_of_certificates':p})
+    else:
+        messages.info(request, "You Can't Access This Page!")
+        return redirect("/")
+def verify_certificate(request,id):
+    user=UserDetails.objects.get(userid=id)
+    if(user.user_type=='Hospital'):
+        p=Hospital.objects.get(hospitalid=user)
+        p.verified="Yes"
+        p.save()
+    elif(user.user_type=='Doctor'):
+        p=Doctor.objects.get(doctorid=user)
+        p.verified="Yes"
+        p.save()
+    else:
+        p=TestingLab.objects.get(tlabid=user)
+        p.verified="Yes"
+        p.save()
+    user = UserDetails.objects.get(email=request.session['email'])
+    p = dict()
+    if (user.user_type == 'Moderator'):
+        p['Hospital'] = Hospital.objects.filter(verified="Yes")
+        # p['Clinic']=Hospital.objects.filter(verified="No").filter(clinic_name=)
+        p['Doctor'] = Doctor.objects.filter(verified="Yes")
+        p['Testing_Lab'] = TestingLab.objects.filter(verified="No")
+        return render(request, "main_app/Verify_Certificate.html", context={'list_of_certificates': p})
+    else:
+        messages.info(request, "You Can't Access This Page!")
+        return redirect("/")
 
 def profile(request):
     email=request.session['email']
@@ -33,14 +72,21 @@ def profile(request):
     if(user_type=='Patient'):
         for i in Patient.objects.all():
             if (i.patientid==user):
+                User_Profile=i;
+
+                list_of_Appointments = Appointments.objects.filter(patientemail=email).order_by('-appointment_date')
                 User_Profile=i
-                break
+                break;
         list_of_Appointments = Appointments.objects.filter(patientemail=email)
     if (user_type == 'Doctor'):
         for i in Doctor.objects.all():
             #print(type(i.doctorid.userid))
             if(i.doctorid==user):
                 User_Profile=i
+                list_of_Appointments =Appointments.objects.filter(doctoremail=i.doctorid.email).order_by('-appointment_date')
+                #print(p)
+                break;
+    #print(p)
                 list_of_Appointments = Appointments.objects.filter(doctoremail=i.doctorid.email)
                 break
     print(list_of_Appointments)
@@ -61,7 +107,7 @@ def home(request):
 
 def Hospitals(request):
     lis_of_countries = geo_plug.all_CountryNames()
-    p=Hospital.objects.all()
+    p=Hospital.objects.filter(verified="Yes")
     for i in p:
         print(i.pic1,i.hospitalid.name,i.city)
     request.session['Username'] = 10
@@ -151,18 +197,59 @@ def list_of_city(request):
     return JsonResponse(data=list_of_cities, safe=False)
 
 def list_of_hospital(request):
-    Country=request.POST.get("country")
-    City=request.POST.get("city")
-    State=request.POST.get("state")
-    lis_of_countries = geo_plug.all_CountryNames()
-    p=Hospital.objects.filter(country=Country).filter(city=City)
+    try:
+        filter_type=request.POST.get("filter")
+        lis_of_countries = geo_plug.all_CountryNames()
+        #print("ppp:",filter_type)
+        filter1=''
+        if(filter_type=='Hospitals'):
+            p = Hospital.objects.all()
+            filter="Hospitals"
+        elif(filter_type=='Testing_Labs'):
+            p=TestingLab.objects.all()
+            filter="Testing_Labs"
+        if(filter_type=='Location'):
+            Country=request.POST.get("country")
+            City=request.POST.get("city")
+            State=request.POST.get("state")
+            p=Hospital.objects.filter(country=Country).filter(city=City).filter(verified="Yes")
+            print(p)
+        elif (filter_type == 'Doctor_Name'):
+            p = []
+            search_value = request.POST.get("search_values")
+            for i in Doctor.objects.all():
+                if (i.doctorid.name == search_value):
+                    p.append(i)
+                    break;
+            #print(p,search_value)
+            return render(request, "main_app/Hospital_Selection.html",
+                          context={"list_of_doctors": p,"filter":"Doctor", 'list_of_countries': lis_of_countries})
+        elif(filter_type=='Hospital_Name'):
+            p=[]
+            search_value=request.POST.get("search_values")
+            for i in Hospital.objects.all():
+                if(i.hospitalid.name==search_value):
+                    p.append(i)
+                    break;
+        elif(filter_type=='Testing_Lab'):
+            search_value = request.POST.get("search_values")
+            p=[]
+            for i in TestingLab.objects.all():
+                if(i.tlabid.name==search_value):
+                    p.append(i)
+                    break;
+        return render(request,"main_app/Hospital_Selection.html",context={"list_of_hospitals":p,"filter":filter,'list_of_countries':lis_of_countries})
 
-    return render(request,"main_app/Hospital_Selection.html",context={"list_of_hospitals":p,'list_of_countries':lis_of_countries})
+    except:
+        return redirect("/Doctor/")
 
 def Selected_Service_Provider(request,hospital_id):
     p = Hospital.objects.get(hospitalid=hospital_id)
     request.session['Hospital_Id']=hospital_id
-    Specialities=p.speciality.split(",")
+    k=HospitalSpeciality.objects.filter(hospitalid=p)
+    Specialities=[]
+    for i in k:
+        Specialities.append(i.speciality)
     dict1={}
     poke = pd.read_csv("E:\\IIT Research Project\\Neerog_website\\Project\\Neerog\\main_app\\static\\Specialities_Images.csv")
     list1 =poke['Speciality'].tolist()
@@ -228,7 +315,10 @@ def Appointment_Details_Submission(request):
                 a1.doctoremail=i.doctorid.email
                 doctor_details=i
         a1.amount_paid=250
-        a1.appointment_date=request.session["date"]
+        if(request.POST['date']!=None):
+            a1.appointment_date=request.POST['date']
+        else:
+            a1.appointment_date=request.session["date"]
         t = Appointment_slots.objects.filter(doctorid=doctorid).filter(date=request.session['date'])
         no_of_slots_booked_already=0
 
@@ -263,15 +353,19 @@ def Appointment_Details_Submission(request):
             b1.save()
         return render(request,"main_app/Receipt.html",context={"Appointment_Details":a1})
     except:
-        return redirect("/select_speciality/")
+
+        return redirect("/Doctor/")
 
 def select_speciality(request):
     p = Hospital.objects.get(hospitalid=request.session['Hospital_Id'])
-    Specialities = p.speciality.split(",")
+    k = HospitalSpeciality.objects.filter(hospitalid=p)
+    Specialities = []
+    for i in k:
+        Specialities.append(i.speciality)
     return render(request,"main_app/List_Of_Speciality.html",context={"specialities":Specialities,"Hospital_Details":p})
 
 def book_appointment1(request,speciality):
-    p=Doctor.objects.filter(specialization=speciality).filter(hospitalid=request.session['Hospital_Id'])
+    p=Doctor.objects.filter(specialization=speciality).filter(hospitalid=request.session['Hospital_Id']).filter(verified="Yes")
     #t=Appointment_slots. vfv,mflv.filter(date=request.session['date']).filter(Slots_Booked < 16)
     list_of_doctors=[]
     for i in p:
@@ -291,3 +385,63 @@ def chosen_date(request):
     request.session['date']=request.GET.get("date")
     print(request.GET.get("date"))
     return JsonResponse(request.session['date'],safe=False)
+def search_appointments(request):
+    #try:
+        email = request.session['email']
+        filter_type=request.POST['filter']
+        search_values=request.POST['search_values']
+        dict = {}
+        for i in UserDetails.objects.all():
+            if (i.email == email):
+                user_id = i.userid
+                user = i
+                user_type = i.user_type
+        print(user_id)
+        if (user_type == 'Patient'):
+            for i in Patient.objects.all():
+                if (i.patientid == user):
+                    User_Profile = i;
+                    break;
+            if(filter_type=='Date'):
+                list_of_Appointments = Appointments.objects.filter(patientemail=email).filter(appointment_date=search_values)
+            else:
+                list_of_Appointments=[]
+                lis_of_doctors=UserDetails.objects.filter(user_type="Doctor").filter(name__iexact=search_values)
+                for i in lis_of_doctors:
+                    list_of_Appointments=Appointments.objects.filter(patientemail=email).filter(doctoremail__iexact=i.email)
+                    for j in list_of_Appointments:
+                        if (j.Prescription != ""):
+                            dict[j] = j
+                        else:
+                            dict[j] = "Upload Prescription"
+
+        if (user_type == 'Doctor'):
+            for i in Doctor.objects.all():
+                # print(type(i.doctorid.userid))
+                if (i.doctorid == user):
+                    User_Profile = i
+                    if (filter_type == 'Date'):
+                        list_of_Appointments = Appointments.objects.filter(doctoremail=i.doctorid.email).filter( appointment_date=search_values)
+                    else:
+                        list_of_Appointments = Appointments.objects.filter(doctoremail=i.doctorid.email).filter(
+                            patientname__iexact=search_values)
+
+
+                    # print(p)
+                    break;
+        # print(p)
+        if(user_type!="Patient"):
+            for i in list_of_Appointments:
+                if (i.Prescription != ""):
+                    dict[i] = i
+                else:
+                    dict[i] = "Upload Prescription"
+            print(dict)
+        return render(request, 'main_app/Profile.html',
+                      context={"list_of_Appointments": dict, "User_Details": User_Profile})
+    #except:
+    #    return redirect('/profile')
+def Appointment_Details(request,appointment_id):
+    Appointment_Details1=Appointments.objects.get(appointmentid=appointment_id)
+    return render(request,'main_app/Receipt.html',context={'Appointment_Details':Appointment_Details1})
+

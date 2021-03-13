@@ -9,39 +9,6 @@ from . import tokens
 import sys
 
 
-def getUserType(uid):
-    userobj=UserDetails.objects.get(userid=uid-1)
-    return str(userobj.user_type)
-
-def isVerifiedUser(uid):
-    user_type=getUserType(uid)
-    if(user_type == "Doctor"):
-        try:
-            doctorobj=Doctor.objects.get(doctorid=uid-1)
-            if(str(doctorobj.verified) == "No"):
-                return False
-            else:
-                return True
-        except:
-            return False
-    elif(user_type == "Hospital"):
-        try:
-            hospitalobj=Hospital.objects.get(hospitalid=uid-1)
-            if(str(hospitalobj.verified) == "No"):
-                return False
-            else:
-                return True
-        except:
-            return False
-    elif(user_type == "Patient"):
-        try:
-            patientobj=Patient.objects.get(patientid=uid-1)
-            return True
-        except:
-            return False
-
-
-
 def sendConfirmEmail(user,name,userEmail):
     template=render_to_string('accounts/email_template.html',
         {
@@ -86,7 +53,7 @@ def register(name,user_type,password,email):
         sendConfirmEmail(user,name,email)
         return True
     except:
-        print(sys.exc_info()[0], "occurred!")
+        print(sys.exc_info())
         return False
 
 def registerDoctor(uid, phone, is_independent, gender, experience, specialization, institution, proof):

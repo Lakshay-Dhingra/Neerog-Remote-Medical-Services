@@ -17,6 +17,8 @@ class UserDetails(models.Model):
     user_type=models.CharField(max_length=50, choices=USER_TYPE_CHOICES, default=USER_TYPE_DEFAULT)   
     name = models.CharField(max_length=200)
     email=models.EmailField(max_length=254, unique=True, blank=False, null=False)
+    followers = models.PositiveSmallIntegerField(default = 0)
+    avg_rating = models.DecimalField(default= 0, max_digits=9, decimal_places=1)
     created_at=models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -120,6 +122,7 @@ class HospitalSpeciality(models.Model):
 
     class Meta:
         unique_together = ('hospitalid', 'speciality')
+        verbose_name_plural='Hospital Speciality'
 
 #Doctor will be deleted if its Userid is deleted in UserDetails
 class Doctor(models.Model):
@@ -127,9 +130,6 @@ class Doctor(models.Model):
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)])
     specialization = models.CharField(max_length=100)
     about=models.TextField(max_length=500, blank=True)
-    country=models.CharField(max_length=50, blank=True)
-    city=models.CharField(max_length=50, blank=True)
-    address=models.CharField(max_length=200, blank=True)
     DEFAULT_GENDER='U'
     GENDER_CHOICES = [
         ('Male', 'Male'),
@@ -143,12 +143,17 @@ class Doctor(models.Model):
     certificate=models.FileField(upload_to="doctor_certificate/")
     #hospitalid will become null when a hospital is deleted
     hospitalid = models.ForeignKey(Hospital, models.SET_NULL, blank=True, null=True)
+    
     clinic_name = models.CharField(max_length=100, blank=True)
     clinic_photo = models.ImageField(upload_to="clinic_photo/", blank=True, null=True)
+    country=models.CharField(max_length=50, blank=True)
+    city=models.CharField(max_length=50, blank=True)
+    area=models.CharField(max_length=200, blank=True)
+
     is_independent = models.BooleanField()
     verified = models.CharField(max_length=10, default="No")
 
-    nullable_strings=[about, country, city, address, clinic_name]
+    nullable_strings=[about, country, city, area, clinic_name]
     nullable_non_strings=[profile_pic, hospitalid, clinic_photo]
 
     def save(self, *args, **kwargs):
@@ -162,6 +167,7 @@ class Doctor(models.Model):
 
     def __str__(self):
         return str(self.doctorid)
+    
 
 #TestingLab will be deleted if its Userid is deleted in UserDetails
 class TestingLab(models.Model):
@@ -218,3 +224,21 @@ class Appointment_slots(models.Model):
     date=models.DateTimeField()
     Slots_Booked=models.IntegerField(default=0)
 
+class Follow(models.Model):
+    influencerid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, related_name='follow_influencer')
+    followerid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, related_name='follower')
+
+    def __str__(self):
+        return str(self.influencerid)+" "+str(self.followerid)
+    class Meta:
+        unique_together = ('followerid', 'influencerid',)
+
+class Ratings(models.Model):
+    influencerid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, related_name='ratings_influencer')
+    raterid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, related_name='rater')
+    rating = models.PositiveSmallIntegerField(validators=[MaxValueValidator(5),MinValueValidator(1)])
+    def __str__(self):
+        return str(self.influencerid)+" "+str(self.rating)
+    class Meta:
+        unique_together = ('raterid', 'influencerid',)
+        verbose_name_plural='Ratings'

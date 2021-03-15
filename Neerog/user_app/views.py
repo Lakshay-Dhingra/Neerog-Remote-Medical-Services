@@ -14,6 +14,10 @@ def profile(request, uid):
                     fid=request.user.id
                     doctor_data['Following']=user_data.isFollowing(uid, fid)
                     doctor_data['MyRating']=user_data.userRating(uid, fid)
+                    if(uid == fid):
+                        doctor_data["Myself"]=True
+                    else:
+                        doctor_data["Myself"]=False
                 else:
                     #User not logged in
                     doctor_data['Following']=False
@@ -25,8 +29,25 @@ def profile(request, uid):
             messages.info(request,"This User Hasn't Completed Registeration yet!")
     else:
         messages.info(request,"Sorry, No Such User Exists!")
-
     return redirect("/")
+
+def edit_profile(request):
+    if(request.user.is_authenticated):
+        #User is logged in
+        uid=request.user.id
+        user_type=user_data.getUserType(uid)
+        if(user_data.isRegisteredUser(uid)):
+            if(user_type == "Doctor"):
+                doctor_data = user_data.getDoctorData(uid)
+                return render(request,'user_app/EditDoctorProfile.html',doctor_data)
+            else:
+                messages.info(request,"You Are Not A Doctor!") #Temporary
+        else:
+            messages.info(request,"You Haven't Completed Registeration yet!")
+    else:
+        #User not logged in
+        messages.info(request,"You are not Logged In!")
+        return redirect("/accounts/signin")
 
 def unfollow(request, uid):
     if(request.user.is_authenticated):

@@ -1,5 +1,4 @@
 {% load static %}
-<!-- Signin or Login Page -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -90,11 +89,16 @@
                     </div>
 
                     <div class="follow_email row">
+
+                    {% if Myself %}
+                    <div class="col-5 follow"><a href="{% url 'edit_profile' %}" class="btn btn-info">Edit Profile</a></div>
+                    {% else %}
                         {% if Following %}
                         <div class="col-5 follow"><a href="{% url 'unfollow' uid=uid %}" class="btn btn-info">Following</a></div>
                         {% else %}
                         <div class="col-5 follow"><a href="{% url 'follow' uid=uid %}" class="btn btn-info">Follow</a></div>
                         {% endif %}
+                    {% endif %}
                         <div class="col-7 profileemail"><a href="mailto:{{Email}}" style = "display: inline-block; word-break: break-word; word-wrap: break-word;">{{Email}}</a></div>
                     </div>
 

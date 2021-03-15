@@ -13,6 +13,7 @@ class UserDetails(models.Model):
         ('Hospital', 'Hospital'),
         ('Doctor', 'Doctor'),
         ('Testing Lab', 'Testing Lab'),
+        ('Moderator', 'Moderator'),
     ]
     user_type=models.CharField(max_length=50, choices=USER_TYPE_CHOICES, default=USER_TYPE_DEFAULT)   
     name = models.CharField(max_length=200)
@@ -174,7 +175,7 @@ class TestingLab(models.Model):
     address=models.CharField(max_length=200)
     year_established=models.PositiveIntegerField(validators=[MinValueValidator(1700)], null=True)
     tlab_logo=models.ImageField(upload_to="testing_lab_logo/", null=True)
-    pic1=models.ImageField(upload_to="testing_lab_photo/", null=True)
+    profile_pic=models.ImageField(upload_to="testing_lab_photo/", null=True)
     certificate=models.FileField(upload_to="testing_lab_certificate/", null=True)
     verified = models.CharField(max_length=10, default="No")
 
@@ -196,13 +197,15 @@ class TestPricing(models.Model):
 # Even if user or doctor gets deleted, this record shouldn't be deleted...
 class Appointments(models.Model):
    appointmentid = models.AutoField(primary_key=True)
-   doctoremail = models.EmailField(max_length=254, blank=False, null=False)
+   doctoremail = models.EmailField(max_length=254, blank=False, null=True)
    patientname=models.CharField(max_length=254, blank=False, null=False)
+   Speciality=models.CharField(max_length=254,blank=True,null=True)
    patientemail = models.EmailField(max_length=254, blank=False, null=False)
    Prescription = models.ImageField(upload_to="Prescriptions/", null=True)
+   TestingLabId=models.ForeignKey(TestingLab,models.SET_NULL, blank=True, null=True)
    hospitalemail = models.EmailField(max_length=254,null=True)
    amount_paid = models.PositiveIntegerField()
-   appointment_date=models.CharField(max_length=254, blank=False, null=False)
+   appointment_date=models.DateField(blank=False, null=False)
    appointment_time=models.TimeField(blank=False, null=False)
    DEFAULT_MODE_OF_MEETING = 'Remote'
    MEETING_CHOICES = [
@@ -215,6 +218,8 @@ class Appointments(models.Model):
 
 class Appointment_slots(models.Model):
     doctorid=models.ForeignKey(Doctor, models.SET_NULL, blank=True, null=True)
-    date=models.DateTimeField()
+    TestingLab=models.ForeignKey(TestingLab,models.SET_NULL,blank=True,null=True)
+    date=models.DateField()
+    available=models.BooleanField(default=True)
     Slots_Booked=models.IntegerField(default=0)
 

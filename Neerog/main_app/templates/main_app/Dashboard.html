@@ -6,6 +6,35 @@
     <title>Dashboard</title>
      {% include "main_app/header.html" %}
     <style>
+     @media only screen and (max-width: 720px) {
+     .spec
+     {
+      margin-left:10px !important;
+      }}
+    .dot {
+  height: 25px;
+  width: 25px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+    h2 {
+   width: 100%;
+   text-align: center;
+   border-bottom: 1px solid #000;
+   line-height: 0.01em;
+   margin: 10px 0 20px;
+   color:#3291a8;
+}
+
+h2 span {
+    background:#fff;
+    padding:0 10px;
+}
+.card
+{
+margin-left:20px;
+}
     h3
     {
       color:#3291a8;
@@ -25,25 +54,72 @@
     font-size:19px;
     color:#a86532;
     }
-    a
-    {
-    color:white;
-    }
-    </style>
 
+    </style>
 </head>
 <body>
 <div class="container-fluid">
+    {% if Testing_Lab_Details %}
     <div class="row">
         <div class="col-lg-1">
-            <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"></image></div>
-         <div class="col-lg-5">
-        <h3>{{ Hospital_Details.hospitalid.name }}</h3>
+            <image src="{{ Testing_Lab_Details.tlab_logo.url }}" style="width:100px;height:40px;"></image></div>
+    <div class="col-lg-5">
+        <h3>{{ Testing_Lab_Details.tlablid.name }}</h3>
             </div>
-        <div class="col-lg-6">
+        <div class="col-lg-3">
+            <!--<i class="fa fa-phone" style="font-size:24px;color:#3291a8;"></i>
+                {{ Hospital_Details.phone }}
+-->
+        </div>
+        <div class="col-lg-3">
             <button type="button" class="btn btn-success"style="float:right;" onclick="location.href='{% url 'select_speciality'  %}'">Book Appointment</button>
        </div>
     </div>
+    <div>Home</div>
+    <div id="carouselExampleSlidesOnly1" class="carousel slide" data-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+        <img src="{{ Testing_Lab_Details.profile_pic.url }}" class="d-block w-100 img1" alt="bye22">
+    </div>
+</div>
+    </div>
+    <div style="margin-top:40px;">
+    <h2><span>About Us</span></h2>
+    <p>{{ Testing_Lab_Details.about }}</p>
+        </div>
+     <div style="margin-top:40px;">
+    <h2><span>Our Specialities</span></h2>
+    <div class="row">
+        {% for key in specialities %}
+            <div class="col-lg-3 col-sm-6 col-xs-6 col-md-4 card">
+                    <div>
+                     <center><span class="dot">{{ key.testname|first }}</span></center>
+                    <h6>{{ key.testname }}</h6>
+                    <h6>Fee:{{ key.price }}</h6>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+     </div>
+    {% else %}
+    <div class="row">
+        <div class="col-lg-1">
+
+            <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"></image></div>
+
+    <div class="col-lg-5">
+        <h3>{{ Hospital_Details.hospitalid.name }}</h3>
+            </div>
+        <div class="col-lg-3">
+            <!--<i class="fa fa-phone" style="font-size:24px;color:#3291a8;"></i>
+                {{ Hospital_Details.phone }}
+-->
+        </div>
+        <div class="col-lg-3">
+            <button type="button" class="btn btn-success"style="float:right;" onclick="location.href='{% url 'select_speciality'  %}'">Book Appointment</button>
+       </div>
+    </div>
+    <div>Home</div>
     <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner">
       {% if  Hospital_Details.pic1.url %}
@@ -63,29 +139,29 @@
       {% endif %}
   </div>
 </div>
-    <h2 style="color:#3291a8;">About Us....</h2>
+    <div style="margin-top:40px;">
+    <h2><span>About Us</span></h2>
     <p>{{ Hospital_Details.about }}</p>
-    <h3 style="text-align:center;">Our Specialities</h3>
-    <div class="row jumbotron">
+        </div>
+     <div style="margin-top:40px;">
+    <h2><span>Our Specialities</span></h2>
+         <div class="row">
         {% for key,item in specialities.items %}
-            <div class="col-lg-3 col-sm-3">
-                <div><img alt="{{ key }}"  class="media-object" src="https://www.narayanahealth.org/sites/default/files/{{ item }}">
-                </div>
-                <div><h6>{{ key }}</h6></div>
+           {% for i,j in item.items %}
+            <div style="margin-left:20px;" class="spec">
+                    <img alt="{{ key }}"  class="media-object" src="https://www.narayanahealth.org/sites/default/files/{{ i }}">
+                     <center></center>
+                    <h6 >{{ key }}</h6>
+                    <h6 >Fee:{{ j }}</h6>
+                </center>
+
             </div>
+        {% endfor %}
         {% endfor %}
     </div>
-    <!--<h3 style="text-align:center;">News and Events</h3>
-    <div class="row jumbotron">
-        {% for key,item in specialities.items %}
-            <div class="col-lg-3 col-sm-3">
-                <div><img alt="{{ key }}"  class="media-object" src="https://www.narayanahealth.org/sites/default/files/{{ item }}">
-                </div>
-                <div><h6>{{ key }}</h6></div>
-            </div>
-        {% endfor %}
-    </div>-->
+</div>
 
+{% endif %}
 </div>
 </body>
 </html>

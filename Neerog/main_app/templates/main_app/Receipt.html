@@ -12,18 +12,34 @@
 </head>
 <body class="jumbotron" onkeydown="return (event.keyCode != 116)">
 <h5 style="text-align:center;color:#3291a8;">Receipt</h5>
-<div class="card">
+<div class="card table-responsive">
         <table class="table table-striped container" style="margin-top:30px">
               <tr>
                 <th>Appointment Id</th>
-                  <td>{{ Appointment_Details.appointmentid }}</td></tr>
+                  <td>{{ Appointment_Details.appointmentid }}</td>
+              </tr>
               <tr>
               <tr>
                 <th>Patient Name</th>
                   <td>{{ Appointment_Details.patientname }}</td></tr>
+               {% if Appointment_Details.doctoremail  %}
               <tr>
                   <th>Doctor Email</th>
-              <td>{{ Appointment_Details.doctoremail }}</td></tr>
+                  <td>{{ Appointment_Details.doctoremail }}</td></tr>
+                 {% elif Appointment_Details.TestingLabId %}
+            <tr>
+                  <th>Testing Lab Name</th>
+                  <td>{{  Appointment_Details.TestingLabId.tlabid.name }}</td>
+              </tr>
+            <tr>
+                  <th>Testing Lab Email</th>
+                  <td>{{  Appointment_Details.TestingLabId.tlabid.email }}</td>
+              </tr>
+            <tr>
+                  <th>Test Name</th>
+                  <td>{{  Appointment_Details.Speciality }}</td>
+              </tr>
+            {% endif %}
              <tr>
             <th>Appointment Date</th>
                  <td>{{ Appointment_Details.appointment_date }}</td>
@@ -31,7 +47,7 @@
             {% if Appointment_Details.meeting_url  %}
                <tr>
             <th>Meeting Url</th>
-                 <td>{{ Appointment_Details.meeting_url }}</td>
+                   <td><a href="{{ Appointment_Details.meeting_url }}">{{ Appointment_Details.meeting_url }}</a></td>
               </tr>
             {% endif %}
              <tr>

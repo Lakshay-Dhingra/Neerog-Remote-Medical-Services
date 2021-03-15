@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load extras %}
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    {% include "main_app/header.html" %}
+    <style>
+    .cha
+    {
+     width:95%;
+     margin-left:20px;
+    }
+    .da
+    {
+       width:300px;
+       margin-left:20px;
+    }
+        .card-header
+    {
+    background-color:black;
+    color:white;
+    border-radius:20px;
+    text-align:center;
+    }
+    h1
+    {
+     color:blue;
+     text-align:center;
+     }
+    </style>
+    <script>
+        $(document).ready(function()
+        {
+       $("#filters2").on("change",function(){
+        var filter=$("#filters2").val();
+        if(filter=="Select")
+             alert("Select Appropriate Filter");
+        else
+        {
+            {% for i in speciality %}
+                var p="."+i
+                {% ifequal i filter %}
+                     $(p).css({"display":"block"})
+                 {% else %}
+                    $(p).css({"display":"none"})
+                 {% endifequal %}
+             {% endfor %}
+         }
+         });
+         });
+    </script>
+    <script>
+    $(document).ready(function()
+        {
+       $("#filters").on("change",function(){
+        var filter=$("#filters").val();
+        if(filter=="Select")
+             alert("Select Appropriate Filter");
+        else
+        {
+            if(filter=="Date"){
+
+             $("#search_value").css({"display":"block"});
+            $("#search_value").empty();
+              $("#search_values1").css({"display":"none"})
+            $("#search_value").append(`<input type="date" id="Date" class="form-control" required name="search_values">
+                                  </input>`);}
+            else if(filter=="speciality")
+            {
+
+            $("#search_value").empty();
+            $("#search_value").css({"display":"none"});
+            $("#search_values1").css({"display":"block"});
+            }
+            else{
+
+             $("#search_values1").css({"display":"block"});
+             $("#search_value").empty();
+               $("#search_values1").css({"display":"none"});
+            $("#search_value").append(`<input type="text" class="form-control" required name="search_values">
+                                  </input>`);}
+                                  }
+                                  });
+                                  });
+    </script>
+</head>
+<body>
+<div class="row" style="margin-top:20px;">
+    <div class="col-lg-3 col-md-3 col-sm-3">
+        <div class="card da">
+        <div class="card-header">
+            Appointments This Month
+
+        </div>
+        <div class="card-body">
+            <h1>{{ appointments_this_month }}
+            </h1>
+        </div>
+    </div>
+</div>
+    <div class="col-lg-3 col-md-3 col-sm-3 ">
+        <div class="card da">
+        <div class="card-header">
+    Appointments Today
+  </div>
+        <div class="card-body">
+            <h1>{{ appointments_today }}</h1>
+        </div>
+    </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3">
+        <div class="card da">
+        <div class="card-header">
+    Online Consultations
+  </div>
+        <div class="card-body">
+            <h1>{{ Online_consultations_today }}</h1>
+        </div>
+    </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3">
+        <div class="card da">
+        <div class="card-header">
+            Earning this Month
+        </div>
+        <div class="card-body">
+            <h1> &#8377;{{ earning_this_month }}</h1>
+
+    </div>
+        </div>
+</div>
+</div>
+<div class="row" style="margin-top:50px;">
+<div class="col-lg-6">
+    <div class="card cha">
+        <canvas id="myChart" width="100px" height="100px"></canvas></div>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels:{{ list_of_speciality|safe }},
+        datasets: [{
+            label: 'No Of Appointments This Month',
+            data: {{ list_of_speciality_appointments }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+    maintainAspectRatio: true,
+    responsive: true,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    suggestedMin: 10,
+                    suggestedMax: 50,
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+</div>
+<div class="col-lg-6 " >
+    <div class="card cha">
+    <div class="card-header">Doctor Monitoring</div>
+    <div class="table-responsive">
+
+    <table class="table">
+
+        <thead>
+        <tr>
+            <td>Doctor Name</td>
+            <td>Specialisation</td>
+            <td>No Of Appointments</td>
+            <td>Available Today</td>
+            <td>Earning(in INR)</td>
+        </tr>
+        </thead>
+        {% for i,j in doctors_data.items %}
+        <tbody>
+
+        <td>{{ i.doctorid.name }}</td>
+        <td>{{ i.specialization }}</td>
+        {% for k in j %}
+        <td>{{ k }}</td>
+        {% endfor %}
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+    </div>
+    </div>
+</div>
+<div class="card">
+    <div id="appointment" style="display:block;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+            <div class="card-header">List Of Appointments</div>
+            <div style="margin-top:10px;" class="row">
+                {% if User_Details.doctorid %}
+                <div class="col-lg-2 offset-lg-10">
+                     <input type="checkbox" id="available" value="available" checked>
+                    <b>  Available</b>
+                {% endif %}
+                </div>
+
+            </div>
+            <div style="margin-top:20px;">
+            <form action="{% url 'admin_search_appointments' %}" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-6 form-group"></div>
+                    <div class="col-lg-1 col-sm-1">
+                        <label for="filters" style="float:right;">Filter By:</label></div>
+
+                    <div class="col-lg-1 col-sm-1 form-group">
+
+                <select id="filters" name="filter" class="form-control" style="float:right;"required>
+
+                    <option value="Date" checked>Date</option>
+                    <option value="Doctor Name">Doctor Name</option>
+                   <option value="Patient Name">Patient Name</option>
+                    <option value="speciality">Select Speciality</option>
+
+                </select>
+                </div>
+                <div class="col-lg-2 col-sm-2" id="search_value">
+                <input type="date" id="Date" class="form-control" required name="search_values">
+                                  </div>
+                  <div  style="display:none" class="col-lg-2 col-sm-2" id="search_values1">
+                     <select id="filters1" name="search_values1" class="form-control" style="float:right;"required>
+                         {% for i in speciality %}
+                         <option value="{{ i }}">{{ i }}</option>
+                         {% endfor %}
+                </select>
+                 </div>
+
+
+                <div class="col-lg-2 col-sm-2">
+                    <button type="submit"  value="submit" class="form-control btn btn-success">Submit</button>
+
+                </div>
+                    </div>
+                 </form>
+        </div>
+                <div class="card-body">
+                <div class="table-responsive" style="overflow-y:scroll; height:300px;">
+        <table class="table" style="margin-top:30px">
+            {% if list_of_Appointments %}
+            <thead style="background-color:lightgray">
+              <tr>
+                <th>Appointment Id</th>
+                <th>Patient Name</th>
+                  {% if User_Details.doctorid %}
+                <th>Patient Email Id</th>
+                  {% else %}
+                  {% if User_Details.tlabid %}
+                  <th>Patient Email Id</th>
+                  <th>Test Name</th>
+                  {% else %}
+                <th>Doctor Email Id</th>
+                  {% endif %}
+                  {% endif %}
+                <th>Appointment Date</th>
+                <th>Appointment Time</th>
+                <th>Mode Of Meeting</th>
+                <th>Meeting url</th>
+
+              </tr>
+           <tbody>
+
+        {% for i in list_of_Appointments %}
+          <tr>
+              <td>{{ i.appointmentid }}</td>
+            <td>{{ i.patientname }}</td>
+            {% if User_Details.doctorid %}
+            <td>{{ i.patientemail }}</td>
+              {% else %}
+              {% if User_Details.tlabid %}
+              <td>{{ i.patientemail }}</td>
+              <td>{{ i.Speciality }}</td>
+              {% else %}
+              <td>{{ i.doctoremail }}</td>
+              {% endif %}
+              {% endif %}
+              <td>{{ i.appointment_date }}</td>
+              <td>{{ i.appointment_time }}</td>
+            <td>{{ i.mode_of_meeting }}</td>
+            <td>{{ i.meeting_url }}</td>
+          </tr>
+            {% endfor %}
+
+        </tbody>
+            {% else %}
+            <center>No Appointment Available</center>
+            {% endif %}
+        </table>
+                </div>
+                </div>
+            </div>
+</div>
+    </div>
+    </div>
+</div>
+</body>
+</html>

@@ -5,12 +5,33 @@
     {% load static %}
     <title>Profile</title>
      <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% include "main_app/header.html" %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script>
+        $(document).ready(function()
+        {
+        $("#available").click(function()
+        {
+         if($(this).prop("checked") == false){
+         $(".Non_Available_date").css({"display":"block"});
+         $(".available").css({"display":"none"})
+         }
+         });
+         });
+        /*$.ajax(
+        {
+             type:"get",
+             url:"/profile/availablity/",
+        });
+        }
+        });
+        });*/
+    </script>
     <script>
     $(document).ready(function()
         {
@@ -54,61 +75,220 @@
         })
     </script>
     <style>
-    @media only screen and (max-width: 360px) {
+
+    @media only screen and (max-width: 560px) {
         #profile_pic
         {
             height:200px;
-            width:300px;
+            width:300px !important;
         }
-        .card-body{
-               overflow:scroll;
-        }
+        .Appointment
+        {
+          width:200px;
+          }
+          .profile
+          {
+          width:200px;
+          }
+
+
     }
+
     #profile_pic
         {
             height:300px;
             width:max-width;
+
         }
     #search
         {
           float:right;
 
         }
-
+    .card
+    {
+    margin-left:20px;
+    border-radius:20px;
+    margin-top:50px;
+    }
+    th
+    {
+     font-size:12px;
+     color:white;
+     }
+    .table-striped th
+    {
+     font-size:12px;
+     color:black;
+     }
+    .card-header
+    {
+    background-color:#8080ff;
+    color:white;
+    border-radius:20px;
+    text-align:center;
+    }
+    h1
+    {
+     color:blue;
+     text-align:center;
+     }
     </style>
 </head>
-<body>
-<div>
-    <image src="{% static 'image6.jpeg' %}" height="300px" width="100%"></image>
+<body style="overflow-x:hidden;background-color:light-grey;">
+{% if User_Details.doctorid %}
+<div class="row">
+
+    <div class="col-lg-3 col-md-3 col-sm-3 card">
+        <div class="card-header">
+            Registered Appointments This Month
+        </div>
+        <div class="card-body">
+            <h1 >{{ no_of_Appointments }}</h1>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 card">
+        <div class="card-header">
+    Completed Appointments This Month
+  </div>
+        <div class="card-body">
+            <h1>{{ no_of_Appointments_completed }}</h1>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 card">
+        <div class="card-header">
+    Online Consultations This Month
+  </div>
+        <div class="card-body">
+            <h1>{{ online_Appointments }}</h1>
+        </div>
+    </div>
 </div>
-<div style="margin-top:-150px;postion:absolute;">
-<button type="button" class="Appointment" style="border:none;">Appointments</button>
-<button type="button" class="profile" style="border:none;">Profile</button>
+{% elif  User_Details.tlabid %}
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-3 card">
+        <div class="card-header">
+            Registered Appointments This Month
+        </div>
+        <div class="card-body">
+            <h1 >{{ no_of_Appointments }}</h1>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 card">
+        <div class="card-header">
+    Completed Appointments This Month
+  </div>
+        <div class="card-body">
+            <h1>{{ no_of_Appointments_completed }}</h1>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 card">
+        <div class="card-body">
+
+            <canvas id="myChart" width="400" height="400"></canvas>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels:{{ Test_Names|safe }},
+        datasets: [{
+            label: 'No Of Tests This Month',
+            data: {{ dict_test }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+        </div>
+    </div>
+</div>
+{% else %}
+<image src="{% static 'image6.jpeg' %}" height="300px" width="100%"></image>
+{% endif %}
+<div class="row" style="margin-top:10px;">
+    <div class="card col-lg-3 col-sm-3 Appointment col-mb-4">
+        <div><center><i class="fa fa-calendar" style="font-size: 58px;"></i></center></div>
+        <div class="card-body">
+        <center>
+        Appointment
+        </center>
+        </div>
+        </div>
+     <div class="card col-lg-3 col-sm-3 profile col-mb-4">
+        <div><center><i class="fa fa-user"  style="font-size: 58px;"></i></center></div>
+        <div class="card-body">
+            <center>Profile</center>
+        </div>
+        </div>
 </div>
 <div id="appointment" style="display:block;">
     <div class="row">
         <div class="col-md-12">
-    <div class="card" style="margin-top:50px;">
-        <div class="card-header text-center" ><i>List Of Appointments</i>
-        
-        </div>
-        <div style="margin-top:20px;">
+            <div class="card">
+            <div class="card-header">List Of Appointments</div>
+            <form action="{% url 'availablity' %}" method="post">
+                {% csrf_token %}
+            <div style="margin-top:10px;" class="row">
+                {% if User_Details.patientid %}
+                {% else %}
+                <div class="col-lg-2 offset-lg-10 available" style="display:block;">
+                    {% if  available  %}
+                     <input type="checkbox" id="available" value="available" checked>
+                    {% else %}
+                    <input type="checkbox" id="available" value="available" >
+                    {% endif %}
+                    <b>  Available</b>
+
+                 </div>
+
+                <div class="col-lg-3 offset-lg-5 Non_Available_date form-group" style="display:none;">
+                    <b>Unavailable From:</b><input type="date" class="form-control"  name="start">
+                </div>
+                <div class="col-lg-2 Non_Available_date" style="display:none;">
+                    <b> To:</b><input type="date" class="form-control" name="end">
+                </div>
+                <div class="col-lg-2 Non_Available_date" style="display:none;margin-top:10px;">
+                    <button type="submit" class="btn btn-primary form-control">Submit</button>
+                </div>
+
+                {% endif %}
+                </div>
+                </form>
+            <div style="margin-top:20px;">
             <form action="{% url 'search_appointments' %}" method="post">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-lg-6 form-group"></div>
                     <div class="col-lg-1 col-sm-1">
-                        <label for="filters" style="float:right;">Filter By:</label></div>
+                        <label for="filters" style="float:right;"><b>Filter By:</b></label></div>
 
                     <div class="col-lg-1 col-sm-1 form-group">
 
                 <select id="filters" name="filter" class="form-control" style="float:right;"required>
 
                     <option value="Date" checked>Date</option>
-                    {% if User_Details.doctorid %}
-                    <option value="Patient Name">Patient Name</option>
-                    {% else %}
+                    {% if User_Details.patientid %}
                     <option value="Doctor Name">Doctor Name</option>
+                    {% else %}
+                   <option value="Patient Name">Patient Name</option>
                     {% endif %}
 
                 </select>
@@ -124,18 +304,25 @@
                     </div>
                  </form>
         </div>
-        <div class="card-body">
-        <table class="table table-striped" style="margin-top:30px">
+                <div class="card-body">
+                <div class="table-responsive" style="overflow-y:scroll; height:300px;">
+        <table class="table" style="margin-top:30px;position: sticky;">
             {% if list_of_Appointments %}
-            <thead style="background-color:lightgray">
+            <thead style="background-color:black;">
               <tr>
                 <th>Appointment Id</th>
                 <th>Patient Name</th>
-                  {% if User_Details.doctorid %}
+                 {% if User_Details.doctorid %}
                 <th>Patient Email Id</th>
+                  {% else %}
+                  {% if User_Details.tlabid %}
+                  <th>Patient Email Id</th>
+                  <th>Test Name</th>
                   {% else %}
                 <th>Doctor Email Id</th>
                   {% endif %}
+                  {% endif %}
+                <th>Speciality/Tests</th>
                 <th>Appointment Date</th>
                 <th>Appointment Time</th>
                 <th>Mode Of Meeting</th>
@@ -145,19 +332,40 @@
            <tbody>
         {% for i,j in list_of_Appointments.items %}
           <tr>
-              <td><a href="{% url 'Appointment_Details' appointment_id=i.appointmentid %}">{{ i.appointmentid }}</a></td>
+              <td><a href='{% url "Appointment_Details" appointment_id=i.appointmentid %}'>{{ i.appointmentid }}</a></td>
             <td>{{ i.patientname }}</td>
             {% if User_Details.doctorid %}
             <td>{{ i.patientemail }}</td>
               {% else %}
-            <td>{{ i.doctoremail }}</td>
+              {% if User_Details.tlabid %}
+              <td>{{ i.patientemail }}</td>
+              <td>{{ i.Speciality }}</td>
+              {% else %}
+              <td>{{ i.doctoremail }}</td>
               {% endif %}
+              {% endif %}
+              <td>{{ i.Speciality }}</td>
               <td>{{ i.appointment_date }}</td>
               <td>{{ i.appointment_time }}</td>
             <td>{{ i.mode_of_meeting }}</td>
-            <td>{{ i.meeting_url }}</td>
+              {% ifequal i.meeting_url None %}
+              <td>{{ i.meeting_url }}</td>
+              {% else %}
+              <td><a href="{{ i.meeting_url }}">{{ i.meeting_url }}</a></td>
+              {% endifequal %}
             <td>
                 {% if User_Details.doctorid %}
+                {% ifequal j "Upload Prescription" %}
+                <form action="{% url 'prescription' %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="id" hidden value="{{ i.appointmentid }}">
+                    <input type="email" name="Email" hidden value="{{ i.patientemail }}">
+                     <button type="submit" class="btn btn-success"> Upload Prescription</button>
+                   </form>
+                {% else %}
+                <button class="btn btn-success"><a href='{{ j.Prescription.url }}' style="color:white;" download> Download Prescription</a></button>
+               {% endifequal %}
+                {% elif User_Details.tlabid %}
                 {% ifequal j "Upload Prescription" %}
                 <form action="{% url 'prescription' %}" method="post">
                     {% csrf_token %}
@@ -186,10 +394,10 @@
     </div>
 </div>
         </div>
-
     </div>
+        </div>
 </div>
-<div id="profile" style="display:none">
+    <div id="profile" style="display:none;">
 <div class="card" style="margin-top:50px;">
         <div class="card-header text-center" ><i>User Profile</i>
         </div>
@@ -199,10 +407,10 @@
     </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6">
-                    <img src="{{ User_Details.profile_pic.url }}" id="profile_pic">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                  <center> <img src="{{ User_Details.profile_pic.url }}" id="profile_pic"></center>
                 </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-6">
         <table class="table table-striped" style="margin-top:50px;">
             {% if User_Details.doctorid %}
               <tr>
@@ -211,10 +419,16 @@
                 <tr><th>Email Id</th>
                     <td>{{ User_Details.doctorid.email }}</td></tr>
                 <tr>
-                    <th>Specilaisation</th>
+                    <th>Specialization</th>
                 <td>{{ User_Details.specialization }}</td>
               </tr>
-            {% else %}
+            {% elif User_Details.tlabid %}
+                <tr>
+                <th>Username</th>
+                  <td>{{ User_Details.tlabid.name }} </td></tr>
+                <tr><th>Email Id</th>
+                    <td>{{ User_Details.tlabid.email }}</td></tr>
+             {% else %}
             <tr>
                 <th>Username</th>
                   <td>{{ User_Details.patientid.name }} </td></tr>
@@ -229,14 +443,13 @@
                     <th>Address</th>
                 <td>{{ User_Details.address }}</td>
               </tr>
+
   </table>
     </div>
 </div>
         </div>
-
     </div>
 </div>
-</body>
 </div>
 </body>
 </html>

@@ -6,7 +6,202 @@
     <title>Hospital_Selection</title>
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     {% include "main_app/header.html" %}
+    {% include 'main_app/common_css.html' %}
     <link rel="stylesheet" href="{% static 'Hospital_Selection.css' %}">
+    <script>
+        $(document).ready(function(){
+        $("#countries").on("change",function(){
+        var country=$("#countries").val();
+        if(country=="Select")
+             alert("Select Appropriate Country");
+        $.ajax(
+        {
+             type:"get",
+             url:"/Hospital_Selection/states/",
+             data:
+             {
+              country:$("#countries").val()
+             },
+             success:function(data)
+             {
+             var states=JSON.stringify(data);
+             var p=states.split(",");
+
+             $("#states").empty();
+             $("#states").append(`<option value="Select">
+                                       Select State
+                                  </option>`);
+
+             for(var i=0;i<p.length;i++)
+             {
+             var optionText=p[i].replace("\"","");
+                $("#states").append(`<option value="${optionText}">
+                                       ${optionText}
+                                  </option>`);
+             }
+             }
+        });
+        });
+        $("#states").on("change",function(){
+        var state=$("#states").val();
+         if(state=="Select")
+             alert("Select Appropriate State");
+        $.ajax(
+        {
+             type:"get",
+             url:"/Hospital_Selection/city/",
+             data:
+             {
+              city:$("#states").val()
+             },
+             success:function(data)
+             {
+             var states=JSON.stringify(data);
+             var p=states.split(",");
+
+             $("#cities").empty();
+             $("#cities").append(`<option value="Select">
+                                       Select City
+                                  </option>`);
+
+             for(var i=0;i<p.length;i++)
+             {
+             var k=p[i].replace("\[","")
+             var n=k.replace("\]","")
+             var optionText=n.slice(1,n.length-1)
+
+                $("#cities").append(`<option value="${optionText}">
+                                       ${optionText}
+                                  </option>`);
+             }
+             }
+        });
+        });
+        $("#form1").on("submit",function()
+        {
+         var state=$("#states").val();
+         var city=$("#cities").val();
+         var country=$("#countries").val();
+         if(state=="Select" || city=="Select" || country=="Select")
+             alert("Select Appropriate values from dropdowns");
+        });
+        });
+    </script>
+    <style>
+        @media only screen and (max-width: 720px) {
+        *
+        {
+        font-size:10px;
+        }
+        select
+        {
+           width:80px !important;
+        }
+        button
+        {
+          font-size:11px !important;
+        }
+        #countries
+        {
+         margin-left:50px !important;
+            width:80px;
+            height:30px;
+            border-radius:1px;
+            font-size:10px;
+        }
+        #label1
+        {
+           margin-left:50px !important;
+        }
+        #label2
+        {
+           margin-left:50px !important;
+        }
+        #states
+        {
+            margin-left:0px;
+            width:80px;
+            height:30px;
+            border-radius:1px;
+            font-size:10px;
+        }
+
+        #cities
+        {
+        margin-left:0px;
+            width:80px;
+            height:30px;
+            border-radius:1px;
+            font-size:10px;
+
+        }
+    #submit_form
+        {
+            font-size:10px !important;
+            width:60px !important;
+            height:30px !important;
+            margin-top:-28px !important;
+            margin-left:10px !important;
+
+        }
+    #div_form
+        {
+           position:absolute;
+           margin-top:-250px;
+           margin-left:30px;
+        }
+    .img1
+    {
+     height:50px;
+    }
+    .row
+    {
+    margin-left:5px;
+    }
+    .btn
+    {
+      font-size:10px;
+     }
+    .card
+    {
+       margin-left:0px;
+    }
+     th,td
+     {
+        font-size:10px;
+     }
+     }
+     select
+     {
+     width:200px;
+     }
+     .form_select
+        {
+            width:150px;
+            border-radius:3px;
+            margin-left:100px;
+            height:40px;
+        }
+        #div_form
+        {
+           position:absolute;
+           margin-top:-250px;
+           margin-left:100px;
+        }
+        image
+        {
+           height:10px;
+        }
+        #submit_form
+        {
+        font-size:15px;
+        width:100px;
+        height:40px;
+        margin-top:-8px;
+        margin-left:90px;
+        }
+
+    </style>
     <script src="{% static 'Hospital_Selection.js' %}"></script>
     <script>
         $(document).ready(function(){
@@ -21,10 +216,15 @@
         function validate()
         {
         var date=document.getElementById("Appointment_Date").value;
-        //alert(date);
+        alert(date);
         var d=new Date();
-        if(!Date.parse(date) || new Date(date)<= d){
+        var d1=new Date(date);
+        if(!Date.parse(date)){
             alert('Please Select Appropriate Date');
+            return false;
+        }
+        if(!(d1>d && d1.getDay()!=0 && d1.getDay()!=6))
+        { alert('Please Select Appropriate Date');
             return false;
         }
         }
@@ -49,20 +249,45 @@
         {
             if(filter=="Location")
             {
-
             $('#filter_type').val(filter);
             $('#form2').css({"display":"none"});
+            $('#form3').css({"display":"none"});
+            $('#form8').css({"display":"none"});
             $("#search_value").empty();
                  $('#form1').css({"display":"block"});
+                  $("test_name").css({"display":"none"});
+            }
+            else if(filter=="Test Name")
+            {
+               $('#filter_type2').val(filter);
+               $('#form1').css({"display":"none"});
+               $('#form2').css({"display":"none"});
+                $('#label2').html("<b>Select the Test Name:</b>");
+                $("#form3").css({"display":"block"});
+            }
+            else if(filter=="speciality")
+            {
+            alert("hi")
+              $('#filter_type3').val(filter);
+               $('#form1').css({"display":"none"});
+               $('#form2').css({"display":"none"});
+                $('#label3').html("<b>Select the Speciality Name:</b>");
+                $("#form3").css({"display":"none"});
+                $("#search_value").empty();
+                $("#form8").css({"display":"block"});
+
             }
             else{
              $("#search_value").empty();
              $('#filter_type1').val(filter);
-             var string1='Enter the '+filter
+             var string1='<b> Enter the '+filter+'</b>'
              $('#label1').html(string1)
              $('#form1').css({"display":"none"});
+             $('#form3').css({"display":"none"});
+             $('#form8').css({"display":"none"});
             $('#form2').css({"display":"block"});
-            $("#search_value").append(`<input type="text" class="form-control" width="100%"required name="search_values">
+             $("test_name").css({"display":"none"});
+            $("#search_value").append(`<input type="text" width="100%"required name="search_values">
                                   </input>`);
                                   }
                                   }
@@ -86,114 +311,116 @@
     </script>
 </head>
 <body style="background-image:url({% static 'image3.jpeg' %}); width:100%;">
-<!--<div class="row">
-
-        <div class="col-lg-3" style="float:right;">
-            <label for="filters1"><h1>Filter By:</h1></label></div>
-        <div class="col-lg-3"  style="float:right;">
-                <select id="filters1"  name="filter" required>
-                    <option value="Location" >Location</option>
-                    <option value="Hospital_Name" >Hospital_Name</option>
-                    <option value="Doctor_Name">Doctor Name</option>
-                    <option value="Clinic_Name">Clinic Name</option>
-                    <option value="Testing_Lab">Testing Lab Name</option>
-                </select>
-    </div>
-        <div class="col-lg-3" style="float:right;">
-            <label for="sort1"><h1>Sort By:</h1></label></div>
-        <div class="col-lg-3"  style="float:right;">
-                <select id="sort1" class="form_select" name="filter" required>
-                    <option value="Hospitals" >Hospitals</option>
-                    <option value="Clinics" >Clinics</option>
-                    <option value="Testing Labs">Testing Labs</option>
-                </select>
-    </div>
-    </div>-->
-   <!--<div>
-        <image src="{% static 'image1.jpeg' %}" width="100%" height="300px"></image>
-    </div>-->
-    <div class="row" >
-        <div class="col-lg-3">
-            <label for="filters" style="float:right;"><b>Filter By:</b></label></div>
-        <div class="col-lg-3"  style="float:right;">
-                <select id="filters"  name="filter" class="form-control" required>
+<div>
+        <span>
+            <label for="filters"><b>Filter By:</b></label></span>
+        <span>
+                <select id="filters"  name="filter"  required>
                     <option value="Location" selected>Location</option>
                     <option value="Hospital_Name" >Hospital_Name</option>
                     <option value="Doctor_Name">Doctor Name</option>
                     <option value="Clinic_Name">Clinic Name</option>
+                    <option value="speciality">Speciality</option>
                     <option value="Testing_Lab">Testing Lab Name</option>
+                    <option value="Test Name">Test Name</option>
                 </select>
-    </div>
-        <div class="col-lg-3" >
-            <label for="sort" style="float:right;"><b>Sort By:</b></label></div>
-        <div class="col-lg-3"  style="float:right;">
+    </span>
+    <span style="float:right;">
             <form action="{% url 'list_of_hospital' %}" id="form6"  style="display:block;" method="post">
               {% csrf_token %}
                 {% if filter %}
-                <input type="text" hidden class="filter_value" value="{{ filter }}">
+                <input type="text" hidden class="filter_value" class="form-control" value="{{ filter }}">
                 {% else %}
                  <input type="text" hidden class="filter_value" value="">
                 {% endif %}
-                <select id="sort" class="form-control" name="filter" required >
+                <select id="sort"  name="filter" required >
                     <option value="Hospitals" id="Hospitals">Hospitals</option>
                     <option value="Clinics" id="Clinics">Clinics</option>
                     <option value="Testing_Labs" id="Testing_Labs">Testing Labs</option>
                 </select>
             </form>
+    </span>
+    <span style="float:right;">
+            <label for="sort"><b>Sort By:</b></label></span>
     </div>
-
-    </div>
-
    <div style="margin-top:50px;">
         <form action="{% url 'list_of_hospital' %}" id="form1" style="display:block;" method="post">
             {% csrf_token %}
             {% if list_of_countries|length > 0 %}
-            <div class="row">
-                <div class="col-lg-2">
-             <input type="text" hidden id="filter_type" name="filter"></div>
-                <div class="col-lg-2">
-                <select id="countries" class="form-control"  name="country">
+                <span>
+             <input type="text" hidden id="filter_type" name="filter"></span>
+                <span>
+                <select id="countries" style="margin-left:300px;">
                  <option value="Select">Select Country</option>
                 {% for i in list_of_countries %}
                         <option value="{{ i }}">{{ i }}</option>
                 {% endfor %}
-                </select></div>
+                </select></span>
             {% endif %}
-                <div class="col-lg-2">
-                <select id="states" class="form-control"   name="state">
+                <span>
+                <select id="states" >
                         <option value="Select">Select State</option>
-                </select></div>
-                <div class="col-lg-2">
-                <select id="cities" class="form-control"   name="city">
+                </select></span>
+                <span>
+                <select id="cities">
                     <option value="Select">Select City</option>
-                </select></div>
-                <div class="col-lg-2">
-                <button type="submit" class="btn-success form-control" id="submit_form"> Submit</button></div>
-                </div>
+                </select></span>
+                <span>
+                <button type="submit" class="btn-success" id="submit_form"> Submit</button></span>
             </form>
-
         <form  action="{% url 'list_of_hospital' %}" id="form2" style="display:none" method="post">
                 {% csrf_token %}
-            <div class="row">
-                <div class="col-lg-3">
-                 <input type="text" hidden id="filter_type1" name="filter"></div>
-                <div class="col-lg-3" id="label1">
-                </div>
-                <div  id="search_value" class="col-lg-3" style="float:right;">
+                <span>
+                 <input type="text" hidden id="filter_type1" name="filter"></span>
+                <span  id="label1" style="margin-left:300px;">
+                </span>
+                <span  id="search_value" >
 
-                    </div>
-                <div class="col-lg-3">
-                <button type="submit"  value="submit" class=" btn btn-success">Submit</button></div>
-</div>
-
-
+                    </span>
+                <span>
+                <button type="submit"  value="submit" class=" btn btn-success">Submit</button></span>
                  </form>
-</div>
-<div class="container-fluid">
+       <form  action="{% url 'list_of_hospital' %}" id="form3" style="display:none" method="post">
+                {% csrf_token %}
+                <span>
+                 <input type="text" hidden id="filter_type2" name="filter"></span>
+                <span  id="label2" style="margin-left:300px;">
+                </span>
+                {% if list_of_tests %}
+                <span>
+                <select id="test_names"  name="Test_Name" >
+                {% for i in list_of_tests %}
+                        <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+                </select></span>
+                {% endif %}
+                <span>
+                <button type="submit"  value="submit" class=" btn btn-success">Submit</button></span>
+                 </form>
+       <form  action="{% url 'list_of_hospital' %}" id="form8" style="display:none" method="post">
+                {% csrf_token %}
+                <span>
+                 <input type="text" hidden id="filter_type3" name="filter"></span>
+                <span  id="label3" style="margin-left:300px;">
+                </span>
+                {% if list_of_speciality %}
+                <span>
+                <select id="speciality"  name="speciality" >
+                {% for i in list_of_speciality %}
+                        <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+                </select></span>
+                {% endif %}
+                <span>
+                <button type="submit"  value="submit" class=" btn btn-success">Submit</button></span>
+                 </form>
+   </div>
+
+       <div class="container-fluid">
     {% if list_of_hospitals|length > 0 %}
 <div class="row" style="margin-top:50px;">
     {% for i in list_of_hospitals %}
-    <div class="col-lg-3 col-xs-1 ">
+    <div class="col-lg-3 col-xs-1 " style="margin-top:10px;">
         <div class="card">
             <image src="{{ i.pic1.url }}" height=100px  class="img1" alt="{{ i.hospitalid.name }}"></image>
             <table class="table-stripped">
@@ -207,7 +434,7 @@
 
                 </tr>
             </table>
-            <button class="btn btn-primary" onclick="location.href='{% url 'Selected' hospital_id=i.hospitalid  %}'">Apply Now</button>
+            <button class="btn btn-primary" onclick="location.href='{% url 'Selected' user_id=i.hospitalid  %}'">Apply Now</button>
         </div>
     </div>
     {% endfor %}
@@ -217,7 +444,6 @@
     <div>
         <center>
              {% ifequal filter "Hospital" %}
-
                 No Hospitals Registered In this Area
             {% endifequal %}
         </center>
@@ -227,16 +453,24 @@
 
 <div class="container-fluid">
     {% if list_of_doctors|length > 0 %}
-
 <div class="row" style="margin-top:50px;">
     {% for i in list_of_doctors %}
-    <div class="col-lg-3 col-xs-3 ">
+    <div class="col-lg-4 col-xs-4" style="margin-top:10px;">
         <div class="card">
+            {% ifequal filter "Clinics" %}
+            <image src="{{ i.clinic_photo.url }}" height=100px class="img1" alt="{{ i.hospitalid.name }}"></image>
+            {% else %}
             <image src="{{ i.profile_pic.url }}" height=100px class="img1" alt="{{ i.hospitalid.name }}"></image>
+            {% endifequal %}
             <table class="table-stripped">
                 <tr>
+                    {% ifequal filter "Clinics" %}
+                    <th>Clinic Name:</th>
+                    <td>{{ i.clinic_name }}</td>
+                    {% else %}
                     <th>Hospital Name:</th>
                     <td>{{ i.hospitalid.hospitalid.name }}</td>
+                    {% endifequal %}
                 </tr>
                 <tr>
                     <th>Name:</th>
@@ -252,9 +486,12 @@
 
                 </tr>
                 <tr>
-
-                        <th>   <button class="btn btn-primary mode" id="Online"  data-toggle="modal" data-target="#exampleModal">Book Online Appointment</button></th>
-                <td><button class="btn btn-primary mode"  id="Remote"  data-toggle="modal" data-target="#exampleModal">Book Remote Appointment</button></td>
+                    <th>fee:</th>
+                    <td>{{ i.specialization }}</td>
+                </tr>
+                <tr>
+                    <td><button class="btn btn-primary mode" id="Online" style="font-size:14px;margin-left:2px;"  data-toggle="modal" data-target="#exampleModal">Book Online Appointment</button></td>
+                <td><button class="btn btn-primary mode"  id="Remote"  style="font-size:14px;" data-toggle="modal" data-target="#exampleModal">Book Remote Appointment</button></td>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -282,13 +519,14 @@
     </div>
   </div>
 </div>
-
-                </tr>
+                        </tr>
             </table>
             </div>
     </div>
     {% endfor %}
         </div>
+
+
     {% else %}
     <div>
         <center>
@@ -299,8 +537,33 @@
     </div>
     {% endif %}
     </div>
-</body>
+<div class="container-fluid">
+    {% if list_of_testing_labs|length > 0 %}
+<div class="row" style="margin-top:50px;">
+    {% for i in list_of_testing_labs %}
+    <div class="col-lg-3 col-xs-1" style="margin-top:10px;">
+        <div class="card">
+            <image src="{{ i.profile_pic.url }}" height=100px class="img1" alt="{{ i.tlabid.name }}"></image>
+            <table class="table-stripped">
+                <tr>
+                    <th>Testing Lab Name:</th>
+                    <td>{{ i.tlabid.name }}</td>
+                </tr>
+                <tr>
+                    <th>City:</th>
+                    <td>{{ i.city }}</td>
+                </tr>
+            </table>
+             <button class="btn btn-primary" onclick="location.href='{% url 'Selected' user_id=i.tlabid  %}'">Apply Now</button>
 
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+    {% endif %}
+</div>
+ {% include 'main_app/show_messages.html' %}
+</body>
 </html>
 
 
@@ -316,7 +579,3 @@
 
 
 
-
-<!--<div style="margin-top:20px;">
-
-        </div>-->

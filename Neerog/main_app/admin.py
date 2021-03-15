@@ -31,10 +31,17 @@ class HospitalSpecialityAdmin(admin.ModelAdmin):
     list_display = ('hospitalid','speciality','price')
     #columns that have  a filter-by option
     list_filter=['speciality','price']
+class AppointmentslotsAdmin(admin.ModelAdmin):
+    list_display = ('doctorid','available','date',"TestingLab")
 
+admin.site.register(Appointment_slots,AppointmentslotsAdmin)
+
+class AppointmentsAdmin(admin.ModelAdmin):
+    #columns which will be displayed in outer view
+    list_display = ('appointmentid','doctoremail','patientemail')
 admin.site.register(HospitalSpeciality,HospitalSpecialityAdmin)
 
-
+admin.site.register(Appointments,AppointmentsAdmin)
 class DoctorAdmin(admin.ModelAdmin):
     #columns which will be displayed in outer view
     list_display = ('doctorid','city','country','gender','experience','verified')

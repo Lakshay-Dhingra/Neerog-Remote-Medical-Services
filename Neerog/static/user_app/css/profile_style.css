@@ -1,0 +1,224 @@
+/* Profile Page CSS */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
+
+body
+{
+  font-family: 'Open Sans', sans-serif;
+}
+
+@media(min-width: 700px)
+{
+    .profilebg::before
+    {
+        background-image: url("../images/doctor_bg.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        content:"";
+        position: absolute;
+        top:0;
+        left:0;
+        width: 100%;
+        height: 1600px;
+        z-index: -1;
+        opacity: 0.6;
+    } 
+}
+
+#main_profile
+{
+    width: 90vw;
+    margin: 0 auto;
+    margin-top: 60px;
+}
+
+@media(max-width: 450px)
+{
+  body
+  {
+     background: rgba(200, 200, 210, 0.2);
+  } 
+  #main_profile
+    {
+        width: 94vw;
+        margin: 0 auto;
+        margin-top: 70px;
+    }
+    #profile_card
+    {
+      margin-left: 4px;
+      margin-bottom: 35px;
+    }
+    #profile_head
+    {
+      padding-left: 25px;
+      padding-top: 30px;
+    }
+
+    #left_profile_section
+    {
+      margin-bottom:25px;
+    }
+}
+
+#profile_image
+{
+  padding:45px 90px;
+}
+
+#profile_image img
+{
+  border: solid;
+}
+
+@media(min-width: 450px)
+{
+  #profile_head
+  {
+    border-radius: 10px;
+    margin:45px 0;
+    padding-left: 25px;
+    padding-top: 45px;
+    background: rgba(240, 248, 255,0.5);
+  }
+}
+
+.star_rating
+{
+  padding-top: 5px;
+}
+
+.your_rating
+{
+  font-size:27px;
+  font-weight: 550;
+  text-align: right;
+  margin-top: 10px;
+}
+
+.follow
+{
+  font-size:27px;
+  font-weight: 550;
+  text-align: right;
+  padding-right:20px;
+  
+}
+
+.follow a
+{
+  font-size: 25px;
+  padding: 10px 20px;
+}
+
+.profileemail
+{
+  margin-top: 10px;
+}
+
+.rating {
+    display: inline-block;
+    position: relative;
+    height: 50px;
+    line-height: 50px;
+    font-size: 50px;
+  }
+  
+  .rating label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    cursor: pointer;
+  }
+  
+  .rating label:last-child {
+    position: static;
+  }
+  
+  .rating label:nth-child(1) {
+    z-index: 5;
+  }
+  
+  .rating label:nth-child(2) {
+    z-index: 4;
+  }
+  
+  .rating label:nth-child(3) {
+    z-index: 3;
+  }
+  
+  .rating label:nth-child(4) {
+    z-index: 2;
+  }
+  
+  .rating label:nth-child(5) {
+    z-index: 1;
+  }
+  
+  .rating label input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+  
+  .rating label .icon {
+    float: left;
+    color: transparent;
+  }
+  
+  .rating label:last-child .icon {
+    color:silver;
+  }
+  
+  .rating:not(:hover) label input:checked ~ .icon,
+  .rating:hover label:hover input ~ .icon {
+    color:rgba(235, 195, 0, 0.9);
+  }
+  
+  .rating label input:focus:not(:checked) ~ .icon:last-child {
+    color: #000;
+    text-shadow: 0 0 5px #09f;
+  }
+
+  @media(max-width: 450px)
+  {
+    #profile_head .star_rating .rating
+    {
+      font-size: 35px;
+      height: 35px;
+    }
+    #profile_head .star_rating .your_rating
+    {
+      font-size: 19px;
+    }
+
+    .follow
+    {
+      text-align: center;      
+    }
+
+    .follow a
+    {
+      font-size: 22px;
+      padding: 8px 16px;
+    }
+  }
+
+#left_profile_section
+{
+  padding:0 30px;
+}
+
+#left_profile_section h4
+{
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+#left_profile_section .about_me
+{
+  text-align: justify;
+  word-wrap: normal;
+}

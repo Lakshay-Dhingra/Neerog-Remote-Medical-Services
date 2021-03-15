@@ -72,7 +72,7 @@ footer{
   min-width: 260px;
 }
 
-.btn{
+.newsletter_btn{
   padding: 18px 40px;
   font-size: 16px;
   color: #f1f1f1;
@@ -86,7 +86,7 @@ footer{
   transition: opacity .3s linear;
 }
 
-.btn:hover{
+.newsletter_btn:hover{
   opacity: .7;
 }
 
@@ -115,7 +115,7 @@ footer{
 
 
 @media screen and (max-width:700px){
-  .btn{
+  .newsletter_btn{
     margin: 0;
     width: 100%;
     margin-top: 20px;

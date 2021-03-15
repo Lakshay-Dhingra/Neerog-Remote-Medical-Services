@@ -65,3 +65,19 @@ class TestPricingAdmin(admin.ModelAdmin):
     list_filter=['testname','price']
 
 admin.site.register(TestPricing,TestPricingAdmin)
+
+class FollowAdmin(admin.ModelAdmin):
+    #columns which will be displayed in outer view
+    list_display = ('influencerid','followerid')
+    #columns that have  a filter-by option
+    list_filter=['influencerid','followerid']
+
+admin.site.register(Follow,FollowAdmin)
+
+class RatingsAdmin(admin.ModelAdmin):
+    #columns which will be displayed in outer view
+    list_display = ('influencerid','raterid', 'rating')
+    #columns that have  a filter-by option
+    list_filter=['influencerid','raterid', 'rating']
+
+admin.site.register(Ratings,RatingsAdmin)

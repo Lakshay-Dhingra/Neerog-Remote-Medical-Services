@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User,auth
 from . import tokens
 from . import authenticate
+from main_app import user_data
 from main_app import medical_speciality
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
@@ -26,16 +27,16 @@ def signup(request):
     return render(request,'accounts/signup.html')
 
 def signup_redirect(request):
-    if(authenticate.getUserType(request.user.id) == "Doctor"):
+    if(user_data.getUserType(request.user.id) == "Doctor"):
         return redirect("/accounts/signup/doctor")
-    elif(authenticate.getUserType(request.user.id) == "Patient"):
+    elif(user_data.getUserType(request.user.id) == "Patient"):
         return redirect("/accounts/signup/patient")
-    elif(authenticate.getUserType(request.user.id) == "Hospital"):
+    elif(user_data.getUserType(request.user.id) == "Hospital"):
         return redirect("/accounts/signup/hospital")
 
 def signup_doctor(request):
-    if(authenticate.getUserType(request.user.id) == "Doctor"):
-        if(authenticate.isVerifiedUser(request.user.id)):
+    if(user_data.getUserType(request.user.id) == "Doctor"):
+        if(user_data.isVerifiedUser(request.user.id)):
             messages.info(request,"You're Details Have Already Been Submitted!")
             return redirect("/")
         else:
@@ -45,8 +46,8 @@ def signup_doctor(request):
         return redirect("/")
 
 def signup_hospital(request):
-    if(authenticate.getUserType(request.user.id) == "Hospital"):
-        if(authenticate.isVerifiedUser(request.user.id)):
+    if(user_data.getUserType(request.user.id) == "Hospital"):
+        if(user_data.isVerifiedUser(request.user.id)):
             messages.info(request,"You're Details Have Already Been Submitted!")
             return redirect("/")
         else:
@@ -56,8 +57,8 @@ def signup_hospital(request):
         return redirect("/")
 
 def signup_patient(request):
-    if(authenticate.getUserType(request.user.id) == "Patient"):
-        if(authenticate.isVerifiedUser(request.user.id)):
+    if(user_data.getUserType(request.user.id) == "Patient"):
+        if(user_data.isVerifiedUser(request.user.id)):
             messages.info(request,"You're Details Have Already Been Submitted!")
             return redirect("/")
         else:

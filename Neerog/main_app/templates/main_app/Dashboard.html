@@ -22,9 +22,10 @@
      }
       }
     .dot {
-  height: 65px;
-  width: 65px;
-  font-size:40px;
+    border:2px solid white;
+  height: 60px;
+  width: 60px;
+  font-size:35px;
   background-color:#4B0082;
   border-radius: 50%;
   display: inline-block;
@@ -75,7 +76,7 @@ color:white;
      }
     </style>
 </head>
-<body style="width:90vw;margin:10px auto;">
+<body class="container-fluid">
 <div class="container-fluid">
     {% if Testing_Lab_Details %}
     <div class="row">
@@ -93,7 +94,7 @@ color:white;
             <button type="button" class="btn btn-success"style="float:right;" onclick="location.href='{% url 'select_speciality'  %}'">Book Appointment</button>
        </div>
     </div>
-    <div>Home</div>
+
     <div id="carouselExampleSlidesOnly1" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active">
@@ -111,7 +112,7 @@ color:white;
         {% for key in specialities %}
             <div class="col-lg-3 col-sm-6 col-xs-6 col-md-4 card" style="height:150px;margin-top:10px;">
                     <div>
-                        <span class="dot"><b style="margin-left:18px;">{{ key.testname|first }}</b></span>
+                        <span class="dot"><b style="margin-left:16px;">{{ key.testname|first }}</b></span>
                     <h6>{{ key.testname }}</h6>
                         <h6>Fee:{{ key.price }}</h6>
 

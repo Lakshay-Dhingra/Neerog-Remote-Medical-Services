@@ -62,9 +62,9 @@
         <div class="col-lg-3" style="margin-top:10px;">
             <form action="{% url 'Payment' %}" method="post">
                 {% csrf_token %}
-            <input type="text" value="{{ i }}" name="time_slot" hidden>
+            <input type="text" value="{{ i|time:'H:i:s' }}" name="time_slot" hidden>
             <div class="card">
-            <button type="submit" class="btn">{{ i }}</button></div>
+            <button type="submit" class="btn">{{ i|time }}</button></div>
             </form>
         </div>
         {% endfor %}

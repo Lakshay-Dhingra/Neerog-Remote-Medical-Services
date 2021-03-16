@@ -344,7 +344,7 @@
                                   });
     </script>
 </head>
-<body style="background-image:url({% static 'image3.jpeg' %}); width:100%;" >
+<body style="background-image:url({% static 'image3.jpeg' %}); width:100%;"class="container-fluid" >
 <div>
         <span>
             <label for="filters"><b style="font-size:20px;">Filter By:</b></label></span>
@@ -384,7 +384,7 @@
                 <span>
              <input type="text" hidden id="filter_type" name="filter"></span>
                 <span>
-                <select id="countries" style="margin-left:300px;">
+                <select id="countries" style="margin-left:300px;" name="country">
                  <option value="Select">Select Country</option>
                 {% for i in list_of_countries %}
                         <option value="{{ i }}">{{ i }}</option>
@@ -392,11 +392,11 @@
                 </select></span>
             {% endif %}
                 <span>
-                <select id="states" >
+                <select id="states" name="state">
                         <option value="Select">Select State</option>
                 </select></span>
                 <span>
-                <select id="cities">
+                <select id="cities" name="city">
                     <option value="Select">Select City</option>
                 </select></span>
                 <span>
@@ -473,15 +473,6 @@
     </div>
     {% endfor %}
         </div>
-
-    {% else %}
-    <div>
-        <center>
-             {% ifequal filter "Hospital" %}
-                No Hospitals Registered In this Area
-            {% endifequal %}
-        </center>
-    </div>
     {% endif %}
     </div>
 
@@ -491,14 +482,14 @@
     {% for i in list_of_doctors %}
     <div class="col-lg-4 col-xs-4" style="margin-top:10px;">
         <div class="card">
-            {% ifequal filter "Clinics" %}
+            {% ifequal filter "Clinic" %}
             <image src="{{ i.clinic_photo.url }}" height=100px class="img1" alt="{{ i.hospitalid.name }}"></image>
             {% else %}
             <image src="{{ i.profile_pic.url }}" height=100px class="img1" alt="{{ i.hospitalid.name }}"></image>
             {% endifequal %}
             <table class="table-stripped">
                 <tr>
-                    {% ifequal filter "Clinics" %}
+                    {% ifequal filter "Clinic" %}
                     <th>Clinic Name:</th>
                     <td>{{ i.clinic_name }}</td>
                     {% else %}
@@ -517,7 +508,6 @@
                 <tr>
                     <th>Specialisation:</th>
                     <td>{{ i.specialization }}</td>
-
                 </tr>
                 <tr>
                     <th>fee:</th>

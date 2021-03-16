@@ -28,14 +28,14 @@
         $(document).ready(function(){
         $(".btn").on("click",function(){
         var id1=$(this).attr('id');
-        alert(id1)
+
         $(".mode").val(id1);
-        alert($(".mode").val(id1))
+
         });
         });
     </script>
 </head>
-<body style="width:90vw;margin-top:30px auto;">
+<body class="container-fluid">
 <div class="container-fluid">
     <div class="row">
         <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"></image>

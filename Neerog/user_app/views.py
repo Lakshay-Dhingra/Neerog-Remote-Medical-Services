@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from main_app import user_data
+from main_app import user_data, medical_speciality
 
 
 def profile(request, uid):
@@ -39,6 +39,8 @@ def edit_profile(request):
         if(user_data.isRegisteredUser(uid)):
             if(user_type == "Doctor"):
                 doctor_data = user_data.getDoctorData(uid)
+                doctor_data['AllSpecialities']=medical_speciality.get_specialities()
+                doctor_data['AllGenders']=['Male', 'Female', 'Trans', 'Unknown']
                 return render(request,'user_app/EditDoctorProfile.html',doctor_data)
             else:
                 messages.info(request,"You Are Not A Doctor!") #Temporary

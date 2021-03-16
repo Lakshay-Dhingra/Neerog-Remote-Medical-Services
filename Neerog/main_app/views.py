@@ -396,7 +396,7 @@ def Selected_Service_Provider(request,user_id):
         for i in k:
             Specialities.append(i.speciality)
         dict1={}
-        poke = pd.read_csv("E:\\IIT Research Project\\Neerog_website\\Project\\Neerog\\main_app\\static\\Specialities_Images.csv")
+        poke = pd.read_csv("main_app/static/Specialities_Images.csv")
         list1 =poke['Speciality'].tolist()
         list2=poke['Speciality_Image'].tolist()
         #print(list1,list2)

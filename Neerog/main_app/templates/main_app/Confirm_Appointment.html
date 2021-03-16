@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+     {% include "main_app/header.html" %}
+    <title>Appointment Details</title>
+</head>
+<body class="jumbotron" onkeydown="return (event.keyCode != 116)">
+<h5 style="text-align:center;color:#3291a8;">Confirm Appointment Details</h5>
+<div class="card table-responsive">
+        <table class="table table-striped container" style="margin-top:30px">
+              <tr>
+                <th>Patient Name</th>
+                  <td>{{ patientname }}</td>
+              </tr>
+              <tr>
+              <tr>
+                <th>Patient Email</th>
+                  <td>{{ patientemail }}</td></tr>
+               {% if userdetails.doctorid  %}
+              <tr>
+                  <th>Doctor Email</th>
+                  <td>{{ userdetails.doctorid.email }}</td></tr>
+                 {% elif userdetails.tlabId %}
+            <tr>
+                  <th>Testing Lab Name</th>
+                  <td>{{ userdetails.tlabId.name }}</td>
+              </tr>
+            <tr>
+                  <th>Testing Lab Email</th>
+                  <td>{{  userdetails.tlabId.email }}</td>
+              </tr>
+            <tr>
+                  <th>Test Name</th>
+                  <td>{{  speciality }}</td>
+              </tr>
+            {% endif %}
+             <tr>
+            <th>Appointment Date</th>
+                 <td>{{ date }}</td>
+              </tr>
+            {% if meeting_url  %}
+               <tr>
+            <th>Meeting Url</th>
+                   <td><a href="{{ meeting_url }}">{{ meeting_url }}</a></td>
+              </tr>
+            {% endif %}
+             <tr>
+            <th>Appointment Time</th>
+                 <td>{{ time }}</td>
+              </tr>
+             <tr>
+            <th>Mode</th>
+                 <td>{{ mode }}</td>
+              </tr>
+            <tr>
+            <th>Fee</th>
+                 <td>{{ amount_paid }}</td>
+              </tr>
+  </table>
+    <center>
+        <button type="button" onclick="location.href='{% url 'Appointment_Details_Submission' %}'"class="btn btn-success"onclick="window.print()">Checkout</button>
+        <button type="button" onclick="location.href='{% url 'cancel_appointment' %}'"class="btn btn-success"onclick="window.print()">Cancel</button>
+    </center>
+    </div>
+
+
+</body>
+</html>

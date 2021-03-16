@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Slot</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    {% include "main_app/header.html" %}
+    {% include 'main_app/common_css.html' %}
+    <style>
+    @media only screen and (max-width: 560px) {
+        .col-lg-8
+        {
+            height:100% !important;
+        }
+        }
+        tr
+        {
+          margin-left:20px;
+          margin-top:5px;
+          font-size:18px;
+          }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="row" style="margin-top:30px;">
+    <div class="col-lg-4 card" style="height:600px;">
+        <div>
+            <center><image src="{{ User_Profile.profile_pic.url }}" style="width:300px;height:300px;"></image>
+            </center>
+        </div>
+        <hr>
+        <center><h3 style="color:#3291a8;">About</h3></center>
+        <div class="table-responsive">
+            <table>
+                <tr>
+            <th>Name:</th>
+            <td>{{ User_Profile.doctorid.name}}</td></tr>
+
+        <tr>
+            <th>Specialisation:</th>
+            <td>{{ User_Profile.specialization }}</td>
+        </tr>
+        <tr>
+            <th>Experience:</th>
+            <td>{{ User_Profile.experience }}</td>
+        </tr>
+        <tr>
+            <th>Area:</th>
+            <td>{{ User_Profile.area }}</td>
+        </tr>
+            </table>
+
+    </div>
+    </div>
+<div class="jumbotron col-lg-8 card" style="height:600px;">
+
+   <h1 style="color:#3291a8;">Select Slot</h1>
+    <hr>
+    <div class="row">
+    {% for i in slots %}
+        <div class="col-lg-3" style="margin-top:10px;">
+            <form action="{% url 'Payment' %}" method="post">
+                {% csrf_token %}
+            <input type="text" value="{{ i|time:'H:i:s' }}" name="time_slot" hidden>
+            <div class="card">
+            <button type="submit" class="btn">{{ i|time }}</button></div>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+
+</div>
+</div>
+    </div>
+</body>
+</html>

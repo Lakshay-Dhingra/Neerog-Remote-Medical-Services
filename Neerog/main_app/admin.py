@@ -34,8 +34,12 @@ class HospitalSpecialityAdmin(admin.ModelAdmin):
 class AppointmentslotsAdmin(admin.ModelAdmin):
     list_display = ('doctorid','available','date',"TestingLab")
 
+
 admin.site.register(Appointment_slots,AppointmentslotsAdmin)
 
+class Appointment_TimingsAdmin(admin.ModelAdmin):
+    list_display = ("service_provider_id","date","time")
+admin.site.register(Appointment_Timings,Appointment_TimingsAdmin)
 class AppointmentsAdmin(admin.ModelAdmin):
     #columns which will be displayed in outer view
     list_display = ('appointmentid','doctoremail','patientemail')

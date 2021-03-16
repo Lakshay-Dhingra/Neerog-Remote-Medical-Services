@@ -229,6 +229,15 @@ class Appointment_slots(models.Model):
     available=models.BooleanField(default=True)
     Slots_Booked=models.IntegerField(default=0)
 
+class Appointment_Timings(models.Model):
+    service_provider_id = models.ForeignKey(UserDetails, models.SET_NULL, blank=True, null=True)
+    date=models.DateField()
+    time=models.CharField(max_length=20)
+    Booked=models.BooleanField(default=False)
+    available = models.BooleanField(default=True)
+
+
+
 class Follow(models.Model):
     influencerid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, related_name='follow_influencer')
     followerid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, related_name='follower')

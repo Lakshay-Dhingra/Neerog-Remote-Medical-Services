@@ -13,6 +13,26 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
+        function validate()
+        {
+        var start=document.getElementById("start").value;
+        var end=document.getElementById("end").value;
+        var d=new Date();
+        var d2=new Date(start);
+        var d1=new Date(end);
+        if(!Date.parse(start) || !Date.parse(end)){
+         alert('Please Select Appropriate Date');
+         alert("hi1");
+            return false;
+        }
+        if(!((d2>d && d1.getDay()!=0 && d1.getDay()!=6 && d2.getDay()!=0 && d2.getDay()!=6 && d1>d && d1>=d2))){
+             alert('Please Select Appropriate Date');
+            return false;
+        }
+        }
+    </script>
+
+    <script>
         $(document).ready(function()
         {
         $("#available").click(function()
@@ -118,12 +138,12 @@
      }
     .table-striped th
     {
-     font-size:12px;
+     font-size:18px;
      color:black;
      }
     .card-header
     {
-    background-color:#8080ff;
+    background-color:#404040;
     color:white;
     border-radius:20px;
     text-align:center;
@@ -135,7 +155,7 @@
      }
     </style>
 </head>
-<body style="overflow-x:hidden;background-color:light-grey;">
+<body style="overflow-x:hidden;background-color:light-grey;" class="container-fluid">
 {% if User_Details.doctorid %}
 <div class="row">
 
@@ -244,7 +264,7 @@ var myChart = new Chart(ctx, {
         <div class="col-md-12">
             <div class="card">
             <div class="card-header">List Of Appointments</div>
-            <form action="{% url 'availablity' %}" method="post">
+            <form action="{% url 'availablity' %}" method="post" onsubmit="return validate()">
                 {% csrf_token %}
             <div style="margin-top:10px;" class="row">
                 {% if User_Details.patientid %}
@@ -260,10 +280,10 @@ var myChart = new Chart(ctx, {
                  </div>
 
                 <div class="col-lg-3 offset-lg-5 Non_Available_date form-group" style="display:none;">
-                    <b>Unavailable From:</b><input type="date" class="form-control"  name="start">
+                    <b>Unavailable From:</b><input type="date" class="form-control"  id="start" name="start">
                 </div>
                 <div class="col-lg-2 Non_Available_date" style="display:none;">
-                    <b> To:</b><input type="date" class="form-control" name="end">
+                    <b> To:</b><input type="date" class="form-control" id="end" name="end">
                 </div>
                 <div class="col-lg-2 Non_Available_date" style="display:none;margin-top:10px;">
                     <button type="submit" class="btn btn-primary form-control">Submit</button>
@@ -308,7 +328,7 @@ var myChart = new Chart(ctx, {
                 <div class="table-responsive" style="overflow-y:scroll; height:300px;">
         <table class="table" style="margin-top:30px;position: sticky;">
             {% if list_of_Appointments %}
-            <thead style="background-color:black;">
+            <thead style="background-color:#404040;">
               <tr>
                 <th>Appointment Id</th>
                 <th>Patient Name</th>
@@ -322,12 +342,21 @@ var myChart = new Chart(ctx, {
                 <th>Doctor Email Id</th>
                   {% endif %}
                   {% endif %}
+                {% if User_Details.patientid %}
                 <th>Speciality/Tests</th>
+                  {% endif %}
                 <th>Appointment Date</th>
                 <th>Appointment Time</th>
                 <th>Mode Of Meeting</th>
+                  {% if User_Details.tlabid %}
+                  {% else %}
                 <th>Meeting url</th>
+                  {% endif %}
+                  {% if User_Details.tlabid %}
+                  <th>Test Report</th>
+                  {% else %}
                   <th>Prescription</th>
+                  {% endif %}
               </tr>
            <tbody>
         {% for i,j in list_of_Appointments.items %}
@@ -344,15 +373,20 @@ var myChart = new Chart(ctx, {
               <td>{{ i.doctoremail }}</td>
               {% endif %}
               {% endif %}
+              {% if User_Details.patientid %}
               <td>{{ i.Speciality }}</td>
+              {% endif %}
               <td>{{ i.appointment_date }}</td>
               <td>{{ i.appointment_time }}</td>
             <td>{{ i.mode_of_meeting }}</td>
+              {% if User_Details.tlabid %}
+              {% else %}
               {% ifequal i.meeting_url None %}
               <td>{{ i.meeting_url }}</td>
               {% else %}
               <td><a href="{{ i.meeting_url }}">{{ i.meeting_url }}</a></td>
               {% endifequal %}
+              {% endif %}
             <td>
                 {% if User_Details.doctorid %}
                 {% ifequal j "Upload Prescription" %}
@@ -371,10 +405,10 @@ var myChart = new Chart(ctx, {
                     {% csrf_token %}
                     <input type="text" name="id" hidden value="{{ i.appointmentid }}">
                     <input type="email" name="Email" hidden value="{{ i.patientemail }}">
-                     <button type="submit" class="btn btn-success"> Upload Prescription</button>
+                     <button type="submit" class="btn btn-success"> Upload Report</button>
                    </form>
                 {% else %}
-                <button class="btn btn-success"><a href='{{ j.Prescription.url }}' style="color:white;" download> Download Prescription</a></button>
+                <button class="btn btn-success"><a href='{{ j.Prescription.url }}' style="color:white;" download> Download Report</a></button>
                {% endifequal %}
                 {% else %}
                 {% ifequal j "Upload Prescription" %}
@@ -421,13 +455,20 @@ var myChart = new Chart(ctx, {
                 <tr>
                     <th>Specialization</th>
                 <td>{{ User_Details.specialization }}</td>
+
               </tr>
+             <tr>
+                    <th>Experience</th>
+                <td>{{ User_Details.experience }}</td>
+             </tr>
             {% elif User_Details.tlabid %}
                 <tr>
                 <th>Username</th>
                   <td>{{ User_Details.tlabid.name }} </td></tr>
                 <tr><th>Email Id</th>
                     <td>{{ User_Details.tlabid.email }}</td></tr>
+                 <tr><th>Year Established</th>
+                    <td>{{ User_Details.year_established }}</td></tr>
              {% else %}
             <tr>
                 <th>Username</th>

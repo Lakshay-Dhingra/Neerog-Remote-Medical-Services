@@ -59,7 +59,7 @@
         }
     </script>
 </head>
-<body>
+<body class="container-fluid">
 {% if Hospital_Details %}
 <div class="row">
         <div class="col-lg-1">
@@ -67,7 +67,7 @@
          <div class="col-lg-5">
              <h3>{{ Hospital_Details.hospitalid.name }}</h3></div>
     </div>
-    <div style="margin-left:10px;"><a href="http://127.0.0.1:8000/Selected/{{ Hospital_Details.hospitalid }}">Home</a>/Speciality</div>
+    <!--<div style="margin-left:10px;"><a href="http://127.0.0.1:8000/Selected/{{ Hospital_Details.hospitalid }}">Home</a>/Speciality</div-->
 {% elif Testing_Lab_Details %}
     <div class="row">
         <div class="col-lg-1">
@@ -75,7 +75,7 @@
          <div class="col-lg-5">
              <h3>{{ Testing_Lab_Details.tlabid.name }}</h3></div>
     </div>
-    <div style="margin-left:10px;"><a href="http://127.0.0.1:8000/Selected/{{ Testing_Lab_Details.tlablid }}">Home</a>/Speciality</div>
+    <!--div style="margin-left:10px;"><a href="http://127.0.0.1:8000/Selected/{{ Testing_Lab_Details.tlablid }}">Home</a>/Speciality</div-->
 {% endif %}
 <div class="container-fluid jumbotron">
          <div class="form-group">
@@ -84,10 +84,7 @@
          </div>
     {% if Hospital_Details %}
          <h3 style="color:#3291a8;"> Select Speciality </h3>
-    {% elif Testing_Lab_Details %}
-        <h3 style="color:#3291a8;"> Select Test </h3>
-    {% endif %}
-    <div class="row">
+         <div class="row">
         {% for i in specialities %}
              <div class="col-lg-4 col-md-2">
                      <form action='{% url "book_appointment1" speciality=i %}' onsubmit="return validate()">
@@ -95,12 +92,23 @@
                      <button type="submit" class="btn" style="margin-top:10px;" >{{ i }}<span style="float:right;"> ></span></a></button>
                         </div>
                      </form>
-
-
-
              </div>
-
         {% endfor %}
+    {% elif Testing_Lab_Details %}
+        <h3 style="color:#3291a8;"> Select Test </h3>
+    <div class="row">
+        {% for i in specialities %}
+             <div class="col-lg-4 col-md-2">
+                     <form action="{% url 'Appointment_Details_Submission1' %}" method="post" >
+                         {% csrf_token %}
+                         <div class="card">
+                      <input type="text" name="speciality" value="{{ i }}" hidden >
+                     <button type="submit" class="btn" style="margin-top:10px;" >{{ i }}<span style="float:right;"> ></span></a></button>
+                        </div>
+                     </form>
+             </div>
+        {% endfor %}
+    {% endif %}
     </div>
 {% include 'main_app/show_messages.html' %}
 </div>

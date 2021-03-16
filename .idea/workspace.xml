@@ -19,8 +19,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -38,7 +38,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/CeInsights" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -105,6 +105,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="463" y="118" key="FileChooserDialogImpl" timestamp="1615876396344">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1615876396344" />
     <state width="1345" height="179" key="GridCell.Tab.0.bottom" timestamp="1615297516348">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -121,13 +125,13 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1345" height="179" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1615297516347" />
-    <state x="257" y="17" key="SettingsEditor" timestamp="1606984089765">
+    <state x="184" y="8" key="SettingsEditor" timestamp="1615876866555">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="257" y="17" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1606984089765" />
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1615213170452">
+    <state x="184" y="8" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1615876866555" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1615809034123">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1615213170452" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1615809034123" />
   </component>
 </project>

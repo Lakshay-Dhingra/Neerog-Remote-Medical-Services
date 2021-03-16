@@ -7,7 +7,7 @@
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     {% include "main_app/header.html" %}
     {% include 'main_app/common_css.html' %}
-    <link rel="stylesheet" href="{% static 'Hospital_Selection.css' %}">
+    <!--<link rel="stylesheet" href="{% static 'Hospital_Selection.css' %}">-->
     <script>
         $(document).ready(function(){
         $("#countries").on("change",function(){
@@ -107,7 +107,7 @@
             width:80px;
             height:30px;
             border-radius:1px;
-            font-size:10px;
+            font-size:12px;
         }
         #label1
         {
@@ -123,16 +123,33 @@
             width:80px;
             height:30px;
             border-radius:1px;
-            font-size:10px;
+            font-size:12px;
         }
-
+        #sort
+        {
+             width:100px !important;
+            height:30px;
+            border-radius:1px;
+            font-size:12px;
+        }
+        b
+        {
+          font-size:15px !important;
+        }
+         #filters
+         {
+         width:100px !important;
+            height:30px;
+            border-radius:1px;
+            font-size:12px;
+         }
         #cities
         {
         margin-left:0px;
             width:80px;
             height:30px;
             border-radius:1px;
-            font-size:10px;
+            font-size:12px;
 
         }
     #submit_form
@@ -152,7 +169,7 @@
         }
     .img1
     {
-     height:50px;
+     height:150px !important;
     }
     .row
     {
@@ -165,15 +182,25 @@
     .card
     {
        margin-left:0px;
+       width:300px;
     }
      th,td
      {
         font-size:10px;
      }
      }
+     .img1
+     {
+        height:250px !important;
+        }
      select
      {
      width:200px;
+     height:30px;
+     }
+     b
+     {
+       font-size:20px;
      }
      .form_select
         {
@@ -182,16 +209,23 @@
             margin-left:100px;
             height:40px;
         }
+        input[type="text"]
+        {
+          width:200px;
+          height:30px;
+        }
+        .mode
+        {
+          font-size:15px;
+          margin-left:2px;
+        }
         #div_form
         {
            position:absolute;
            margin-top:-250px;
            margin-left:100px;
         }
-        image
-        {
-           height:10px;
-        }
+
         #submit_form
         {
         font-size:15px;
@@ -267,7 +301,7 @@
             }
             else if(filter=="speciality")
             {
-            alert("hi")
+
               $('#filter_type3').val(filter);
                $('#form1').css({"display":"none"});
                $('#form2').css({"display":"none"});
@@ -310,10 +344,10 @@
                                   });
     </script>
 </head>
-<body style="background-image:url({% static 'image3.jpeg' %}); width:100%;">
+<body style="background-image:url({% static 'image3.jpeg' %}); width:100%;" >
 <div>
         <span>
-            <label for="filters"><b>Filter By:</b></label></span>
+            <label for="filters"><b style="font-size:20px;">Filter By:</b></label></span>
         <span>
                 <select id="filters"  name="filter"  required>
                     <option value="Location" selected>Location</option>
@@ -341,7 +375,7 @@
             </form>
     </span>
     <span style="float:right;">
-            <label for="sort"><b>Sort By:</b></label></span>
+            <label for="sort"><b style="font-size:20px;">Group By:</b></label></span>
     </div>
    <div style="margin-top:50px;">
         <form action="{% url 'list_of_hospital' %}" id="form1" style="display:block;" method="post">
@@ -490,8 +524,8 @@
                     <td>{{ i.specialization }}</td>
                 </tr>
                 <tr>
-                    <td><button class="btn btn-primary mode" id="Online" style="font-size:14px;margin-left:2px;"  data-toggle="modal" data-target="#exampleModal">Book Online Appointment</button></td>
-                <td><button class="btn btn-primary mode"  id="Remote"  style="font-size:14px;" data-toggle="modal" data-target="#exampleModal">Book Remote Appointment</button></td>
+                    <td><button class="btn btn-primary mode" id="Online"   data-toggle="modal" data-target="#exampleModal">Book Online Consultation</button></td>
+                <td><button class="btn btn-primary mode"  id="Remote"   data-toggle="modal" data-target="#exampleModal">Book Offline Appointment</button></td>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -503,7 +537,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-        <form role="form" action="{% url 'Appointment_Details_Submission' %}"   onsubmit="return validate()" id="form4" method="post">
+        <form role="form" action="{% url 'Appointment_Details_Submission1' %}"   onsubmit="return validate()" id="form4" method="post">
                         {% csrf_token %}
       <div class="modal-body">
 
@@ -525,16 +559,6 @@
     </div>
     {% endfor %}
         </div>
-
-
-    {% else %}
-    <div>
-        <center>
-         {% ifequal filter "Doctor" %}
-                No Doctors Registered In this Area
-            {% endifequal %}
-        </center>
-    </div>
     {% endif %}
     </div>
 <div class="container-fluid">
@@ -543,7 +567,7 @@
     {% for i in list_of_testing_labs %}
     <div class="col-lg-3 col-xs-1" style="margin-top:10px;">
         <div class="card">
-            <image src="{{ i.profile_pic.url }}" height=100px class="img1" alt="{{ i.tlabid.name }}"></image>
+            <image src="{{ i.profile_pic.url }}" height=250px class="img1" alt="{{ i.tlabid.name }}"></image>
             <table class="table-stripped">
                 <tr>
                     <th>Testing Lab Name:</th>

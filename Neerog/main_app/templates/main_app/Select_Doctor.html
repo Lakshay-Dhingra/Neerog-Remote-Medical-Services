@@ -35,15 +35,14 @@
         });
     </script>
 </head>
-<body>
+<body style="width:90vw;margin-top:30px auto;">
 <div class="container-fluid">
     <div class="row">
         <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"></image>
         <h3>{{ Hospital_Details.hospitalid.name }}</h3>
 
     </div>
-    <div style="margin-left:10px;"><a href="http://127.0.0.1:8000/Selected/{{ Hospital_Details.hospitalid }}">Home</a>/<a href="http://127.0.0.1:8000/select_speciality/">Specialities</a>/Doctors</div>
-
+    <!--div style="margin-left:10px;"><a href="http://127.0.0.1:8000/Selected/{{ Hospital_Details.hospitalid }}">Home</a>/<a href="http://127.0.0.1:8000/select_speciality/">Specialities</a>/Doctors</div-->
     <div class="jumbotron">
         {% if list_of_Doctors|length > 0 %}
     <h3 style="color:#3291a8;">Select Doctor </h3>
@@ -68,12 +67,12 @@
                     <td>{{ i.hospitalid.hospitalid.name }}</td>
                 </tr>
                 <tr>
-                    <form action="{% url 'Appointment_Details_Submission' %}"  id="form1" method="post">
+                    <form action="{% url 'Appointment_Details_Submission1' %}"  id="form1" method="post">
                         {% csrf_token %}
                         <input type="text" hidden value="{{ i.doctorid }}" name="doctorid">
                         <input type="text" hidden value="" name="mode" class="mode">
-                    <th><button class="btn btn-primary" style="font-size:14px;" id="Online" type="submit">Book Online Appointment</button></th>
-                <td><button class="btn btn-primary"  style="font-size:14px;" id="Remote" type="submit">Book Remote Appointment</button></td>
+                    <th><button class="btn btn-primary" style="font-size:14px;" id="Online" type="submit">Book Online Consultation</button></th>
+                <td><button class="btn btn-primary"  style="font-size:14px;" id="Remote" type="submit">Book Offline Appointment</button></td>
                 </form>
                 </tr>
             </table>

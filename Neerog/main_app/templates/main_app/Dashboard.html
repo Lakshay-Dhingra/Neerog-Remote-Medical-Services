@@ -11,6 +11,15 @@
      {
        font-size:20px;
      }
+     span
+     {
+       font-size:15px;
+     }
+     .news
+     {
+        width:200px !important;
+        height:100px !important;
+     }
      .spec
      {
       margin-left:10px !important;
@@ -44,7 +53,7 @@ h2 span {
     padding:0 10px;
 }
 
-.card
+.card #test
 {
 margin-left:20px;
 background-color:#404040;
@@ -74,6 +83,7 @@ color:white;
      width:100%;
      height:500px;
      }
+
     </style>
 </head>
 <body class="container-fluid">
@@ -86,11 +96,10 @@ color:white;
         <h3>{{ Testing_Lab_Details.tlablid.name }}</h3>
             </div>
         <div class="col-lg-3">
-            <!--<i class="fa fa-phone" style="font-size:24px;color:#3291a8;"></i>
-                {{ Hospital_Details.phone }}
--->
+                {{ Testing_Lab_Details.tlablid.name }}Lifeline <i class="fa fa-phone" style="font-size:24px;color:#3291a8;"></i>{{ Hospital_Details.phone }}
         </div>
         <div class="col-lg-3">
+
             <button type="button" class="btn btn-success"style="float:right;" onclick="location.href='{% url 'select_speciality'  %}'">Book Appointment</button>
        </div>
     </div>
@@ -110,7 +119,7 @@ color:white;
     <h2><span>Centers Of Excellence</span></h2>
     <div class="row">
         {% for key in specialities %}
-            <div class="col-lg-3 col-sm-6 col-xs-6 col-md-4 card" style="height:150px;margin-top:10px;">
+            <div class="col-lg-3 col-sm-6 col-xs-6 col-md-4 card" id="test" style="height:150px;margin-top:10px;">
                     <div>
                         <span class="dot"><b style="margin-left:16px;">{{ key.testname|first }}</b></span>
                     <h6>{{ key.testname }}</h6>
@@ -131,27 +140,29 @@ color:white;
         <h3>{{ Hospital_Details.hospitalid.name }}</h3>
             </div>
         <div class="col-lg-3">
-            <!--<i class="fa fa-phone" style="font-size:24px;color:#3291a8;"></i>
-                {{ Hospital_Details.phone }}
--->
+
         </div>
         <div class="col-lg-3">
+           <span style="float:right;"> <i style="color:red;">{{ Hospital_Details.hospitalid.name }} Lifeline:</i> <i class="fa fa-telephone" style="font-size:24px;color:#3291a8;"></i>{{ Hospital_Details.phone }}</span>
             <button type="button" class="btn btn-success"style="float:right;" onclick="location.href='{% url 'select_speciality'  %}'">Book Appointment</button>
        </div>
     </div>
     <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner">
-      {% if Hospital_Details.pic1.url %}
+      {% if Hospital_Details.pic1%}
+
     <div class="carousel-item active">
         <img src="{{ Hospital_Details.pic1.url }}" class="d-block w-100 img1" alt="bye22">
     </div>
       {% endif %}
-      {% if Hospital_Details.pic3.url %}
+      {% if Hospital_Details.pic3 %}
+
     <div class="carousel-item">
       <img src="{{ Hospital_Details.pic3.url }}"  class="d-block w-100 img1"alt="bye45">
+
     </div>
       {% endif %}
-      {% if  Hospital_Details.pic2.url %}
+      {% if  Hospital_Details.pic2 %}
     <div class="carousel-item">
       <img src="{{ Hospital_Details.pic2.url }}" class="d-block w-100 img1" alt="bye">
     </div>
@@ -167,7 +178,7 @@ color:white;
          <div class="row">
         {% for key,item in specialities.items %}
            {% for i,j in item.items %}
-            <div style="margin-left:20px;" class="col-lg-3 col-md-6">
+            <div  class="col-lg-3 col-md-6">
                     <img alt="{{ key }}"  class="media-object" src="https://www.narayanahealth.org/sites/default/files/{{ i }}">
                      <center></center>
                     <h6 >{{ key }}</h6>
@@ -181,6 +192,29 @@ color:white;
 </div>
 
 {% endif %}
+    <div style="margin-top:40px;">
+    <h2><span>News/Events</span></h2>
+        <div id="carouselExampleSlidesOnly2" class="carousel slide" data-ride="carousel" style="background-color:blue;">
+            <div class="carousel-inner">
+        {% for key in Hospital_News %}
+                {% ifequal forloop.counter 1 %}
+                      <div class="carousel-item active">
+                        <span style="float:left;width:50%;margin-top:10%;">{{ key.Information }}</span>
+                        <span style="float:right;width:50%;">
+                        <img src="{{ key.photos.url }}" class="news" width="700px" height="400px"></span>
+                      </div>
+                {% else %}
+                      <div class="carousel-item">
+                          <span style="float:left;width:50%;margin-top:10%;">{{ key.Information }}</span>
+                        <span style="float:right;width:50%;">
+                            <img src="{{ key.photos.url }}" class="news" width="700px" height="400px"></span>
+                      </div>
+                {% endifequal %}
+        {% endfor %}
+
+        </div>
+</div>
+</div>
 </div>
 </body>
 </html>

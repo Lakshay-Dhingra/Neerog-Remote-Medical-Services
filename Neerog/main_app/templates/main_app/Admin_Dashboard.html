@@ -84,8 +84,68 @@
                                   });
                                   });
     </script>
+    <script>
+        $(document).ready(function()
+        {
+        $("#available").click(function()
+        {
+         if($(this).prop("checked") ==true){
+         $(".Non_Available_date").css({"display":"block"});
+         }
+         if($(this).prop("checked") ==false){
+         $(".Non_Available_date").css({"display":"none"});
+
+         }
+         });
+         });
+    </script>
+    <script>
+        function validate()
+        {
+        var start=document.getElementById("start").value;
+        var end=document.getElementById("end").value;
+        var d=new Date();
+        var d2=new Date(start);
+        var d1=new Date(end);
+        if(!Date.parse(start) || !Date.parse(end)){
+         alert('Please Select Appropriate Date');
+
+            return false;
+        }
+        if(!(d1>=d2)){
+             alert('Please Select Appropriate Date');
+            return false;
+        }
+        else
+        {
+
+        }
+        }
+    </script>
 </head>
 <body>
+<div><button class="btn btn-primary" onclick="location.href='{% url 'add_news' id=Hospital_Id %}'">Add News/Events</button></div>
+<div>
+    <form action="{% url 'report' %}" method="post" onsubmit="return validate()">
+                {% csrf_token %}
+            <div style="margin-top:10px;" class="row">
+                <div class="col-lg-2 offset-lg-10 available" style="display:block;">
+                     <input type="checkbox" id="available" value="available">
+                    <b>Get Report</b>
+                 </div>
+
+                <div class="col-lg-3 offset-lg-5 Non_Available_date form-group" style="display:none;">
+                    <b>Report From:</b><input type="date" class="form-control"  id="start" name="start">
+                </div>
+                <div class="col-lg-2 Non_Available_date" style="display:none;">
+                    <b> To:</b><input type="date" class="form-control" id="end" name="end">
+                </div>
+                <div class="col-lg-2 Non_Available_date" style="display:none;margin-top:23px;">
+                    <button type="submit" class="btn btn-primary form-control">Submit</button>
+                </div>
+                </div>
+                </form>
+</div>
 <div class="row" style="margin-top:20px;">
     <div class="col-lg-3 col-md-3 col-sm-3">
         <div class="card da">
@@ -132,7 +192,7 @@
 </div>
 </div>
 <div class="row" style="margin-top:50px;">
-<div class="col-lg-6">
+<div class="col-lg-6" style="margin-top:10px;">
     <div class="card cha">
         <canvas id="myChart" width="100px" height="100px"></canvas></div>
 <script>
@@ -170,7 +230,7 @@ var myChart = new Chart(ctx, {
 });
 </script>
 </div>
-<div class="col-lg-6 " >
+<div class="col-lg-6 " style="margin-top:10px;" >
     <div class="card cha">
     <div class="card-header">Doctor Monitoring</div>
     <div class="table-responsive">

@@ -10,6 +10,7 @@ urlpatterns = [
     path('Hospital_Selection/Hospital',views.list_of_hospital,name="list_of_hospital"),
     path('profile/',views.profile,name='profile'),
     path('verify/',views.verify,name='verify'),
+    path('report/',views.report,name='report'),
     path('verify_certificate/<str:id>',views.verify_certificate,name='verify_certificate'),
     path('index/', views.index, name='index'),
     path('select_speciality/',views.select_speciality,name="select_speciality"),
@@ -28,8 +29,9 @@ urlpatterns = [
     path('Appointment_Details_Submission1/', views.Appointment_Details_Submission1,
          name='Appointment_Details_Submission1'),
     path('Payment/',views.Payment,name="Payment"),
-    path('cancel_appointment/',views.cancel_appointment,name="cancel_appointment")
-
+    path('cancel_appointment/',views.cancel_appointment,name="cancel_appointment"),
+    path("add_news/<str:id>",views.add_news,name='add_news'),
+    path("submit_news",views.submit_news,name="submit_news")
 ]
 import main_app.jobs  # NOQA @isort:skip
 import logging

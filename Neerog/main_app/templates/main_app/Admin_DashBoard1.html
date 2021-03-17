@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load extras %}
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    {% include "main_app/header.html" %}
+    <style>
+    .cha
+    {
+     width:95%;
+     margin-left:20px;
+    }
+    .da
+    {
+       width:400px;
+       margin-left:20px;
+    }
+        .card-header
+    {
+    background-color:#404040;
+    color:white;
+    border-radius:20px;
+    text-align:center;
+    }
+    h1
+    {
+     color:blue;
+     text-align:center;
+     }
+    </style>
+</head>
+<body>
+    <h2 style="text-align:center;">Report <span style="font-size:15px;">(From {{ start }} to {{ end }})</span></h2>
+    <div class="row" style="margin-top:20px;">
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <div class="card da">
+        <div class="card-header">
+            Total Appointments
+
+        </div>
+        <div class="card-body">
+            <h1>{{ appointments_this_month }}
+            </h1>
+        </div>
+    </div>
+</div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <div class="card da">
+        <div class="card-header">
+    Online Consultations
+  </div>
+        <div class="card-body">
+            <h1>{{ Online_consultations_today }}</h1>
+        </div>
+    </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <div class="card da">
+        <div class="card-header">
+            Total Earning
+        </div>
+        <div class="card-body">
+            <h1> &#8377;{{ earning_this_month }}</h1>
+
+    </div>
+        </div>
+</div>
+</div>
+<div class="row" style="margin-top:50px;">
+<div class="col-lg-6">
+    <div class="card cha">
+        <canvas id="myChart" width="100px" height="100px"></canvas></div>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels:{{ list_of_speciality|safe }},
+        datasets: [{
+            label: 'Total No Of Appointments ',
+            data: {{ list_of_speciality_appointments }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+    maintainAspectRatio: true,
+    responsive: true,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    suggestedMin: 10,
+                    suggestedMax: 50,
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+</div>
+<div class="col-lg-6 " >
+    <div class="card cha">
+    <div class="card-header">Doctor Data</div>
+    <div class="table-responsive">
+    <table class="table">
+
+        <thead>
+        <tr>
+            <td>Doctor Name</td>
+            <td>Specialisation</td>
+            <td>No Of Appointments</td>
+            <td>Earning(in INR)</td>
+        </tr>
+        </thead>
+        {% for i,j in doctors_data.items %}
+        <tbody>
+
+        <td>{{ i.doctorid.name }}</td>
+        <td>{{ i.specialization }}</td>
+        {% for k in j %}
+        <td>{{ k }}</td>
+        {% endfor %}
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+    </div>
+    </div>
+</div>
+<div style="margin-top:20px;">
+<center><button type="button" class="btn btn-success"onclick="window.print()" >Print Report</button></center>
+</div>
+</body>
+</html>

@@ -29,6 +29,10 @@ class UserDetails(models.Model):
         verbose_name_plural='User Details'
 
     
+
+
+
+
 #Patient will be deleted if its Userid is deleted in UserDetails
 class Patient(models.Model):
     patientid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
@@ -222,13 +226,6 @@ class Appointments(models.Model):
    meeting_url=models.CharField(max_length=300,unique=True,null=True)
 #     etc... complete according to requirements
 
-class Appointment_slots(models.Model):
-    doctorid=models.ForeignKey(Doctor, models.SET_NULL, blank=True, null=True)
-    TestingLab=models.ForeignKey(TestingLab,models.SET_NULL,blank=True,null=True)
-    date=models.DateField()
-    available=models.BooleanField(default=True)
-    Slots_Booked=models.IntegerField(default=0)
-
 class Appointment_Timings(models.Model):
     service_provider_id = models.ForeignKey(UserDetails, models.SET_NULL, blank=True, null=True)
     date=models.DateField()
@@ -256,3 +253,9 @@ class Ratings(models.Model):
     class Meta:
         unique_together = ('raterid', 'influencerid',)
         verbose_name_plural='Ratings'
+
+class Hospital_News(models.Model):
+    hospitalid=models.ForeignKey(Hospital, on_delete=models.CASCADE)
+    Title=models.CharField(max_length=100,default='')
+    Information=models.CharField(max_length=500)
+    photos = models.ImageField(upload_to="Hospital_news_Photos/", blank=True, null=True)

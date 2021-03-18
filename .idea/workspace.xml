@@ -19,8 +19,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -125,10 +125,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1345" height="179" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1615297516347" />
-    <state x="184" y="8" key="SettingsEditor" timestamp="1615876866555">
+    <state x="184" y="8" key="SettingsEditor" timestamp="1615986085114">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="184" y="8" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1615876866555" />
+    <state x="184" y="8" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1615986085114" />
     <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1615809034123">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

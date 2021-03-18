@@ -429,6 +429,7 @@ def Selected_Service_Provider(request,user_id):
     if(user.user_type=="Hospital"):
         p = Hospital.objects.get(hospitalid=user_id)
         k=HospitalSpeciality.objects.filter(hospitalid=p)
+        k1=Hospital_News.objects.filter(hospitalid=p)
         Specialities=[]
         for i in k:
             Specialities.append(i.speciality)
@@ -443,7 +444,7 @@ def Selected_Service_Provider(request,user_id):
                 l0=HospitalSpeciality.objects.filter(speciality=i).filter(hospitalid=user_id)
                 dict2[list2[list1.index(i)]]=l0[0].price
                 dict1[i]=dict2
-        return render(request,"main_app/Dashboard.html",context={"Hospital_Details":p,"specialities":dict1})
+        return render(request,"main_app/Dashboard.html",context={"Hospital_News":k1,"Hospital_Details":p,"specialities":dict1})
     elif(user.user_type=="Testing Lab"):
         p = TestingLab.objects.get(tlabid=user_id)
         k = TestPricing.objects.filter(tlabid=user_id)
@@ -897,7 +898,7 @@ def admin(request):
         for i in l23:
             Appointments1.append(i)
     print(list_of_speciality)
-    return render(request, "main_app/Admin_Dashboard.html",context={"speciality":speciality,"list_of_Appointments":Appointments1,"doctors_data":doctors_data,"list_of_speciality":json.dumps(list(list_of_speciality.keys())),"list_of_speciality_appointments":list(list_of_speciality.values()),"Online_consultations_today":Online_consultations_today,"appointments_this_month":appointments_this_month,"earning_this_month":earning_this_month,"appointments_today":appointments_today})
+    return render(request, "main_app/Admin_Dashboard.html",context={"Hospital_Id":16,"speciality":speciality,"list_of_Appointments":Appointments1,"doctors_data":doctors_data,"list_of_speciality":json.dumps(list(list_of_speciality.keys())),"list_of_speciality_appointments":list(list_of_speciality.values()),"Online_consultations_today":Online_consultations_today,"appointments_this_month":appointments_this_month,"earning_this_month":earning_this_month,"appointments_today":appointments_today})
 
 def admin_search_appointments(request):
     email=request.session['email']
@@ -1061,3 +1062,74 @@ def availablity(request):
             email.fail_silently = False
             email.send()
     return redirect("/profile")
+
+def report(request):
+    start=request.POST['start']
+    end=request.POST['end']
+    dt = datetime.datetime.today()
+    Appointments1 = []
+    appointments_this_month = 0;
+    earning_this_month = 0;
+    appointments_today = 0;
+    Online_consultations_today = 0;
+    list_of_speciality = {}
+    speciality = []
+    l = HospitalSpeciality.objects.filter(hospitalid=16)
+    for i in l:
+        speciality.append(i.speciality)
+        list_of_speciality[i.speciality] = 0
+    list_of_doctors = Doctor.objects.filter(hospitalid=16)
+    P = 0;
+    doctors_data = {}
+    for i in list_of_doctors:
+        l1 = []
+        l2 = 0;
+        user = UserDetails.objects.get(userid=i.doctorid.userid)
+        # print(Appointments.objects.filter(appointment_date__month=dt.month).filter(doctoremail=i.doctorid.email).count())
+        l2 = Appointments.objects.filter(appointment_date__range=[start,end]).filter(doctoremail=i.doctorid.email).count()
+        list_of_speciality[i.specialization] += l2
+        p1 = HospitalSpeciality.objects.filter(speciality=i.specialization).filter(hospitalid=16)
+        if (len(p1) == 0):
+            l1.append(0)
+            l1.append(0)
+        else:
+            for k1 in p1:
+                l1.append(l2)
+                l1.append(k1.price * l2)
+        doctors_data[i] = l1
+        appointments_this_month += l2
+        appointments_today += Appointments.objects.filter(appointment_date__range=[start,end]).filter(
+            doctoremail=i.doctorid.email).count()
+        Online_consultations_today += Appointments.objects.filter(appointment_date__range=[start,end]).filter(
+            mode_of_meeting="Online").filter(doctoremail=i.doctorid.email).count()
+        k = Appointments.objects.filter(appointment_date__range=[start,end]).filter(
+            doctoremail=i.doctorid.email).aggregate(Sum('amount_paid'))
+        if (k['amount_paid__sum'] != None):
+            earning_this_month += k['amount_paid__sum']
+        l23 = Appointments.objects.filter(appointment_date__range=[start,end]).filter(doctoremail=i.doctorid.email)
+        for i in l23:
+            Appointments1.append(i)
+    print(list_of_speciality)
+    return render(request, "main_app/Admin_Dashboard1.html",
+                  context={"speciality": speciality, "list_of_Appointments": Appointments1,
+                           "doctors_data": doctors_data,
+                           "start":start,"end":end,
+                           "list_of_speciality": json.dumps(list(list_of_speciality.keys())),
+                           "list_of_speciality_appointments": list(list_of_speciality.values()),
+                           "Online_consultations_today": Online_consultations_today,
+                           "appointments_this_month": appointments_this_month, "earning_this_month": earning_this_month,
+                           "appointments_today": appointments_today})
+
+def add_news(request,id):
+    return render(request,"main_app/News.html",context={"id":id})
+
+def submit_news(request):
+    a1=Hospital_News()
+    a1.Title=request.POST['title']
+    a1.photos=request.FILES['file1']
+    a1.Information=request.POST['About']
+    a1.hospitalid=Hospital.objects.get(hospitalid=request.POST['id'])
+    a1.save()
+    return redirect('admin1')
+
+

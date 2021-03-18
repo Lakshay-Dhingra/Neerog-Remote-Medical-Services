@@ -31,12 +31,6 @@ class HospitalSpecialityAdmin(admin.ModelAdmin):
     list_display = ('hospitalid','speciality','price')
     #columns that have  a filter-by option
     list_filter=['speciality','price']
-class AppointmentslotsAdmin(admin.ModelAdmin):
-    list_display = ('doctorid','available','date',"TestingLab")
-
-
-admin.site.register(Appointment_slots,AppointmentslotsAdmin)
-
 class Appointment_TimingsAdmin(admin.ModelAdmin):
     list_display = ("service_provider_id","date","time")
 admin.site.register(Appointment_Timings,Appointment_TimingsAdmin)

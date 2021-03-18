@@ -5,26 +5,27 @@
     {% load static %}
      {% include "main_app/header.html" %}
      <script src="{% static 'Hospital_Selection.js' %}"></script>
-    <title>Add Prescription</title>
+    <title>Add News/Events</title>
 </head>
 <body>
 <div class="container-fluid">
-    <h3 style="color:#3291a8;">Add Prescription</h3>
+    <h3 style="color:#3291a8;">Add Hospital News/Events</h3>
     <h4 style="text-align:center;">Information</h4>
-    <form action="{% url 'submit_Prescription' %}" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'submit_news' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="container jumbotron">
+              <input type="text" class="form-control" value="{{ id }} "name="id" hidden >
         <div class="form-group">
-            <label for="Appointment_Id">Appointment Id:</label>
-            <input type="text" class="form-control" value="{{ Appointment_Id }}" name="Appointment_Id" id="Appointment_Id" >
+            <label for="Title">Title Of Event:</label>
+            <input type="text" class="form-control" name="title" id="Title" >
         </div>
         <div class="form-group">
-            <label for="Patient Email">Patient Email Id:</label>
-            <input type="email" class="form-control" value="{{ Patient_Email }}" id="Patient Email" name="Email">
+            <label for="About">About Event</label>
+            <textarea type="email" class="form-control" id="About" name="About"></textarea>
         </div>
-        Add Prescription:
+        Add Image Of Event:
         <div class="custom-file">
-            <input type="file"  id="File01" name="prescription">
+            <input type="file"  id="File01" name="file1">
             <!--<label class="custom-file-label" for="File01">Choose file</label>-->
         </div><br><br>
             <center>

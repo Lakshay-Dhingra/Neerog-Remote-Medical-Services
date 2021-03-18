@@ -1,0 +1,107 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    {% include 'main_app/common_meta.html' %}
+
+    <!-- Link or CSS Tags -->
+    {% include 'main_app/common_css.html' %}
+    <link rel="stylesheet" href="{% static 'main_app/css/footer_style.css' %}">
+    <link rel="stylesheet" href="{% static 'user_app/css/profile_style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+
+    <title>Neerog - Remote Medical Services</title>
+
+</head>
+<body>
+
+    <!-- Messages -->
+    {% include 'main_app/show_messages.html' %}
+
+    <!-- Navbar -->
+    {% include 'main_app/navbar.html' %}
+
+    <!--Edit Profile Section -->
+
+    <div class="profilebg"></div>
+
+    <div id="edit_main_profile">
+        <h2>Edit Personal Details</h2>
+        <form>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                <label for="Name">Name</label>
+                <input type="text" class="form-control" id="Name" placeholder="Name" value="{{Name}}">
+                </div>
+                <div class="form-group col-md-4">
+                <label for="Email">Email</label>
+                <input type="email" class="form-control" id="Email" placeholder="Email" value="{{Email}}">
+                </div>
+                <div class="form-group col-md-4">
+                <label for="Phone">Phone</label>
+                <input type="number" class="form-control" id="Phone" placeholder="Phone or Mobile Number" value="{{Phone}}">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                <label for="Specialization">Specialization</label>
+                <select id="Specialization" class="form-control">
+                    <option selected>{{SpecializedIn}}</option>
+                    {% for sp in AllSpecialities%}
+                        {% if sp != SpecializedIn%}
+                        <option>{{sp}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                </div>
+                <div class="form-group col-md-4">
+                <label for="Experience">Experience (In Years)</label>
+                <input type="number" class="form-control" id="inputCity" placeholder="Experience In Years" value="{{Experience}}">
+                </div>
+                <div class="form-group col-md-3">
+                <label for="Gender">Gender</label>
+                <select id="Gender" class="form-control">
+                    <option selected>{{Gender}}</option>
+                    {% for gd in AllGenders%}
+                        {% if gd != Gender%}
+                        <option>{{gd}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    <label for="About">About Me</label>
+                    <textarea class="form-control" id="About" rows="4">{{About}}</textarea>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="exampleFormControlFile1">Example file input</label>
+                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlFile1">Example file input</label>
+                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button class="btn btn-secondary">Reset</button>
+        </form>
+    </div>    
+
+
+
+    <!-- Footer -->
+    {% comment %} {% include 'main_app/footer.html' %} {% endcomment %}
+      
+    <!-- JavaScript -->
+    {% include 'main_app/common_js.html' %}
+</body>
+</html> 

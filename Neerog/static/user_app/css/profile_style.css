@@ -19,7 +19,7 @@ body
         top:0;
         left:0;
         width: 100%;
-        height: 1600px;
+        height: 2000px;
         z-index: -1;
         opacity: 0.6;
     } 
@@ -32,12 +32,25 @@ body
     margin-top: 60px;
 }
 
+#edit_main_profile
+{
+    width: 70vw;
+    margin: 0 auto;
+    margin-top: 100px;
+}
+
 @media(max-width: 450px)
 {
   body
   {
      background: rgba(200, 200, 210, 0.2);
-  } 
+  }
+  #edit_main_profile
+  {
+      width: 90vw;
+      margin: 0 auto;
+      margin-top: 100px;
+  }
   #main_profile
     {
         width: 94vw;
@@ -221,4 +234,84 @@ body
 {
   text-align: justify;
   word-wrap: normal;
+}
+
+#free_timing
+{
+  padding-top:80px;
+}
+
+#free_timing .slot_buttons
+{
+  padding: 50px 80px;
+  text-align: center;
+}
+
+#free_timing h3
+{
+  font-size: 1.9em;
+  font-weight: 600;
+  text-align: center;
+}
+
+#free_timing .left h4
+{
+  font-size: 1.3em;
+  font-weight: 600;
+  padding:0 5px;
+  padding-top: 30px;
+}
+
+#free_timing .left
+{
+  padding:0 25px;
+}
+
+#Appointment_Date, #mode
+{
+  width: 85%;
+  height: 50px;
+  margin-top: 10px;
+  font-size: 22px;
+  padding:0 15px;
+}
+
+#free_timing button
+{
+  width: 180px;
+  height: 80px;
+  font-size: 26px;
+  font-weight: 600;
+  background-color: rgba(75, 0, 130, 0.9);
+  color: whitesmoke;
+  margin-bottom: 20px;
+}
+
+@media(max-width: 450px)
+{
+  #free_timing button
+  {
+  width: 150px;
+  height: 60px;
+  font-size: 23px;
+  font-weight: 600;
+  background-color: rgba(75, 0, 130, 0.9);
+  color: whitesmoke;
+  }
+  #free_timing .slot_buttons
+  {
+    padding: 40px 10px;
+  }
+  #free_timing
+  {
+    padding-top:20px;
+  }
+  #free_timing h3
+  {
+    font-size: 1.5em;
+    font-weight: 500;
+    text-align: left;
+    padding:0 5px;
+    padding-top: 40px;
+  }
 }

@@ -1,5 +1,5 @@
-from main_app.models import UserDetails, Doctor, Hospital, Patient, TestingLab, Follow, Ratings
-import sys
+from main_app.models import UserDetails, Doctor, Hospital, Patient, TestingLab, Follow, Ratings, Appointment_Timings
+import sys, datetime
 
 def getUserType(uid):
     userobj=UserDetails.objects.get(userid=uid-1)
@@ -166,3 +166,46 @@ def rate(influencer, rater, rating):
         robj=UserDetails.objects.get(userid=rater-1)
         ratingobj = Ratings(influencerid=iobj,raterid=robj, rating = rating)
         ratingobj.save()
+
+def getFreeSlots(uid, mydate):
+    slots = []
+    service_provider=UserDetails.objects.get(userid=uid)
+    t = Appointment_Timings.objects.filter(service_provider_id=uid).filter(date=mydate)
+    if len(t) > 0:
+        if (t[0].available == False):
+            # messages.info(request, "Doctor not availaible on this date")
+            return None
+        else:
+            for i in t:
+                if (i.Booked==False):
+                    t12=i.time.split(":")
+                    d12=str(i.date).split("-")
+                    print(d12)
+                    da=datetime.datetime(int(d12[0]),int(d12[1]),int(d12[2]),int(t12[0]),int(t12[1]),int(t12[2]))
+                    slots.append(da)
+            if(len(slots)==0):
+                # messages.info(request, "Doctor not availaible on this date")
+                return None
+    else:
+        start_time = [9, 0, 0]
+        end_time = [18, 0, 0]
+        date = mydate.split("-")
+        x = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(start_time[0]), int(start_time[1]), 0)
+        y = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(end_time[0]), int(end_time[1]), 0)
+        while (x < y):
+            b12 = Appointment_Timings()
+            b12.service_provider_id = service_provider
+            b12.date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+            b12.time = x.strftime("%X")
+            t12 = b12.time.split(":")
+            d12 = str(b12.date).split("-")
+            da = datetime.datetime(int(d12[0]), int(d12[1]), int(d12[2]), int(t12[0]), int(t12[1]), int(t12[2]))
+            slots.append(da)
+            b12.save()
+            x += datetime.timedelta(minutes=30)
+
+    return slots
+
+
+                    
+        

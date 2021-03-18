@@ -1,5 +1,4 @@
 {% load static %}
-<!-- Signin or Login Page -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -90,11 +89,16 @@
                     </div>
 
                     <div class="follow_email row">
+
+                    {% if Myself %}
+                    <div class="col-5 follow"><a href="{% url 'edit_profile' %}" class="btn btn-info">Edit Profile</a></div>
+                    {% else %}
                         {% if Following %}
                         <div class="col-5 follow"><a href="{% url 'unfollow' uid=uid %}" class="btn btn-info">Following</a></div>
                         {% else %}
                         <div class="col-5 follow"><a href="{% url 'follow' uid=uid %}" class="btn btn-info">Follow</a></div>
                         {% endif %}
+                    {% endif %}
                         <div class="col-7 profileemail"><a href="mailto:{{Email}}" style = "display: inline-block; word-break: break-word; word-wrap: break-word;">{{Email}}</a></div>
                     </div>
 
@@ -126,12 +130,47 @@
                 <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                    <img class="d-block w-100"  style="height: 700px; border:solid" src="{{InstitutePhotoUrl}}" alt="Doctor's Organization Image">
+                    <img class="d-block w-100"  style="height: 750px; border:solid" src="{{InstitutePhotoUrl}}" alt="Doctor's Organization Image">
                     </div>
                 </div>
                 </div>
             </section>
         </section>
+
+        <section id="free_timing">
+            <div class="row">
+                <div class="col-lg-3 col-12 left">
+                    <h4>Appointment Date:</h4>
+                    <form action="{% url 'setDate' uid=uid %}" method="post" id="dateform">
+                    {% csrf_token %}
+                    <input type="date" name="date" id="Appointment_Date" value="{{ SelectedDate|date:"Y-m-d" }}">
+                    </form>
+                    <h4>Mode of Appointment</h4>
+                    <form action="{% url 'setMode' uid=uid %}" method="post" id="modeform">
+                    {% csrf_token %}
+                    <select id="mode" name="mode">
+                        <option value="Online" {% if SelectedMode == "Online"%}selected{% endif %}>Remote (via Zoom Call)</option>
+                        <option value="Remote" {% if SelectedMode == "Remote"%}selected{% endif %}>Offline (Physical Meeting)</option>
+                    </select>
+                    </form>
+                </div>
+                <div class="col-lg-9 col-12"> 
+                    <h3>Time Slots Available for Appointment on {{ SelectedDate|date:"l, d F, Y" }}</h3>
+                    <form action="{% url 'Payment' %}" method="post">
+                        {% csrf_token %}
+                    <div class="row slot_buttons">
+                        {% for slot in AvailableSlots %}
+                        <div class="col-lg-3 col-md-4 col-6">
+                            <input type="text" value="{{ i|time:'H:i:s' }}" name="time_slot" hidden>
+                            <button type="submit" class="btn">{{ slot|time:"h:i A" }}</button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
     </div>
 
    <script>
@@ -140,12 +179,24 @@
     {
         stars[{{MyRating}}-1].checked = true;
     }
+
+    var date = document.querySelector('#Appointment_Date');
+    date.addEventListener("change",changeDate);
+    function changeDate()
+    {
+        var dateform = document.querySelector('#dateform');
+        dateform.submit();
+    }
+
+    var mode = document.querySelector('#mode');
+    mode.addEventListener("change",changeMode);
+    function changeMode()
+    {
+        var modeform = document.querySelector('#modeform');
+        modeform.submit();
+    }
+
    </script>
-
-
-
-    <!-- Footer -->
-    {% include 'main_app/footer.html' %}
       
     <!-- JavaScript -->
     {% include 'main_app/common_js.html' %}

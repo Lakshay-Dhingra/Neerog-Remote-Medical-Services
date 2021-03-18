@@ -1,16 +1,11 @@
 import time
-import random
 from django.core.mail import send_mail, EmailMessage
-from django.db.models import Sum,Avg,Q
+from django.db.models import Sum
 from django.template.loader import render_to_string
 from main_app.models import*;
 from main_app.medical_tests import *;
 from django.contrib import messages
-from . import medical_speciality;
-from django.contrib.auth.models import User,auth
 import requests
-import datetime
-import json
 import re
 import json
 import pandas as pd
@@ -41,6 +36,7 @@ def verify(request):
         return redirect("/")
 
 def verify_certificate(request,id):
+    user = UserDetails.objects.get(email=request.session['email'])
     if (user.user_type == 'Moderator'):
         user = UserDetails.objects.get(userid=id)
         if (user.user_type == 'Hospital'):
@@ -55,10 +51,8 @@ def verify_certificate(request,id):
             p = TestingLab.objects.get(tlabid=user)
             p.verified = "Yes"
             p.save()
-        user = UserDetails.objects.get(email=request.session['email'])
         p = dict()
         p['Hospital'] = Hospital.objects.filter(verified="No")
-        # p['Clinic']=Hospital.objects.filter(verified="No").filter(clinic_name=)
         p['Doctor'] = Doctor.objects.filter(verified="No")
         p['Testing_Lab'] = TestingLab.objects.filter(verified="No")
         return render(request, "main_app/Verify_Certificate.html", context={'list_of_certificates': p})
@@ -72,12 +66,11 @@ def appoin(list_of_Appointments):
     for i in list_of_Appointments:
         if (i.Prescription!=""):
             dict[i] = i
-
-            #print(no_of_appointment_completed,i.Prescription)
         else:
-
             dict[i] = "Upload Prescription"
     return dict
+
+
 def profile(request):
     dt = datetime.datetime.today()
     email=request.session['email']
@@ -153,7 +146,7 @@ def profile(request):
         print(list_of_speciality)
         return render(request, "main_app/Admin_Dashboard.html",
                       context={"speciality": speciality, "list_of_Appointments": Appointments1,
-                               "doctors_data": doctors_data,
+                               "doctors_data": doctors_data,"hospitalid":user.userid,
                                "list_of_speciality": json.dumps(list(list_of_speciality.keys())),
                                "list_of_speciality_appointments": list(list_of_speciality.values()),
                                "Online_consultations_today": Online_consultations_today,
@@ -176,11 +169,6 @@ def profile(request):
         online_Appointments=Appointments.objects.filter(doctoremail=User_Profile.doctorid.email).filter(appointment_date__month=dt.month).filter(mode_of_meeting="Online").count()
         no_of_Appointments=Appointments.objects.filter(doctoremail=User_Profile.doctorid.email).filter(appointment_date__month=dt.month).count();
         no_of_Appointments_completed=Appointments.objects.filter(doctoremail=User_Profile.doctorid.email).filter(appointment_date__month=dt.month).exclude(Prescription='').count();
-        #no_of_Appointments_completed1=0
-        #for i in no_of_Appointments:
-        #    if(i.Prescription!=""):
-
-
         return render(request, 'main_app/Profile.html',
                       context={"available":available,"list_of_Appointments":appoin(list_of_Appointments) , "User_Details": User_Profile,
                                "no_of_Appointments_completed":no_of_Appointments_completed,
@@ -458,13 +446,10 @@ def Book_Appointment(request):
 def Add_Prescription(request):
     Patient_Email=request.POST['Email']
     Appointment_Id=request.POST['id']
-
     return render(request,"main_app/Prescription.html",context={"Patient_Email":Patient_Email,'Appointment_Id':Appointment_Id})
 
 def submit_Prescription(request):
-    email = request.POST['Email']
     Appointment_Id=request.POST['Appointment_Id']
-    dict={}
     prescription = request.FILES['prescription']
     b1=Appointments.objects.get(appointmentid=int(Appointment_Id))
     b1.Prescription=prescription
@@ -472,9 +457,8 @@ def submit_Prescription(request):
     return redirect("/profile")
     #return render(request,"main_app/Profile.html",context={"list_of_Appointments":dict})
 def Payment(request):
-    try:
             user = UserDetails.objects.get(userid=request.session['user_type_Id'])
-            if(user.user_type=="Doctor" or user.user_type=="Hospital"):
+            if(user.user_type=="Hospital" or user.user_type=="Doctor"):
                 mode=request.session['mode']
                 doctorid=request.session['doctorid']
                 email=request.session['email']
@@ -482,13 +466,14 @@ def Payment(request):
                 patientname=i.name
                 patientemail=i.email
                 i=Doctor.objects.get(doctorid=int(doctorid))
-                doctoremail=i.doctorid.email
                 doctordetails=i
                 speciality=i.specialization
-                l1=HospitalSpeciality.objects.filter(hospitalid=i.hospitalid).filter(speciality=speciality)
-                amount_paid =l1[0].price
+                if(user.user_type=="Hospital"):
+                    l1=HospitalSpeciality.objects.filter(hospitalid=i.hospitalid).filter(speciality=speciality)
+                    amount_paid =l1[0].price
+                else:
+                    amount_paid = i.clinic_fee
                 appointment_date=request.session["date"]
-
                 appointment_time=request.POST['time_slot']
                 request.session['time'] = appointment_time
                 meeting_url=None
@@ -500,6 +485,7 @@ def Payment(request):
                           context={"meeting_url":meeting_url,"mode": mode, "patientname": patientname, "patientemail": patientemail,
                                    "speciality": speciality, "amount_paid": amount_paid,"date":appointment_date,"time":appointment_time,"userdetails":doctordetails})
             elif(user.user_type=="Testing Lab"):
+                print("bad")
                 mode = "Remote"
                 p1 = UserDetails.objects.get(email=request.session['email'])
                 patientname = p1.name
@@ -517,40 +503,12 @@ def Payment(request):
                               context={"mode": mode, "patientname": patientname, "patientemail": patientemail,
                                        "speciality": speciality, "amount_paid": amount_paid, "date": appointment_date,
                                        "time": appointment_time, "userdetails": TestingLabId})
-    except:
-                mode = request.session['mode']
-                doctorid = request.session['doctorid']
-                email = request.session['email']
-                i = UserDetails.objects.get(email=email)
-                patientname = i.name
-                patientemail = i.email
-                i = Doctor.objects.get(doctorid=int(doctorid))
-                #doctoremail = i.doctorid.email
-                doctor_details = i
-                #hospital_id = i.hospitalid
-                speciality = i.specialization
-                #Speciality = speciality
-                l1 = HospitalSpeciality.objects.filter(hospitalid=i.hospitalid).filter(speciality=speciality)
-                amount_paid = l1[0].price
-                appointment_date = request.session["date"]
-                appointment_time = request.POST['time_slot']
-                request.session['time']=appointment_time
-                meeting_url=None
-                if (mode == 'Online'):
-                    t1 = request.POST['time_slot']
-                    request.session['meeting_url'] = create_zoom_meeting(appointment_date, t1)
-                    meeting_url = request.session['meeting_url']
-                return render(request, "main_app/Confirm_Appointment.html",
-                              context={"meeting_url":meeting_url,"mode": mode, "patientname": patientname, "patientemail": patientemail,
-                                       "speciality": speciality, "amount_paid": amount_paid, "date": appointment_date,
-                                       "time": appointment_time, "userdetails": doctordetails})
 def cancel_appointment(request):
     return redirect('/Hospital_Selection')
 
 def Appointment_Details_Submission(request):
-        try:
             user = UserDetails.objects.get(userid=request.session['user_type_Id'])
-            if(user.user_type=="Doctor" or user.user_type=="Hospital"):
+            if(user.user_type=="Hospital" or user.user_type=="Doctor"):
                 a1=Appointments()
                 mode=request.session['mode']
                 doctorid=request.session['doctorid']
@@ -564,11 +522,13 @@ def Appointment_Details_Submission(request):
                 hospital_id=i.hospitalid
                 speciality=i.specialization
                 a1.Speciality=speciality
-                l1=HospitalSpeciality.objects.filter(hospitalid=hospital_id).filter(speciality=speciality)
-                a1.amount_paid =l1[0].price
+                if(user.user_type=="Hospital"):
+                    l1=HospitalSpeciality.objects.filter(hospitalid=hospital_id).filter(speciality=speciality)
+                    a1.amount_paid =l1[0].price
+                else:
+                    a1.amount_paid = i.clinic_fee
                 a1.appointment_date=request.session["date"]
                 d=a1.appointment_date
-
                 a1.appointment_time=request.session['time']
                 if (mode == 'Online'):
 
@@ -601,40 +561,7 @@ def Appointment_Details_Submission(request):
                 print(len(b1))
                 b1.update(Booked=True)
                 a1.save()
-        except:
-                a1 = Appointments()
-                mode = request.session['mode']
-                doctorid = request.session['doctorid']
-                email = request.session['email']
-                i = UserDetails.objects.get(email=email)
-                a1.patientname = i.name
-                a1.patientemail = i.email
-                i = Doctor.objects.get(doctorid=int(doctorid))
-                a1.doctoremail = i.doctorid.email
-                doctor_details = i
-                hospital_id = i.hospitalid
-                speciality = i.specialization
-                a1.Speciality = speciality
-                l1 = HospitalSpeciality.objects.filter(hospitalid=hospital_id).filter(speciality=speciality)
-                a1.amount_paid = l1[0].price
-                a1.appointment_date = request.session["date"]
-                d = a1.appointment_date
-
-                a1.appointment_time =request.session['time']
-                if (mode == 'Online'):
-
-                    a1.meeting_url = request.session['meeting_url']
-                    a1.mode_of_meeting = mode
-                else:
-                    a1.mode_of_meeting = mode
-
-                b1 = Appointment_Timings.objects.filter(
-                    service_provider_id=UserDetails.objects.get(userid=int(doctorid))).filter(
-                    date=a1.appointment_date).filter(time=a1.appointment_time)
-                print(b1[0])
-                b1.update(Booked=True)
-                a1.save()
-        return render(request,"main_app/Receipt.html",context={"Appointment_Details":a1})
+            return render(request,"main_app/Receipt.html",context={"Appointment_Details":a1})
     #except:
     #    return redirect("/Doctor/")
 
@@ -658,7 +585,7 @@ def select_speciality(request):
 def book_appointment1(request,speciality):
     user=UserDetails.objects.get(userid=request.session['user_type_Id'])
     request.session['speciality'] = speciality
-    if(user.user_type=="Hospital" or user.user_type=="Clinic"):
+    if(user.user_type=="Hospital"):
         p=Doctor.objects.filter(specialization=speciality).filter(hospitalid=request.session['user_type_Id']).filter(verified="Yes")
         list_of_doctors=[]
         for i in p:
@@ -677,28 +604,25 @@ def book_appointment1(request,speciality):
         return render(request, "main_app/Select_Doctor.html", context={"list_of_Doctors": list_of_doctors,"Hospital_Details":k})
 def Appointment_Details_Submission1(request):
         try:
-            user=UserDetails.objects.get(userid=request.session['user_type_Id'])
-            if(user.user_type=='Doctor' or user.user_type=="Hospital"):
+            request.session["date"] = request.POST['date']
+            request.session['user_type_Id']=int(request.POST['doctorid'])
+        except:
+            pass
+        user=UserDetails.objects.get(userid=request.session['user_type_Id'])
+        if(user.user_type=='Doctor' or user.user_type=="Hospital"):
                 request.session['mode'] = request.POST['mode']
                 request.session['doctorid'] = request.POST['doctorid']
-                service_provider = UserDetails.objects.get(userid=request.session['doctorid'])
+                print(request.POST['doctorid'])
+                service_provider = UserDetails.objects.get(userid=int(request.session['doctorid']))
                 User_Profile=Doctor.objects.get(doctorid=request.session['doctorid'])
 
-            elif(user.user_type=='Testing Lab'):
+        elif(user.user_type=='Testing Lab'):
                 request.session['mode']="Remote"
                 request.session['doctorid']=request.session['user_type_Id']
                 service_provider = UserDetails.objects.get(userid=request.session['doctorid'])
                 User_Profile = TestingLab.objects.get(tlabid=request.session['doctorid'])
                 request.session['speciality1']=request.POST['speciality']
-        except:
-            request.session['mode'] = request.POST['mode']
-            request.session['doctorid'] = request.POST['doctorid']
-            service_provider = UserDetails.objects.get(userid=request.session['doctorid'])
-            User_Profile = Doctor.objects.get(doctorid=request.session['doctorid'])
-        try:
-            request.session["date"] = request.POST['date']
-        except:
-            pass
+
         slots = []
         t = Appointment_Timings.objects.filter(service_provider_id=service_provider).filter(date=request.session['date'])
         if len(t) > 0:
@@ -708,7 +632,6 @@ def Appointment_Details_Submission1(request):
                 else:
                     for i in t:
                         if (i.Booked==False):
-
                             t12=i.time.split(":")
                             d12=str(i.date).split("-")
                             print(d12)
@@ -897,7 +820,7 @@ def admin(request):
         for i in l23:
             Appointments1.append(i)
     print(list_of_speciality)
-    return render(request, "main_app/Admin_Dashboard.html",context={"Hospital_Id":16,"speciality":speciality,"list_of_Appointments":Appointments1,"doctors_data":doctors_data,"list_of_speciality":json.dumps(list(list_of_speciality.keys())),"list_of_speciality_appointments":list(list_of_speciality.values()),"Online_consultations_today":Online_consultations_today,"appointments_this_month":appointments_this_month,"earning_this_month":earning_this_month,"appointments_today":appointments_today})
+    return render(request, "main_app/Admin_Dashboard.html",context={"hospitalid":16,"speciality":speciality,"list_of_Appointments":Appointments1,"doctors_data":doctors_data,"list_of_speciality":json.dumps(list(list_of_speciality.keys())),"list_of_speciality_appointments":list(list_of_speciality.values()),"Online_consultations_today":Online_consultations_today,"appointments_this_month":appointments_this_month,"earning_this_month":earning_this_month,"appointments_today":appointments_today})
 
 def admin_search_appointments(request):
     email=request.session['email']
@@ -994,7 +917,7 @@ def admin_search_appointments(request):
     print(Appointments1)
     return render(request, "main_app/Admin_Dashboard.html",
                   context={"speciality":speciality,"list_of_Appointments": Appointments1, "doctors_data": doctors_data,
-                           "list_of_speciality": json.dumps(list(list_of_speciality.keys())),
+                           "list_of_speciality": json.dumps(list(list_of_speciality.keys())),"hospitalid":user.userid,
                            "list_of_speciality_appointments": list(list_of_speciality.values()),
                            "Online_consultations_today": Online_consultations_today,
                            "appointments_this_month": appointments_this_month, "earning_this_month": earning_this_month,
@@ -1065,6 +988,7 @@ def availablity(request):
 def report(request):
     start=request.POST['start']
     end=request.POST['end']
+    user = UserDetails.objects.get(email=request.session['email'])
     dt = datetime.datetime.today()
     Appointments1 = []
     appointments_this_month = 0;
@@ -1073,11 +997,11 @@ def report(request):
     Online_consultations_today = 0;
     list_of_speciality = {}
     speciality = []
-    l = HospitalSpeciality.objects.filter(hospitalid=16)
+    l = HospitalSpeciality.objects.filter(hospitalid=user.userid)
     for i in l:
         speciality.append(i.speciality)
         list_of_speciality[i.speciality] = 0
-    list_of_doctors = Doctor.objects.filter(hospitalid=16)
+    list_of_doctors = Doctor.objects.filter(hospitalid=user.userid)
     P = 0;
     doctors_data = {}
     for i in list_of_doctors:
@@ -1087,7 +1011,7 @@ def report(request):
         # print(Appointments.objects.filter(appointment_date__month=dt.month).filter(doctoremail=i.doctorid.email).count())
         l2 = Appointments.objects.filter(appointment_date__range=[start,end]).filter(doctoremail=i.doctorid.email).count()
         list_of_speciality[i.specialization] += l2
-        p1 = HospitalSpeciality.objects.filter(speciality=i.specialization).filter(hospitalid=16)
+        p1 = HospitalSpeciality.objects.filter(speciality=i.specialization).filter(hospitalid=user.userid)
         if (len(p1) == 0):
             l1.append(0)
             l1.append(0)
@@ -1129,6 +1053,6 @@ def submit_news(request):
     a1.Information=request.POST['About']
     a1.hospitalid=Hospital.objects.get(hospitalid=request.POST['id'])
     a1.save()
-    return redirect('admin1')
+    return redirect('profile')
 
 

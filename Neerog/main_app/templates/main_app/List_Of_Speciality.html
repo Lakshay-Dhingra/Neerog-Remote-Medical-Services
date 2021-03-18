@@ -19,7 +19,7 @@
         var date=$("#Appointment_Date").val();
         var d=new Date();
         var d1=new Date(date);
-        if(d1>d && d1.getDay()!=0 && d1.getDay()!=6){
+
          $.ajax(
         {
              type:"get",
@@ -33,12 +33,6 @@
               
              }
         });
-        }
-        else
-        {
-          alert("Please Choose Appropriate Date ");
-
-        }
         });
         });
     </script>
@@ -52,11 +46,23 @@
          alert('Please Select Appropriate Date');
             return false;
         }
-        if(!((d1>d && d1.getDay()!=0 && d1.getDay()!=6))){
-             alert('Please Select Appropriate Date');
-            return false;
         }
-        }
+    </script>
+    <script>
+        $(document).ready(function()
+        {
+           var dt=new Date();
+           var month=dt.getMonth()+1;
+           var day=dt.getDate()+1;
+           var year=dt.getFullYear();
+           if(month < 10)
+               month='0'+month.toString();
+           if(day < 10)
+               day='0'+day.toString();
+
+           var maxDate=year+'-'+month+'-'+day;
+           $("#Appointment_Date").attr('min',maxDate);
+        });
     </script>
 </head>
 <body class="container-fluid">
@@ -67,16 +73,26 @@
          <div class="col-lg-5">
              <h3>{{ Hospital_Details.hospitalid.name }}</h3></div>
     </div>
-    <!--<div style="margin-left:10px;"><a href="http://127.0.0.1:8000/Selected/{{ Hospital_Details.hospitalid }}">Home</a>/Speciality</div-->
-{% elif Testing_Lab_Details %}
+    {% elif Testing_Lab_Details %}
     <div class="row">
         <div class="col-lg-1">
        <image src="{{ Testing_Lab_Details.tlab_logo.url }}" style="width:100px;height:40px;"></image></div>
          <div class="col-lg-5">
              <h3>{{ Testing_Lab_Details.tlabid.name }}</h3></div>
     </div>
-    <!--div style="margin-left:10px;"><a href="http://127.0.0.1:8000/Selected/{{ Testing_Lab_Details.tlablid }}">Home</a>/Speciality</div-->
-{% endif %}
+    {% endif %}
+<div style="margin-top:50px;">
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    {% if Testing_Lab_Details %}
+    <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Testing_Lab_Details.tlabid %}">Home</a></li>
+    {% else %}
+    <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Hospital_Details.hospitalid %}">Home</a></li>
+    {% endif %}
+      <li class="breadcrumb-item active" aria-current="page">Speciality</li>
+  </ol>
+</nav>
+    </div>
 <div class="container-fluid jumbotron">
          <div class="form-group">
              <label for="Appointment_Date" style="color:#3291a8;"><h3>Date Of Appointment:</h3></label>
@@ -86,7 +102,7 @@
          <h3 style="color:#3291a8;"> Select Speciality </h3>
          <div class="row">
         {% for i in specialities %}
-             <div class="col-lg-4 col-md-2">
+             <div class="col-lg-4 col-md-4 col-sm-4">
                      <form action='{% url "book_appointment1" speciality=i %}' onsubmit="return validate()">
                          <div class="card">
                      <button type="submit" class="btn" style="margin-top:10px;" >{{ i }}<span style="float:right;"> ></span></a></button>
@@ -94,6 +110,7 @@
                      </form>
              </div>
         {% endfor %}
+         </div>
     {% elif Testing_Lab_Details %}
         <h3 style="color:#3291a8;"> Select Test </h3>
     <div class="row">
@@ -108,8 +125,9 @@
                      </form>
              </div>
         {% endfor %}
+        </div>
     {% endif %}
-    </div>
+
 {% include 'main_app/show_messages.html' %}
 </div>
 </body>

@@ -22,8 +22,8 @@
     </style>
 </head>
 <body>
-<div class="container">
-<div class="row" style="margin-top:30px;">
+<div class="container-fluid">
+<!--<div class="row" style="margin-top:30px;">
     <div class="col-lg-4 card" style="height:600px;">
         <div>
             <center><image src="{{ User_Profile.profile_pic.url }}" style="width:300px;height:300px;"></image>
@@ -31,35 +31,21 @@
         </div>
         <hr>
         <center><h3 style="color:#3291a8;">About</h3></center>
-        <div class="table-responsive">
-            <table>
-                <tr>
-            <th>Name:</th>
-            <td>{{ User_Profile.doctorid.name}}</td></tr>
 
-        <tr>
-            <th>Specialisation:</th>
-            <td>{{ User_Profile.specialization }}</td>
-        </tr>
-        <tr>
-            <th>Experience:</th>
-            <td>{{ User_Profile.experience }}</td>
-        </tr>
-        <tr>
-            <th>Area:</th>
-            <td>{{ User_Profile.area }}</td>
-        </tr>
-            </table>
-
-    </div>
-    </div>
-<div class="jumbotron col-lg-8 card" style="height:600px;">
-
+    </div>-->
+<nav aria-label="breadcrumb" style="margin-top:10px;width:100%;">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'select_speciality' %}">Speciality</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Select Time</li>
+  </ol>
+</nav>
+<div  style="height:600px;">
+   <div class="jumbotron card">
    <h1 style="color:#3291a8;">Select Slot</h1>
     <hr>
     <div class="row">
     {% for i in slots %}
-        <div class="col-lg-3" style="margin-top:10px;">
+        <div class="col-lg-3 col-md-4 col-6" style="margin-top:10px;">
             <form action="{% url 'Payment' %}" method="post">
                 {% csrf_token %}
             <input type="text" value="{{ i|time:'H:i:s' }}" name="time_slot" hidden>
@@ -69,8 +55,6 @@
         </div>
         {% endfor %}
     </div>
-
-
 </div>
 </div>
     </div>

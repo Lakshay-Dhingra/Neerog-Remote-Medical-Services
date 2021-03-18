@@ -11,7 +11,12 @@
      @media only screen and (max-width: 720px) {
      button
      {
-     font-size:11px !important;
+     font-size:10px !important;
+     }
+     .btn-primary
+     {
+        font-size:9px !important;
+       width:120px; !important;
      }
      }
      .card
@@ -36,14 +41,20 @@
     </script>
 </head>
 <body class="container-fluid">
-<div class="container-fluid">
+<nav aria-label="breadcrumb" style="margin-top:10px;width:100%;">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Hospital_Details.hospitalid %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'select_speciality' %}">Speciality</a></li>
+      <li class="breadcrumb-item active" aria-current="page">List Of Doctors</li>
+  </ol>
+</nav>
+<div style="margin-top:60px;">
     <div class="row">
         <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"></image>
         <h3>{{ Hospital_Details.hospitalid.name }}</h3>
-
     </div>
-    <!--div style="margin-left:10px;"><a href="http://127.0.0.1:8000/Selected/{{ Hospital_Details.hospitalid }}">Home</a>/<a href="http://127.0.0.1:8000/select_speciality/">Specialities</a>/Doctors</div-->
-    <div class="jumbotron">
+
+        <div class="jumbotron">
         {% if list_of_Doctors|length > 0 %}
     <h3 style="color:#3291a8;">Select Doctor </h3>
         <div class="row">

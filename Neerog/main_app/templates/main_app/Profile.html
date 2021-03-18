@@ -446,13 +446,13 @@ var myChart = new Chart(ctx, {
             <div class="row">
                 <div class="col-md-6 col-sm-6 col-lg-6">
                   {% if  User_Details.profile_pic %}
-                  <center> <img src="{{ User_Details.profile_pic.url }}" id="profile_pic"></center>
+                  <center> <img src="{{ User_Details.profile_pic.url }}" id="profile_pic" style="margin-top:10px;"></center>
                   {% else %}
                      <center><image src="{% static 'image6.jpeg' %}" id="profile_pic"></image></center>
                     {% endif %}
                 </div>
         <div class="col-md-6 col-sm-6">
-        <table class="table table-striped" style="margin-top:50px;">
+        <table class="table table-striped" style="margin-top:10px;">
             {% if User_Details.doctorid %}
               <tr>
                 <th>Username</th>

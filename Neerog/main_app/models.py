@@ -154,7 +154,7 @@ class Doctor(models.Model):
     country=models.CharField(max_length=50, blank=True)
     city=models.CharField(max_length=50, blank=True)
     area=models.CharField(max_length=200, blank=True)
-
+    clinic_fee=models.PositiveIntegerField(null=True)
     is_independent = models.BooleanField()
     verified = models.CharField(max_length=10, default="No")
 

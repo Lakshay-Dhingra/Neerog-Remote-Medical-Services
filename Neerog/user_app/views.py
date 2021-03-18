@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from main_app import user_data, medical_speciality
+import datetime
 
 
 def profile(request, uid):
@@ -9,6 +10,20 @@ def profile(request, uid):
         if(user_data.isRegisteredUser(uid)):
             if(user_type == "Doctor"):
                 doctor_data = user_data.getDoctorData(uid)
+                try:
+                    mydate=request.session['date']
+                except:
+                    mydate = datetime.datetime.now() + datetime.timedelta(days=1)
+                doctor_data['AvailableSlots']=user_data.getFreeSlots(uid, mydate)
+                doctor_data['SelectedDate']= datetime.datetime.strptime(mydate, '%Y-%m-%d')
+                # print(mydate)
+                # print(type(mydate))
+
+                try:
+                    mode = request.session['mode']
+                except:
+                    mode = "Online"
+                doctor_data['SelectedMode'] = mode
                 if(request.user.is_authenticated):
                     #User is logged in
                     fid=request.user.id
@@ -85,3 +100,11 @@ def rate(request, uid, rating):
         #User not logged in
         messages.info(request,"You are not Logged In!")
         return redirect("/accounts/signin")
+
+def setDate(request, uid):
+    request.session['date'] = request.POST['date']
+    return redirect("/user/profile/"+str(uid))
+
+def setMode(request, uid):
+    request.session['mode'] = request.POST['mode']
+    return redirect("/user/profile/"+str(uid))

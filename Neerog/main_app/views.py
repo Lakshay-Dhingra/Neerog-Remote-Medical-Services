@@ -433,7 +433,7 @@ def Selected_Service_Provider(request,user_id):
         for i in k:
             Specialities.append(i.speciality)
         dict1={}
-        poke = pd.read_csv("main_app\\static\\Specialities_Images.csv")
+        poke = pd.read_csv("main_app/static/Specialities_Images.csv")
         list1 =poke['Speciality'].tolist()
         list2=poke['Speciality_Image'].tolist()
         #print(list1,list2)
@@ -674,6 +674,7 @@ def book_appointment1(request,speciality):
                     #list_of_doctors[i] = time_slots.split(",")
         k = Hospital.objects.get(hospitalid=user.userid)
         return render(request, "main_app/Select_Doctor.html", context={"list_of_Doctors": list_of_doctors,"Hospital_Details":k})
+
 def Appointment_Details_Submission1(request):
         try:
             user=UserDetails.objects.get(userid=request.session['user_type_Id'])

@@ -81,19 +81,17 @@
              <h3>{{ Testing_Lab_Details.tlabid.name }}</h3></div>
     </div>
     {% endif %}
-<div style="margin-top:50px;">
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
+<div class="container-fluid" style="margin-top:20px;">
+    <ol class="breadcrumb">
     {% if Testing_Lab_Details %}
     <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Testing_Lab_Details.tlabid %}">Home</a></li>
     {% else %}
     <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Hospital_Details.hospitalid %}">Home</a></li>
     {% endif %}
-      <li class="breadcrumb-item active" aria-current="page">Speciality</li>
-  </ol>
-</nav>
-    </div>
-<div class="container-fluid jumbotron">
+        <li class="breadcrumb-item active" aria-current="page">Speciality</li>
+    </ol>
+ </div>
+<div class="jumbotron" style="margin-top:50px;">
          <div class="form-group">
              <label for="Appointment_Date" style="color:#3291a8;"><h3>Date Of Appointment:</h3></label>
                 <input type="date" required class="form-control" id="Appointment_Date" name="date">

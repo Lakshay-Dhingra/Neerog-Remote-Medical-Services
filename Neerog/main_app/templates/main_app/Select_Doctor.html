@@ -41,20 +41,20 @@
     </script>
 </head>
 <body class="container-fluid">
-<nav aria-label="breadcrumb" style="margin-top:10px;width:100%;">
+
+<div style="margin-top:10px;">
+    <div class="row">
+        <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"></image>
+        <h3>{{ Hospital_Details.hospitalid.name }}</h3>
+    </div>
+    <div class="container-fluid" style="margin-top:10px;">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Hospital_Details.hospitalid %}">Home</a></li>
     <li class="breadcrumb-item"><a href="{% url 'select_speciality' %}">Speciality</a></li>
       <li class="breadcrumb-item active" aria-current="page">List Of Doctors</li>
   </ol>
-</nav>
-<div style="margin-top:60px;">
-    <div class="row">
-        <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"></image>
-        <h3>{{ Hospital_Details.hospitalid.name }}</h3>
-    </div>
-
-        <div class="jumbotron">
+</div>
+        <div class="jumbotron container-fluid">
         {% if list_of_Doctors|length > 0 %}
     <h3 style="color:#3291a8;">Select Doctor </h3>
         <div class="row">

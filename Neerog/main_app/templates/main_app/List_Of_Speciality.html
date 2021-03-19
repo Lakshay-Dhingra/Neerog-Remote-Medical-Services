@@ -114,7 +114,7 @@
     <div class="row">
         {% for i in specialities %}
              <div class="col-lg-4 col-md-2">
-                     <form action="{% url 'Appointment_Details_Submission1' %}" method="post" >
+                     <form action="{% url 'Appointment_Details_Submission1' %}" onsubmit="return validate()" method="post" >
                          {% csrf_token %}
                          <div class="card">
                       <input type="text" name="speciality" value="{{ i }}" hidden >

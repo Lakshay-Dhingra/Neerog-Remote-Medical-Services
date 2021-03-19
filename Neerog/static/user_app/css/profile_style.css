@@ -4,9 +4,10 @@
 body
 {
   font-family: 'Open Sans', sans-serif;
+  background: rgba(200, 200, 210, 0.2);
 }
 
-@media(min-width: 700px)
+@media(min-width: 992px)
 {
     .profilebg::before
     {
@@ -41,10 +42,6 @@ body
 
 @media(max-width: 450px)
 {
-  body
-  {
-     background: rgba(200, 200, 210, 0.2);
-  }
   #edit_main_profile
   {
       width: 90vw;
@@ -84,7 +81,16 @@ body
   border: solid;
 }
 
-@media(min-width: 450px)
+@media (min-width: 450px) and (max-width: 992px)
+{
+  #profile_image
+  {
+    padding:10px 10px;
+  }
+}
+
+
+@media(min-width: 992px)
 {
   #profile_head
   {

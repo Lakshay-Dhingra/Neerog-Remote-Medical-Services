@@ -16,6 +16,7 @@ def profile(request, uid):
                     mydate = datetime.datetime.now() + datetime.timedelta(days=1)
                 doctor_data['AvailableSlots']=user_data.getFreeSlots(uid, mydate)
                 doctor_data['SelectedDate']= datetime.datetime.strptime(mydate, '%Y-%m-%d')
+                doctor_data['Today']= datetime.datetime.now()
                 # print(mydate)
                 # print(type(mydate))
 
@@ -103,8 +104,8 @@ def rate(request, uid, rating):
 
 def setDate(request, uid):
     request.session['date'] = request.POST['date']
-    return redirect("/user/profile/"+str(uid))
+    return redirect("/user/profile/"+str(uid)+"#free_timing")
 
 def setMode(request, uid):
     request.session['mode'] = request.POST['mode']
-    return redirect("/user/profile/"+str(uid))
+    return redirect("/user/profile/"+str(uid)+"#free_timing")

@@ -143,7 +143,7 @@
                     <h4>Appointment Date:</h4>
                     <form action="{% url 'setDate' uid=uid %}" method="post" id="dateform">
                     {% csrf_token %}
-                    <input type="date" name="date" id="Appointment_Date" value="{{ SelectedDate|date:"Y-m-d" }}">
+                    <input type="date" name="date" id="Appointment_Date" value="{{ SelectedDate|date:"Y-m-d" }}" min="{{ Today|date:"Y-m-d" }}">
                     </form>
                     <h4>Mode of Appointment</h4>
                     <form action="{% url 'setMode' uid=uid %}" method="post" id="modeform">

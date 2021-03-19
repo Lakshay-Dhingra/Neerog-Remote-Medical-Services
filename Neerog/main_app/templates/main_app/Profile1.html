@@ -6,6 +6,30 @@
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     {% include "main_app/header.html" %}
     {% include 'main_app/common_css.html' %}
+    <script>
+    $(document).ready(function()
+        {
+       $("#Appointment_Date").on("change",function(){
+         $("#form1").submit();
+                                  });
+                                  });
+    </script>
+    <script>
+        $(document).ready(function()
+        {
+           var dt=new Date();
+           var month=dt.getMonth()+1;
+           var day=dt.getDate()+1;
+           var year=dt.getFullYear();
+           if(month < 10)
+               month='0'+month.toString();
+           if(day < 10)
+               day='0'+day.toString();
+
+           var maxDate=year+'-'+month+'-'+day;
+           $("#Appointment_Date").attr('min',maxDate);
+        });
+    </script>
     <style>
         tr
         {
@@ -22,7 +46,7 @@
         <image src="{{ User_Profile.tlab_logo.url }}" style="width:100px;height:40px;"></image>
         <h3>{{ User_Profile.tlabid.name }}</h3>
         {% elif User_Profile.hospitalid %}
-        <image src="{{ User_Profile.hospital_logo.url }}" style="width:100px;height:40px;"></image>
+        <image src="{{ User_Profile.hospitalid.hospital_logo.url }}" style="width:100px;height:40px;"></image>
         <h3>{{ User_Profile.hospitalid.name }}</h3>
         {% else %}
         <image src="{{ User_Profile.clinic_photo.url }}" style="width:100px;height:40px;"></image>
@@ -39,7 +63,7 @@
     <li class="breadcrumb-item"><a href="{% url 'select_speciality' %}">Speciality</a></li>
      <li class="breadcrumb-item active" aria-current="page">Book Slot</li>
     {% else %}
-       <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Hospital_Details.hospitalid %}">Home</a></li>
+       <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=User_Profile.hospitalid %}">Home</a></li>
     <li class="breadcrumb-item"><a href="{% url 'select_speciality' %}">Speciality</a></li>
      <li class="breadcrumb-item"><a href="{% url 'book_appointment1' speciality=User_Profile.specialization %}">Doctor</a></li>
       <li class="breadcrumb-item active" aria-current="page">Book Slot</li>
@@ -48,9 +72,17 @@
 </div>
 <div class="container-fluid" style="margin-top:20px;">
    <div class="jumbotron card">
-   <h1 style="color:#3291a8;">Select Slot</h1>
+
+   <h2 style="color:#3291a8;">Edit Date Of Appointment</h2>
+       <hr>
+       <form action="{% url 'change_date' %}" id="form1" method="post">
+           {% csrf_token %}
+           <input type="date" id="Appointment_Date" value="{{ date }}"class="form-control" name="date">
+       </form>
+   <h2 style="color:#3291a8;margin-top:20px;">Select Time Slot</h2>
     <hr>
     <div class="row">
+    {% if slots|length > 0 %}
     {% for i in slots %}
         <div class="col-lg-3 col-md-4 col-6" style="margin-top:10px;">
             <form action="{% url 'Payment' %}" method="post">
@@ -61,7 +93,12 @@
             </form>
         </div>
         {% endfor %}
+        {% else %}
+        <center>No Slots Available</center>
+        {% endif %}
     </div>
+
+
 </div>
 </div>
 

@@ -122,20 +122,17 @@
     </script>
     <style>
 
-    @media only screen and (max-width: 800px) {
+    @media only screen and (max-width: 400px) {
+        *
+        {
+         font-size:10px;
+        }
         #profile_pic
         {
             height:200px;
             width:300px !important;
         }
-        .Appointment
-        {
-          width:180px;
-          }
-          .profile
-          {
-          width:180px;
-          }
+
 
 
     }
@@ -271,7 +268,7 @@ var myChart = new Chart(ctx, {
 <image src="{% static 'image6.jpeg' %}" height="300px" width="100%"></image>
 {% endif %}
 <div class="row" style="margin-top:10px;">
-    <div class="card col-lg-3 col-sm-3 Appointment col-mb-4">
+    <div class="card col-lg-3 col-md-3 Appointment col-5">
         <div><center><i class="fa fa-calendar" style="font-size: 58px;"></i></center></div>
         <div class="card-body">
         <center>
@@ -279,7 +276,7 @@ var myChart = new Chart(ctx, {
         </center>
         </div>
         </div>
-     <div class="card col-lg-3 col-sm-3 profile col-mb-4">
+     <div class="card col-lg-3 col-md-3 profile col-5">
         <div><center><i class="fa fa-user"  style="font-size: 58px;"></i></center></div>
         <div class="card-body">
             <center>Profile</center>
@@ -306,10 +303,10 @@ var myChart = new Chart(ctx, {
 
                  </div>
 
-                <div class="col-lg-3 offset-lg-5 Non_Available_date form-group" style="display:none;">
+                <div class="col-lg-3 offset-lg-4 Non_Available_date form-group" style="display:none;">
                     <b>Unavailable From:</b><input type="datetime-local" class="form-control"  id="start" name="start">
                 </div>
-                <div class="col-lg-2 Non_Available_date" style="display:none;">
+                <div class="col-lg-3 Non_Available_date" style="display:none;">
                     <b> To:</b><input type="datetime-local" class="form-control" id="end" name="end">
                 </div>
                 <div class="col-lg-2 Non_Available_date" style="display:none;margin-top:25px;">

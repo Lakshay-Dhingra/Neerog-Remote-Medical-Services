@@ -13,6 +13,30 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
+
+        $(document).ready(function()
+        {
+           var dt=new Date();
+           var month=dt.getMonth()+1;
+           var day=dt.getDate();
+           var year=dt.getFullYear();
+           if(month < 10)
+               month='0'+month.toString();
+           if(day < 10)
+               day='0'+day.toString();
+            var hours=dt.getHours();
+            var minutes=dt.getMinutes();
+            if(hours<10)
+                 hours='0'+hours.toString();
+            if(minutes<10)
+                 minutes='0'+minutes.toString()
+
+           var maxDate=year+'-'+month+'-'+day+'T'+hours+':'+minutes;
+           $("#start").attr('min',maxDate);
+           $("#end").attr('min',maxDate);
+        });
+    </script>
+    <script>
         function validate()
         {
         var start=document.getElementById("start").value;
@@ -24,7 +48,7 @@
          alert('Please Select Appropriate Date');
             return false;
         }
-        if(!((d2>d && d1.getDay()!=0 && d1.getDay()!=6 && d2.getDay()!=0 && d2.getDay()!=6 && d1>d && d1>=d2))){
+        if(!(d1>=d2)){
              alert('Please Select Appropriate Date');
             return false;
         }
@@ -283,10 +307,10 @@ var myChart = new Chart(ctx, {
                  </div>
 
                 <div class="col-lg-3 offset-lg-5 Non_Available_date form-group" style="display:none;">
-                    <b>Unavailable From:</b><input type="date" class="form-control"  id="start" name="start">
+                    <b>Unavailable From:</b><input type="datetime-local" class="form-control"  id="start" name="start">
                 </div>
                 <div class="col-lg-2 Non_Available_date" style="display:none;">
-                    <b> To:</b><input type="date" class="form-control" id="end" name="end">
+                    <b> To:</b><input type="datetime-local" class="form-control" id="end" name="end">
                 </div>
                 <div class="col-lg-2 Non_Available_date" style="display:none;margin-top:25px;">
                     <button type="submit" class="btn btn-primary form-control">Submit</button>
@@ -446,13 +470,13 @@ var myChart = new Chart(ctx, {
             <div class="row">
                 <div class="col-md-6 col-sm-6 col-lg-6">
                   {% if  User_Details.profile_pic %}
-                  <center> <img src="{{ User_Details.profile_pic.url }}" id="profile_pic"></center>
+                  <center> <img src="{{ User_Details.profile_pic.url }}" id="profile_pic" style="margin-top:10px;"></center>
                   {% else %}
                      <center><image src="{% static 'image6.jpeg' %}" id="profile_pic"></image></center>
                     {% endif %}
                 </div>
         <div class="col-md-6 col-sm-6">
-        <table class="table table-striped" style="margin-top:50px;">
+        <table class="table table-striped" style="margin-top:10px;">
             {% if User_Details.doctorid %}
               <tr>
                 <th>Username</th>

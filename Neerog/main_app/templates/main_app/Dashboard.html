@@ -18,7 +18,7 @@
      .news
      {
         width:200px !important;
-        height:100px !important;
+        height:250px !important;
      }
      .spec
      {
@@ -31,7 +31,7 @@
      }
       }
     .dot {
-    border:2px solid white;
+
   height: 60px;
   width: 60px;
   font-size:35px;
@@ -55,9 +55,12 @@ h2 span {
 
 .card #test
 {
-margin-left:20px;
-background-color:#404040;
-color:white;
+margin-left:20px !important;
+background-color:#404040 !important;
+}
+h6
+{
+ color:white;
 }
     h3
     {
@@ -93,16 +96,20 @@ color:white;
         <div class="col-lg-1">
             <image src="{{ Testing_Lab_Details.tlab_logo.url }}" style="width:100px;height:40px;"></image></div>
     <div class="col-lg-5">
-        <h3>{{ Testing_Lab_Details.tlablid.name }}</h3>
+        <h3>{{ Testing_Lab_Details.tlabid.name }}</h3>
             </div>
-        <div class="col-lg-3">
-                {{ Testing_Lab_Details.tlablid.name }}Lifeline <i class="fa fa-phone" style="font-size:24px;color:#3291a8;"></i>{{ Hospital_Details.phone }}
-        </div>
-        <div class="col-lg-3">
+        <div class="col-lg-3"></div>
 
+        <div class="col-lg-3">
+                  <span style="float:right;"> <i style="color:red;">{{ Testing_Lab_Details.tlabid.name }} Lifeline:</i> <i class="fa fa-telephone" style="font-size:24px;color:#3291a8;"></i>{{ Testing_Lab_Details.phone }}</span>
             <button type="button" class="btn btn-success"style="float:right;" onclick="location.href='{% url 'select_speciality'  %}'">Book Appointment</button>
        </div>
     </div>
+    <nav aria-label="breadcrumb" style="margin-top:10px;">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Home</li>
+          </ol>
+    </nav>
 
     <div id="carouselExampleSlidesOnly1" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner">
@@ -119,10 +126,10 @@ color:white;
     <h2><span>Centers Of Excellence</span></h2>
     <div class="row">
         {% for key in specialities %}
-            <div class="col-lg-3 col-sm-6 col-xs-6 col-md-4 card" id="test" style="height:150px;margin-top:10px;">
+            <div class="col-lg-3 col-sm-6 col-md-4 card" id="test" style="background-color:#404040;height:150px;margin-top:10px;">
                     <div>
-                        <span class="dot"><b style="margin-left:16px;">{{ key.testname|first }}</b></span>
-                    <h6>{{ key.testname }}</h6>
+                        <span class="dot" style="border:2px solid white;"><b style="margin-left:16px;color:white;">{{ key.testname|first }}</b></span>
+                    <h6 style="olor:white;">{{ key.testname }}</h6>
                         <h6>Fee:{{ key.price }}</h6>
 
                 </div>
@@ -147,9 +154,14 @@ color:white;
             <button type="button" class="btn btn-success"style="float:right;" onclick="location.href='{% url 'select_speciality'  %}'">Book Appointment</button>
        </div>
     </div>
+    <nav aria-label="breadcrumb" style="margin-top:10px;">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Home</li>
+          </ol>
+    </nav>
     <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner">
-      {% if Hospital_Details.pic1%}
+      {% if Hospital_Details.pic1 %}
 
     <div class="carousel-item active">
         <img src="{{ Hospital_Details.pic1.url }}" class="d-block w-100 img1" alt="bye22">
@@ -172,49 +184,51 @@ color:white;
     <div style="margin-top:40px;">
     <h2><span>About Us</span></h2>
     <p>{{ Hospital_Details.about }}</p>
+    <!--<p style="color:blue;">Address:{{ Hospital_Details.area }}</p>-->
         </div>
      <div style="margin-top:40px;">
     <h2><span>Centers Of Excellence</span></h2>
-         <div class="row">
+         <div class="row" style="background-image:url('https://apollowebsiteprod.blob.core.windows.net/apollohospitals/assets/images/bg-equipment.png');">
         {% for key,item in specialities.items %}
            {% for i,j in item.items %}
-            <div  class="col-lg-3 col-md-6">
+            <div  class="col-lg-3 col-sm-4 col-md-4 col-6">
                     <img alt="{{ key }}"  class="media-object" src="https://www.narayanahealth.org/sites/default/files/{{ i }}">
-                     <center></center>
+                     <span>
                     <h6 >{{ key }}</h6>
                     <h6 >Fee:{{ j }}</h6>
-                </center>
-
+                </span>
             </div>
         {% endfor %}
         {% endfor %}
     </div>
 </div>
-
-{% endif %}
-    <div style="margin-top:40px;">
+<div style="margin-top:40px;">
     <h2><span>News/Events</span></h2>
-        <div id="carouselExampleSlidesOnly2" class="carousel slide" data-ride="carousel" style="background-color:blue;">
+        <div id="carouselExampleSlidesOnly2" class="carousel slide" data-ride="carousel" style="background-image:url('https://apollowebsiteprod.blob.core.windows.net/apollohospitals/assets/images/bg-key-medical.png');margin-top:40px;">
             <div class="carousel-inner">
         {% for key in Hospital_News %}
                 {% ifequal forloop.counter 1 %}
                       <div class="carousel-item active">
-                        <span style="float:left;width:50%;margin-top:10%;">{{ key.Information }}</span>
+                {% else %}
+                          <div class="carousel-item ">
+                 {% endifequal %}
+
+                          <center><h3 style="color:white">{{ key.Title }}</h3></center>
+                        <span style="float:left;width:50%;margin-top:10%;color:white;">{{ key.Information }}</span>
                         <span style="float:right;width:50%;">
                         <img src="{{ key.photos.url }}" class="news" width="700px" height="400px"></span>
                       </div>
-                {% else %}
-                      <div class="carousel-item">
-                          <span style="float:left;width:50%;margin-top:10%;">{{ key.Information }}</span>
-                        <span style="float:right;width:50%;">
-                            <img src="{{ key.photos.url }}" class="news" width="700px" height="400px"></span>
-                      </div>
-                {% endifequal %}
+
+
         {% endfor %}
 
         </div>
 </div>
 </div>
+{% endif %}
+
 </div>
+    <hr>
+    </div>
 </body>
 </html>

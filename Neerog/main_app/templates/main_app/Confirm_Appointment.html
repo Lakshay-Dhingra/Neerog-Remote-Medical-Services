@@ -22,14 +22,21 @@
               <tr>
                   <th>Doctor Email</th>
                   <td>{{ userdetails.doctorid.email }}</td></tr>
-                 {% elif userdetails.tlabId %}
+            <tr>
+                  <th>Address</th>
+                  <td>{{ userdetails.doctorid.area }}</td></tr>
+                 {% elif userdetails.tlabid %}
             <tr>
                   <th>Testing Lab Name</th>
-                  <td>{{ userdetails.tlabId.name }}</td>
+                  <td>{{ userdetails.tlabid.name }}</td>
               </tr>
             <tr>
                   <th>Testing Lab Email</th>
-                  <td>{{  userdetails.tlabId.email }}</td>
+                  <td>{{  userdetails.tlabid.email }}</td>
+              </tr>
+            <tr>
+                  <th>Testing Lab Address</th>
+                  <td>{{  userdetails.tlabid.city }}</td>
               </tr>
             <tr>
                   <th>Test Name</th>

@@ -9,6 +9,22 @@
     {% include 'main_app/common_css.html' %}
     <!--<link rel="stylesheet" href="{% static 'Hospital_Selection.css' %}">-->
     <script>
+        $(document).ready(function()
+        {
+           var dt=new Date();
+           var month=dt.getMonth()+1;
+           var day=dt.getDate()+1;
+           var year=dt.getFullYear();
+           if(month < 10)
+               month='0'+month.toString();
+           if(day < 10)
+               day='0'+day.toString();
+
+           var maxDate=year+'-'+month+'-'+day;
+           $("#Appointment_Date").attr('min',maxDate);
+        });
+    </script>
+    <script>
         $(document).ready(function(){
         $("#countries").on("change",function(){
         var country=$("#countries").val();
@@ -89,13 +105,17 @@
     </script>
     <style>
         @media only screen and (max-width: 720px) {
+        b
+        {
+          font-size:12px !important;
+        }
         *
         {
         font-size:10px;
         }
         select
         {
-           width:80px !important;
+           width:60px !important;
         }
         button
         {
@@ -103,19 +123,26 @@
         }
         #countries
         {
-         margin-left:50px !important;
-            width:80px;
+         margin-left:20px !important;
+            width:60px;
             height:30px;
             border-radius:1px;
             font-size:12px;
         }
         #label1
         {
-           margin-left:50px !important;
+           font-size:10px !important;
+           margin-left:0px !important;
+        }
+        #label3
+        {
+           font-size:10px !important;
+           margin-left:0px !important;
         }
         #label2
         {
-           margin-left:50px !important;
+           font-size:10px !important;
+           margin-left:0px !important;
         }
         #states
         {
@@ -125,24 +152,13 @@
             border-radius:1px;
             font-size:12px;
         }
-        #sort
+
+
+         input[type="text"]
         {
-             width:100px !important;
-            height:30px;
-            border-radius:1px;
-            font-size:12px;
+          width:100px !important;
+          height:30px !important;
         }
-        b
-        {
-          font-size:15px !important;
-        }
-         #filters
-         {
-         width:100px !important;
-            height:30px;
-            border-radius:1px;
-            font-size:12px;
-         }
         #cities
         {
         margin-left:0px;
@@ -241,24 +257,23 @@
         $(document).ready(function(){
         $(".mode").on("click",function(){
         var id1=$(this).attr('id');
-        //alert(id1)
-        $("#mode").val(id1);
+        var id2=$('.doctor').attr('id');
+
+        var p=id1.split(",")
+
+        $(".doctor1").val(p[1]);
+        $(".mode1").val(p[0]);
         });
         });
         </script>
     <script>
         function validate()
         {
-        var date=document.getElementById("Appointment_Date").value;
-
+        var date=document.getElementsById("Appointment_Date").value;
         var d=new Date();
         var d1=new Date(date);
         if(!Date.parse(date)){
             alert('Please Select Appropriate Date');
-            return false;
-        }
-        if(!(d1>d && d1.getDay()!=0 && d1.getDay()!=6))
-        { alert('Please Select Appropriate Date');
             return false;
         }
         }
@@ -305,7 +320,7 @@
               $('#filter_type3').val(filter);
                $('#form1').css({"display":"none"});
                $('#form2').css({"display":"none"});
-                $('#label3').html("<b>Select the Speciality Name:</b>");
+                $('#label3').html("<b>Select the Speciality:</b>");
                 $("#form3").css({"display":"none"});
                 $("#search_value").empty();
                 $("#form8").css({"display":"block"});
@@ -344,11 +359,14 @@
                                   });
     </script>
 </head>
-<body style="background-image:url({% static 'image3.jpeg' %}); width:100%;"class="container-fluid" >
-<div>
-        <span>
-            <label for="filters"><b style="font-size:20px;">Filter By:</b></label></span>
-        <span>
+<body style="background-image:url('https://apollowebsiteprod.blob.core.windows.net/apollohospitals/assets/images/bg-equipment.png');width:100%;"class="container-fluid" >
+<div class="row">
+    <div class="col-lg-1 col-2">
+        <b style="font-size:20px;float:right;">Filter By:</b>
+    </div>
+    <div class="col-lg-5 col-4">
+        <span style="float:left;">
+
                 <select id="filters"  name="filter"  required>
                     <option value="Location" selected>Location</option>
                     <option value="Hospital_Name" >Hospital_Name</option>
@@ -359,7 +377,13 @@
                     <option value="Test Name">Test Name</option>
                 </select>
     </span>
-    <span style="float:right;">
+        </div>
+    <div class="col-lg-4 col-2">
+        <b style="font-size:20px;float:right;">Group By:</b>
+    </div>
+    <div class="col-lg-2 col-4">
+    <span style="float:left;">
+
             <form action="{% url 'list_of_hospital' %}" id="form6"  style="display:block;" method="post">
               {% csrf_token %}
                 {% if filter %}
@@ -374,9 +398,8 @@
                 </select>
             </form>
     </span>
-    <span style="float:right;">
-            <label for="sort"><b style="font-size:20px;">Group By:</b></label></span>
     </div>
+</div>
    <div style="margin-top:50px;">
         <form action="{% url 'list_of_hospital' %}" id="form1" style="display:block;" method="post">
             {% csrf_token %}
@@ -482,21 +505,22 @@
     {% for i in list_of_doctors %}
     <div class="col-lg-4 col-xs-4" style="margin-top:10px;">
         <div class="card">
-            {% ifequal filter "Clinic" %}
+            {% if i.clinic_name|length > 0 %}
             <image src="{{ i.clinic_photo.url }}" height=100px class="img1" alt="{{ i.hospitalid.name }}"></image>
             {% else %}
             <image src="{{ i.profile_pic.url }}" height=100px class="img1" alt="{{ i.hospitalid.name }}"></image>
-            {% endifequal %}
+            {% endif %}
             <table class="table-stripped">
                 <tr>
-                    {% ifequal filter "Clinic" %}
+                    {% if i.clinic_name|length > 0 %}
                     <th>Clinic Name:</th>
                     <td>{{ i.clinic_name }}</td>
                     {% else %}
                     <th>Hospital Name:</th>
                     <td>{{ i.hospitalid.hospitalid.name }}</td>
-                    {% endifequal %}
+                    {% endif %}
                 </tr>
+                <input type="text" id="{{ i.doctorid }}" class="doctor" hidden>
                 <tr>
                     <th>Name:</th>
                     <td>{{ i.doctorid.name }}</td>
@@ -514,8 +538,8 @@
                     <td>{{ i.specialization }}</td>
                 </tr>
                 <tr>
-                    <td><button class="btn btn-primary mode" id="Online"   data-toggle="modal" data-target="#exampleModal">Book Online Consultation</button></td>
-                <td><button class="btn btn-primary mode"  id="Remote"   data-toggle="modal" data-target="#exampleModal">Book Offline Appointment</button></td>
+                    <td><button class="btn btn-primary mode" id="Online,{{ i.doctorid }}"   data-toggle="modal" data-target="#exampleModal">Book Online Consultation</button></td>
+                <td><button class="btn btn-primary mode"  id="Remote,{{ i.doctorid }}"   data-toggle="modal" data-target="#exampleModal">Book Offline Appointment</button></td>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -527,19 +551,19 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-        <form role="form" action="{% url 'Appointment_Details_Submission1' %}"   onsubmit="return validate()" id="form4" method="post">
+         <form  action="{% url 'Appointment_Details_Submission1' %}"   onsubmit="return validate()"  method="post">
                         {% csrf_token %}
       <div class="modal-body">
-
-                        <input type="text" hidden value="{{ i.doctorid }}" name="doctorid">
-                        <input type="text" hidden value="" name="mode" id="mode">
+     <input type="text" class="doctor1" hidden value="" name="doctorid">
+          <input type="text" hidden value="" name="mode" class="mode1">
                 <input type="date" name="date" id="Appointment_Date">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">Book Appointment</button>
       </div>
-        </form>
+         </form>
+
     </div>
   </div>
 </div>

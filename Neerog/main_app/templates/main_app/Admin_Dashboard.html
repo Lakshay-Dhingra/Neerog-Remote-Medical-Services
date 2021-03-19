@@ -123,8 +123,8 @@
         }
     </script>
 </head>
-<body>
-<div><button class="btn btn-primary" onclick="location.href='{% url 'add_news' id=Hospital_Id %}'">Add News/Events</button></div>
+<body class="container-fluid">
+<div><button class="btn btn-success" onclick="location.href='{% url 'add_news' id=hospitalid %}'" style="float:right;">Add News/Events</button></div>
 <div>
     <form action="{% url 'report' %}" method="post" onsubmit="return validate()">
                 {% csrf_token %}

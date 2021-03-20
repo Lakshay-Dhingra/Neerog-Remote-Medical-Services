@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <title>Hospital_Selection</title>
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-    {% include "main_app/header.html" %}
-    {% include 'main_app/common_css.html' %}
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    {% include 'main_app/header.html' %}
+   {% include 'main_app/common_css.html' %}
 
     <!--<link rel="stylesheet" href="{% static 'Hospital_Selection.css' %}">-->
     <script>
@@ -137,12 +139,11 @@
          var filter_value=$(".filter_value1").val();
         if(filter_value!=""){
             var filter=$(".filter_value1").val();
-
             var str1="#"+filter_value
             $(str1).attr("selected","selected");
-
             if(filter=="Location")
             {
+
             $('#filter_type').val(filter);
             $('#form2').css({"display":"none"});
             $('#form3').css({"display":"none"});
@@ -172,6 +173,7 @@
             }
             else if(filter =="Hospital_Name" || filter =="Doctor_Name" || filter =="Clinic_Name" || filter =="Testing_Lab" ){
              $("#search_value").val("{{ search_value }}")
+
              $('#filter_type1').val(filter);
              $('#form1').css({"display":"none"});
              $('#form3').css({"display":"none"});
@@ -179,15 +181,13 @@
             $('#form2').css({"display":"block"});
              $("test_name").css({"display":"none"});
                                   }
-
-            }
-         if(filter=="Location")
+         else
             {
 
-            $('#filter_type').val(filter);
+             $('#filter_type').val("Location");
             $('#form2').css({"display":"none"});
-
                  $('#form1').css({"display":"block"});
+            }
             }
        $("#filters").on("change",function(){
         var filter=$("#filters").val();
@@ -302,7 +302,7 @@
                 <select id="filters"  class="form-control"name="filter"  required>
                     <option value="Location" id="Location"selected>Location</option>
                     <option value="Hospital_Name" id="Hospital_Name">Hospital_Name</option>
-                    <option value="Doctor_Name" id=Doctor_Name" >Doctor Name</option>
+                    <option value="Doctor_Name" id="Doctor_Name">Doctor Name</option>
                     <option value="Clinic_Name" id="Clinic_Name">Clinic Name</option>
                     <option value="speciality" id="speciality">Speciality</option>
                     <option value="Testing_Lab" id="Testing_Lab">Testing Lab Name</option>

@@ -4,6 +4,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('home/', views.home, name='home'),
     path('Hospital_Selection/',views.Hospitals,name='Dashboard'),
+    path('user_location/',views.user_location,name='user_location'),
     path('Hospital_Selection/states/',views.list_of_states,name='select'),
     path('availablity',views.availablity,name='availablity'),
     path('change_date',views.change_date,name='change_date'),

@@ -182,7 +182,7 @@ class TestingLab(models.Model):
     country=models.CharField(max_length=50)
     city=models.CharField(max_length=50)
     fee=models.IntegerField(default=100)
-    address=models.CharField(max_length=200)
+    area=models.CharField(max_length=200)
     year_established=models.PositiveIntegerField(validators=[MinValueValidator(1700)], null=True)
     tlab_logo=models.ImageField(upload_to="testing_lab_logo/", null=True)
     profile_pic=models.ImageField(upload_to="testing_lab_photo/", null=True)

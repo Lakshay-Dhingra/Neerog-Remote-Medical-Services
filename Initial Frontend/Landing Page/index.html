@@ -15,12 +15,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Texturina:ital,wght@1,700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Noto+Serif&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Hind&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
-
   <link rel="stylesheet" href="navbar_style.css">
   <title>Landing Page</title>
+
 </head>
-<body>
+<body onload="hello()">
+
   <nav>
     <div class="menu-icon">
     <span class="fas fa-bars"></span></div>
@@ -69,8 +69,6 @@
       cancelBtn.classList.add("show");
     }
   </script>
-
-
 <section id="main_section">
   <div class="content">
     <h1>Neerog: Remote Medical Services</h1>
@@ -177,7 +175,6 @@
   $('.testimonial-pics img').click(function(){
     $(".testimonial-pics img").removeClass("active");
     $(this).addClass("active");
-
     $(".testimonial").removeClass("active");
     $("#"+$(this).attr("alt")).addClass("active");
   });
@@ -189,7 +186,6 @@
   <a href="#">Join Neerog Now!</a>
   </div>
 </section>
-
 
 <footer>
   <div class="footer-container">
@@ -215,7 +211,10 @@
     </div>
   </div>
 </footer>
-
-
+<script>
+  function hello(){
+    alert("hello");
+    }
+</script>
 </body>
 </html>

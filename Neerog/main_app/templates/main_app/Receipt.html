@@ -26,6 +26,9 @@
               <tr>
                   <th>Doctor Email</th>
                   <td>{{ Appointment_Details.doctoremail }}</td></tr>
+              <tr>
+                  <th>Address</th>
+                  <td>{{ doctor_details.area }},{{ doctor_details.city }},{{ doctor_details.country }}</td></tr>
                  {% elif Appointment_Details.TestingLabId %}
             <tr>
                   <th>Testing Lab Name</th>
@@ -35,13 +38,14 @@
                   <th>Testing Lab Email</th>
                   <td>{{  Appointment_Details.TestingLabId.tlabid.email }}</td>
               </tr>
-            <tr>
-                  <th>Testing Lab Address</th>
-                  <td>{{  Appointment_Details.TestingLabId.tlabid.area }}</td>
-              </tr>
+
             <tr>
                   <th>Test Name</th>
                   <td>{{  Appointment_Details.Speciality }}</td>
+              </tr>
+              <tr>
+                  <th>Address</th>
+                  <td>{{  Appointment_Details.TestingLabId.area }} {{  Appointment_Details.TestingLabId.city }} {{  Appointment_Details.TestingLabId.country }}</td>
               </tr>
 
             {% endif %}

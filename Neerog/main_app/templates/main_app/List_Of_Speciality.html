@@ -113,8 +113,8 @@
         <h3 style="color:#3291a8;"> Select Test </h3>
     <div class="row">
         {% for i in specialities %}
-             <div class="col-lg-4 col-md-2">
-                     <form action="{% url 'Appointment_Details_Submission1' %}" onsubmit="return validate()" method="post" >
+             <div class="col-lg-4 col-md-4 col-sm-4">
+                     <form action="{% url 'Appointment_Details_Submission1' %}" onsubmit="return validate()" method="get" >
                          {% csrf_token %}
                          <div class="card">
                       <input type="text" name="speciality" value="{{ i }}" hidden >

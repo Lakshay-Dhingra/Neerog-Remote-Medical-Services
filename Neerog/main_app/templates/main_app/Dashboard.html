@@ -129,7 +129,7 @@ h6
             <div class="col-lg-3 col-sm-6 col-md-4 card" id="test" style="background-color:#404040;height:150px;margin-top:10px;">
                     <div>
                         <span class="dot" style="border:2px solid white;"><b style="margin-left:16px;color:white;">{{ key.testname|first }}</b></span>
-                    <h6 style="olor:white;">{{ key.testname }}</h6>
+                    <h6 style="color:white;">{{ key.testname }}</h6>
                         <h6>Fee:{{ key.price }}</h6>
 
                 </div>
@@ -194,8 +194,9 @@ h6
             <div  class="col-lg-3 col-sm-4 col-md-4 col-6">
                     <img alt="{{ key }}"  class="media-object" src="https://www.narayanahealth.org/sites/default/files/{{ i }}">
                      <span>
-                    <h6 >{{ key }}</h6>
-                    <h6 >Fee:{{ j }}</h6>
+                    <h6 style="color:black;">{{ key }}</h6>
+                    <h6 style="color:black;">Fee:{{ j }}</h6>
+
                 </span>
             </div>
         {% endfor %}

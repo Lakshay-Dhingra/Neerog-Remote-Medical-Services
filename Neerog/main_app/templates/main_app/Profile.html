@@ -5,8 +5,15 @@
     {% load static %}
     <title>Profile</title>
      <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% include "main_app/header.html" %}
+    <!--{% include "main_app/header.html" %}-->
+    <!-- Meta Tags -->
+    {% include 'main_app/common_meta.html' %}
+
+    <!-- Link or CSS Tags -->
+    {% include 'main_app/common_css.html' %}
+    {% include 'main_app/common_js.html' %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -30,7 +37,6 @@
                  hours='0'+hours.toString();
             if(minutes<10)
                  minutes='0'+minutes.toString()
-
            var maxDate=year+'-'+month+'-'+day+'T'+hours+':'+minutes;
            $("#start").attr('min',maxDate);
            $("#end").attr('min',maxDate);
@@ -79,8 +85,23 @@
         });*/
     </script>
     <script>
-    $(document).ready(function()
-        {
+    $(document).ready(function(){
+         var p=$("#filter_type").val();
+
+         var str1="."+p
+         $(str1).attr("selected","selected");
+         if(p=="Date"){
+
+            $("#search_value").empty();
+            $("#search_value").append(`<input type="date" id="Date" value="{{ search_value }}" class="form-control" required name="search_values">
+                                  </input>`);}
+            else{
+             $("#search_value").empty();
+            $("#search_value").append(`<input type="text" value="{{ search_value }}" class="form-control" required name="search_values">
+                                  </input>`);}
+
+
+
        $("#filters").on("change",function(){
         var filter=$("#filters").val();
         if(filter=="Select")
@@ -89,11 +110,11 @@
         {
             if(filter=="Date"){
             $("#search_value").empty();
-            $("#search_value").append(`<input type="date" id="Date" class="form-control" required name="search_values">
+            $("#search_value").append(`<input type="date" id="Date"  class="form-control" required name="search_values">
                                   </input>`);}
             else{
              $("#search_value").empty();
-            $("#search_value").append(`<input type="text" class="form-control" required name="search_values">
+            $("#search_value").append(`<input type="text"  class="form-control" required name="search_values">
                                   </input>`);}
                                   }
                                   });
@@ -176,9 +197,15 @@
      color:blue;
      text-align:center;
      }
+     .col-6
+     {
+
+      margin-top:10px;
+      }
     </style>
 </head>
 <body style="overflow-x:hidden;background-color:light-grey;" class="container-fluid">
+ <!--{% include 'main_app/navbar.html' %}-->
 <div>
 {% if User_Details.doctorid %}
 <div class="row">
@@ -317,32 +344,32 @@ var myChart = new Chart(ctx, {
                 </div>
                 </form>
             <div style="margin-top:20px;">
-            <form action="{% url 'search_appointments' %}" method="post">
+            <form action="{% url 'search_appointments' %}" method="get">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-lg-6 form-group"></div>
-                    <div class="col-lg-1 col-sm-1">
+                    <div class="col-lg-1 col-sm-1 col-6">
                         <label for="filters" style="float:right;"><b>Filter By:</b></label></div>
-
-                    <div class="col-lg-1 col-sm-1 form-group">
+                       <input type="text" hidden value="{{ filter_type }}" id="filter_type">
+                    <div class="col-lg-1 col-sm-1 col-6 form-group">
 
                 <select id="filters" name="filter" class="form-control" style="float:right;"required>
 
-                    <option value="Date" checked>Date</option>
+                    <option value="Date" class="Date" selected>Date</option>
                     {% if User_Details.patientid %}
-                    <option value="Doctor Name">Doctor Name</option>
+                    <option value="Doctor_Name" class="Doctor_Name">Doctor Name</option>
                     {% else %}
-                   <option value="Patient Name">Patient Name</option>
+                   <option value="Patient_Name" class="Patient_Name">Patient Name</option>
                     {% endif %}
 
                 </select>
                 </div>
-                <div class="col-lg-2 col-sm-2" id="search_value">
-                <input type="date" id="Date" class="form-control" required name="search_values">
+                <div class="col-lg-2 col-sm-2 col-12" id="search_value">
+                <input type="date" id="Date" class="form-control" value="{{ search_value }}" required name="search_values">
                                   </div>
 
-                <div class="col-lg-2 col-sm-2">
-                    <button type="submit"  value="submit" class="form-control btn btn-success">Submit</button>
+                <div class="col-lg-2 col-sm-2 col-12">
+                    <button type="submit" value="submit" class="form-control btn btn-success">Apply</button>
 
                 </div>
                     </div>
@@ -514,15 +541,16 @@ var myChart = new Chart(ctx, {
                     <th>Phone</th>
                 <td>{{ User_Details.phone }}</td>
               </tr>
-            {% if User_Details.doctorid %}
+            {% if User_Details.patientid %}
             <tr>
+                {{ search_value }}
                     <th>Address</th>
-                <td>{{ User_Details.area }}</td>
+                <td>{{ User_Details.address }},{{ User_Details.city }},{{ User_Details.country }}</td>
               </tr>
             {% else %}
             <tr>
                     <th>Address</th>
-                <td>{{ User_Details.address }}</td>
+                <td>{{ User_Details.area }},{{ User_Details.city }},{{ User_Details.country }}</td>
               </tr>
             {% endif %}
 

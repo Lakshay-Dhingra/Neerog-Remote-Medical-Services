@@ -271,6 +271,16 @@
              {
              margin-top:3vw !important;
              }
+             .col-lg-4 button
+           {
+              width:120px !important;
+              font-size:9px !important;
+           }
+           .img1
+            {
+               height:200px !important;
+
+               }
 
 
           }
@@ -280,9 +290,17 @@
             }
             .img1
             {
-               height:25vh;
+               height:20vw;
 
                }
+           .col-lg-4 button
+           {
+              width:200px;
+           }
+           .model
+           {
+              width:150px;
+           }
 
 
     </style>
@@ -424,7 +442,7 @@
     {% if list_of_hospitals|length > 0 %}
 <div class="row" style="margin-top:50px;">
     {% for i in list_of_hospitals %}
-    <div class="col-lg-3 col-xs-1 " style="margin-top:10px;">
+    <div class="col-lg-3 col-md-4 col-sm-6" style="margin-top:10px;">
         <div class="card">
             <image src="{{ i.pic1.url }}" height=100px  class="img1" alt="{{ i.hospitalid.name }}"></image>
             <table class="table-stripped">
@@ -450,7 +468,7 @@
     {% if list_of_doctors|length > 0 %}
 <div class="row" style="margin-top:50px;">
     {% for i in list_of_doctors %}
-    <div class="col-lg-4 col-xs-4" style="margin-top:10px;">
+    <div class="col-lg-4 col-md-4" style="margin-top:10px;">
         <div class="card">
             {% if i.clinic_name|length > 0 %}
             <image src="{{ i.clinic_photo.url }}" height=100px class="img1" alt="{{ i.hospitalid.name }}"></image>
@@ -482,7 +500,7 @@
                 </tr>
                 <tr>
                     <th>fee:</th>
-                    <td>{{ i.specialization }}</td>
+                    <td>&#8377;{{ i.clinic_fee }}</td>
                 </tr>
                 <tr>
                     <td><button class="btn btn-primary mode" id="Online,{{ i.doctorid }}"   data-toggle="modal" data-target="#exampleModal">Book Online Consultation</button></td>
@@ -495,19 +513,19 @@
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Choose Date</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true" style="float:right;">&times;</span>
         </button>
       </div>
-         <form  action="{% url 'Appointment_Details_Submission1' %}"   onsubmit="return validate()"  method="post">
+         <form  action="{% url 'Appointment_Details_Submission1' %}"   onsubmit="return validate()"  method="get">
                         {% csrf_token %}
       <div class="modal-body">
      <input type="text" class="doctor1" hidden value="" name="doctorid">
           <input type="text" hidden value="" name="mode" class="mode1">
-                <input type="date" name="date" id="Appointment_Date">
+                <input type="date" name="date" class="form-control" id="Appointment_Date">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Book Appointment</button>
+        <button type="button"  class="btn btn-danger model"data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary model">Book Appointment</button>
       </div>
          </form>
 
@@ -526,7 +544,7 @@
     {% if list_of_testing_labs|length > 0 %}
 <div class="row" style="margin-top:50px;">
     {% for i in list_of_testing_labs %}
-    <div class="col-lg-3 col-xs-1" style="margin-top:10px;">
+    <div class="col-lg-3 col-md-4 col-sm-6" style="margin-top:10px;">
         <div class="card">
             <image src="{{ i.profile_pic.url }}" height=250px class="img1" alt="{{ i.tlabid.name }}"></image>
             <table class="table-stripped">

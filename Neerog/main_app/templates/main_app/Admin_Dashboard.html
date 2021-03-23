@@ -28,6 +28,10 @@
      color:blue;
      text-align:center;
      }
+     .col-*
+     {
+      margin-top:10px;
+      }
     </style>
     <script>
         $(document).ready(function()
@@ -53,6 +57,32 @@
     <script>
     $(document).ready(function()
         {
+        var str1="."+"{{ filter_type }}";
+        $(str1).attr("selected","selected");
+        if(str1==".Date")
+        {
+
+             $("#search_value").css({"display":"block"});
+            $("#search_value").empty();
+              $("#search_values1").css({"display":"none"})
+            $("#search_value").append(`<input type="date" id="Date" class="form-control" value="{{ search_value }}" required name="search_values">
+                                  </input>`);
+        }
+           else if(str1==".speciality")
+            {
+
+            $("#search_value").empty();
+            $("#search_value").css({"display":"none"});
+            $("#search_values1").css({"display":"block"});
+            }
+            else{
+             $("#search_values1").css({"display":"block"});
+             $("#search_value").empty();
+               $("#search_values1").css({"display":"none"});
+            $("#search_value").append(`<input type="text" class="form-control" value="{{ search_value }}" required name="search_values">
+                                  </input>`);}
+
+
        $("#filters").on("change",function(){
         var filter=$("#filters").val();
         if(filter=="Select")
@@ -134,10 +164,10 @@
                     <b>Get Report</b>
                  </div>
 
-                <div class="col-lg-3 offset-lg-5 Non_Available_date form-group" style="display:none;">
+                <div class="col-lg-3 offset-lg-4 Non_Available_date form-group" style="display:none;">
                     <b>Report From:</b><input type="date" class="form-control"  id="start" name="start">
                 </div>
-                <div class="col-lg-2 Non_Available_date" style="display:none;">
+                <div class="col-lg-3 Non_Available_date" style="display:none;">
                     <b> To:</b><input type="date" class="form-control" id="end" name="end">
                 </div>
                 <div class="col-lg-2 Non_Available_date" style="display:none;margin-top:23px;">
@@ -261,7 +291,7 @@ var myChart = new Chart(ctx, {
     </div>
     </div>
 </div>
-<div class="card">
+<div class="card" style="margin-top:20px;">
     <div id="appointment" style="display:block;">
     <div class="row">
         <div class="col-md-12">
@@ -277,28 +307,28 @@ var myChart = new Chart(ctx, {
 
             </div>
             <div style="margin-top:20px;">
-            <form action="{% url 'admin_search_appointments' %}" method="post">
+            <form action="{% url 'admin_search_appointments' %}" method="get">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-lg-6 form-group"></div>
-                    <div class="col-lg-1 col-sm-1">
-                        <label for="filters" style="float:right;">Filter By:</label></div>
 
-                    <div class="col-lg-1 col-sm-1 form-group">
+                    <div class="col-lg-1 col-sm-1 offset-lg-5 col-4">
+                        <label for="filters" style="float:left;"><b>Filter By:</b></label></div>
+
+                    <div class="col-lg-2 col-sm-1 form-group col-8">
 
                 <select id="filters" name="filter" class="form-control" style="float:right;"required>
 
-                    <option value="Date" checked>Date</option>
-                    <option value="Doctor Name">Doctor Name</option>
-                   <option value="Patient Name">Patient Name</option>
-                    <option value="speciality">Select Speciality</option>
+                    <option value="Date" class="Date" selected>Date</option>
+                    <option value="Doctor_Name" class="Doctor_Name">Doctor Name</option>
+                   <option value="Patient_Name" class="Patient_Name">Patient Name</option>
+                    <option value="speciality" class="speciality">Speciality</option>
 
                 </select>
                 </div>
-                <div class="col-lg-2 col-sm-2" id="search_value">
+                <div class="col-lg-2 col-sm-2 col-12" id="search_value">
                 <input type="date" id="Date" class="form-control" required name="search_values">
                                   </div>
-                  <div  style="display:none" class="col-lg-2 col-sm-2" id="search_values1">
+                  <div  style="display:none" class="col-lg-2 col-sm-2 col-12" id="search_values1">
                      <select id="filters1" name="search_values1" class="form-control" style="float:right;"required>
                          {% for i in speciality %}
                          <option value="{{ i }}">{{ i }}</option>
@@ -306,9 +336,8 @@ var myChart = new Chart(ctx, {
                 </select>
                  </div>
 
-
-                <div class="col-lg-2 col-sm-2">
-                    <button type="submit"  value="submit" class="form-control btn btn-success">Submit</button>
+                <div class="col-lg-2 col-sm-2 col-12">
+                    <button type="submit"  value="submit" class="form-control btn btn-success">Apply</button>
 
                 </div>
                     </div>

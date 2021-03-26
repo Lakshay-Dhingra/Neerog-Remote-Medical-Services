@@ -37,9 +37,7 @@
         $(document).ready(function(){
         $(".btn").on("click",function(){
         var id1=$(this).attr('id');
-
         $(".mode").val(id1);
-
         });
         });
     </script>
@@ -91,7 +89,7 @@
                         <input type="text" hidden value="{{ i.doctorid }}" name="doctorid">
                         <input type="text" hidden value="" name="mode" class="mode">
                     <th><button class="btn btn-primary col-12" style="font-size:14px;" id="Online" type="submit">Book Online Consultation</button></th>
-                <td><button class="btn btn-primary col-12"  style="font-size:14px;" id="Remote" type="submit">Book Offline Appointment</button></td>
+                <td><button class="btn btn-primary col-12"  style="font-size:14px;" id="Offline" type="submit">Book Offline Appointment</button></td>
                 </form>
                 </tr>
             </table>

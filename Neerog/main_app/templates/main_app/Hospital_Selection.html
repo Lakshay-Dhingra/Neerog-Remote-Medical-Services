@@ -318,7 +318,7 @@
                  <input type="text" hidden class="filter_value" value="">
                 {% endif %}
                 <select id="filters"  class="form-control"name="filter"  required>
-                    <option value="Location" id="Location"selected>Location</option>
+                    <!--<option value="Location" id="Location"selected>Location</option-->
                     <option value="Hospital_Name" id="Hospital_Name">Hospital_Name</option>
                     <option value="Doctor_Name" id="Doctor_Name">Doctor Name</option>
                     <option value="Clinic_Name" id="Clinic_Name">Clinic Name</option>
@@ -437,7 +437,6 @@
             </div>
                  </form>
    </div>
-
        <div class="container-fluid">
     {% if list_of_hospitals|length > 0 %}
 <div class="row" style="margin-top:50px;">
@@ -467,7 +466,7 @@
 <div class="container-fluid">
     {% if list_of_doctors|length > 0 %}
 <div class="row" style="margin-top:50px;">
-    {% for i in list_of_doctors %}
+    {% for i,j in list_of_doctors.items %}
     <div class="col-lg-4 col-md-4" style="margin-top:10px;">
         <div class="card">
             {% if i.clinic_name|length > 0 %}
@@ -500,11 +499,11 @@
                 </tr>
                 <tr>
                     <th>fee:</th>
-                    <td>&#8377;{{ i.clinic_fee }}</td>
+                    <td>&#8377;{{ j }}</td>
                 </tr>
                 <tr>
                     <td><button class="btn btn-primary mode" id="Online,{{ i.doctorid }}"   data-toggle="modal" data-target="#exampleModal">Book Online Consultation</button></td>
-                <td><button class="btn btn-primary mode"  id="Remote,{{ i.doctorid }}"   data-toggle="modal" data-target="#exampleModal">Book Offline Appointment</button></td>
+                <td><button class="btn btn-primary mode"  id="Offline,{{ i.doctorid }}"   data-toggle="modal" data-target="#exampleModal">Book Offline Appointment</button></td>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

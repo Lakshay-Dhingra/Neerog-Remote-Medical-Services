@@ -217,10 +217,10 @@ class Appointments(models.Model):
    amount_paid = models.PositiveIntegerField()
    appointment_date=models.DateField(blank=False, null=False)
    appointment_time=models.TimeField(blank=False, null=False)
-   DEFAULT_MODE_OF_MEETING = 'Remote'
+   DEFAULT_MODE_OF_MEETING = 'Offline'
    MEETING_CHOICES = [
        ('Online', 'Online'),
-       ('Remote', 'Remote'),
+       ('Offline', 'Offline'),
    ]
    mode_of_meeting = models.CharField(max_length=10, choices=MEETING_CHOICES, default=DEFAULT_MODE_OF_MEETING)
    meeting_url=models.CharField(max_length=300,unique=True,null=True)

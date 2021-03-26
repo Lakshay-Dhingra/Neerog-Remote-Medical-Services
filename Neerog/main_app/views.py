@@ -206,6 +206,8 @@ def index(request):
 def home(request):
     return render(request,'main_app/home.html')
 
+def set_location(request):
+    pass
 def Hospitals(request):
     lis_of_countries = geo_plug.all_CountryNames()
     list_of_tests=list_of_medical_tests();
@@ -294,6 +296,7 @@ def list_of_hospital(request):
            list_of_hospital=[]
            #filter="Hospitals"
            k1=HospitalSpeciality.objects.filter(speciality=speciality)
+           list_of_doctors={}
            if(country==""):
                for i in k1:
                    list_of_hospital.append(Hospital.objects.get(hospitalid=i.hospitalid))
@@ -304,10 +307,12 @@ def list_of_hospital(request):
                    if(len(p12)>0):
                        list_of_hospital.append(p12[0])
                list_of_clinics=Doctor.objects.filter(specialization=speciality).filter(country=country).filter(city=city).exclude(clinic_name="")
+           for i in list_of_clinics:
+               list_of_doctors[i]=i.clinic_fee
            if(len(list_of_hospital)==0 and len(list_of_clinics)==0):
                 messages.info(request,"No Doctor Available for this Speciality")
            return render(request, "main_app/Hospital_Selection.html",
-                          context={"search_value":speciality,"filter":filter,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality,"list_of_doctors": list_of_clinics,"list_of_hospitals":list_of_hospital,'list_of_countries':lis_of_countries,})
+                          context={"search_value":speciality,"filter":filter,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality,"list_of_doctors": list_of_doctors,"list_of_hospitals":list_of_hospital,'list_of_countries':lis_of_countries,})
         elif(filter_type=='Test_Name'):
             testname=request.GET['Test_Name'];
             p=[]
@@ -350,17 +355,20 @@ def list_of_hospital(request):
                           context={"list_of_testing_labs": p, "filter": filter,
                                    'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
         elif(filter_type=='Clinics'):
+            list_of_doctors={}
             if(country==""):
                 p = Doctor.objects.filter(verified="Yes").exclude(clinic_name='')
             else:
                 p=Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(clinic_name='')
+            for i in p:
+                list_of_doctors[i]=i.clinic_fee
             #filter="Clinics"
             print(filter_type)
             print(p)
             if (len(p) == 0):
                 messages.info(request, "No Clinic Available")
             return render(request, "main_app/Hospital_Selection.html",
-                          context={"list_of_doctors": p, "filter": filter,
+                          context={"list_of_doctors": list_of_doctors, "filter": filter,
                                    'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
 
         elif (filter_type == 'Clinic_Name'):
@@ -393,7 +401,7 @@ def list_of_hospital(request):
             if (len(p) == 0):
                 messages.info(request, "No Hospital available in this area")
         elif (filter_type == 'Doctor_Name'):
-            p = []
+            p = {}
             search_value = request.GET.get("search_values")
             if(country==""):
                 k=Doctor.objects.filter(verified="Yes")
@@ -401,7 +409,11 @@ def list_of_hospital(request):
                 k=Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city)
             for i in k:
                 if (i.doctorid.name.casefold() == search_value.casefold()):
-                    p.append(i)
+                    if(i.clinic_name==''):
+                        k1=HospitalSpeciality.objects.filter(hospitalid=i.hospitalid).filter(speciality=i.specialization)
+                        p[i]=k1[0].price
+                    else:
+                       p[i]=i.clinic_fee
                     break;
             #print(p,search_value)
             if(len(p)==0):
@@ -529,7 +541,7 @@ def Payment(request):
                           context={"meeting_url":meeting_url,"mode": mode, "patientname": patientname, "patientemail": patientemail,
                                    "speciality": speciality, "amount_paid": amount_paid,"date":appointment_date,"time":appointment_time,"userdetails":doctordetails})
             elif(user.user_type=="Testing Lab"):
-                mode = "Remote"
+                mode = "Offline"
                 p1 = UserDetails.objects.get(email=request.session['email'])
                 patientname = p1.name
                 patientemail = p1.email
@@ -635,7 +647,7 @@ def Appointment_Details_Submission(request):
                 a1.save()
             elif(user.user_type=="Testing Lab"):
                 a1 = Appointments()
-                mode = "Remote"
+                mode = "Offline"
                 TestingLabId = request.session['user_type_Id']
                 p1 = UserDetails.objects.get(email=request.session['email'])
                 a1.patientname = p1.name
@@ -646,7 +658,7 @@ def Appointment_Details_Submission(request):
                 a1.amount_paid = l1[0].price
                 a1.TestingLabId = TestingLab.objects.get(tlabid=user.userid)
                 t = Appointment_Timings.objects.filter(service_provider_id=user).filter(date=request.session['date'])
-                a1.mode_of_meeting = "Remote"
+                a1.mode_of_meeting = "Offline"
                 a1.appointment_time = request.session['time']
                 a1.appointment_date=request.session['date']
 

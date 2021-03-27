@@ -16,10 +16,54 @@
     <link rel="stylesheet" href="{% static 'main_app/css/footer_style.css' %}">
     <link rel="stylesheet" href="{% static 'main_app/css/features_style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+
+    <script>
+                $(document).ready(function(){
+                if (navigator.geolocation)
+                {
+                    navigator.geolocation.getCurrentPosition(successFunction, errorFunction);
+                }
+                else
+                {
+                    alert('It seems like Geolocation, which is required for this page, is not enabled in your browser.');
+                }
+            });
+
+
+            function successFunction(position)
+            {
+                var lat = position.coords.latitude;
+                var long = position.coords.longitude;
+                //alert('Your latitude is :'+lat+' and longitude is '+long);
+                $.ajax(
+                    {
+                         type:"get",
+                         url:"/user_location/",
+                         data:
+                         {
+                          longitude:long,
+                          latitude:lat
+                         },
+                         success:function(data)
+                         {
+                         }
+                         });
+
+            }
+
+            function errorFunction(position)
+            {
+                alert('Error!');
+            }
+
+    </script>
+
 
     <title>Neerog - Remote Medical Services</title>
-
 </head>
 <body>
 
@@ -52,7 +96,11 @@
       
     <!-- JavaScript -->
     {% include 'main_app/common_js.html' %}
+<<<<<<< HEAD
 
 
+=======
+     <!--{% include 'main_app/header.html' %}-->
+>>>>>>> b531df44cfea0a5b735495dd24bda5eaf3e9f0a9
 </body>
 </html> 

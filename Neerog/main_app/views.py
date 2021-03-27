@@ -4,8 +4,10 @@ from django.db.models import Sum
 from django.template.loader import render_to_string
 from main_app.models import*;
 from main_app.medical_tests import *;
+from .location import *;
 from django.contrib import messages
 import requests
+from geopy.geocoders import Nominatim
 import re
 import json
 import pandas as pd
@@ -151,13 +153,13 @@ def profile(request):
                                "list_of_speciality_appointments": list(list_of_speciality.values()),
                                "Online_consultations_today": Online_consultations_today,
                                "appointments_this_month": appointments_this_month,
-                               "earning_this_month": earning_this_month, "appointments_today": appointments_today})
+                               "earning_this_month": earning_this_month,"filter_type":"Date","appointments_today": appointments_today})
     if(user.user_type=='Patient'):
         i=Patient.objects.get(patientid=user)
         User_Profile=i;
         list_of_Appointments = Appointments.objects.filter(patientemail=email).order_by('-appointment_date')
         return render(request, 'main_app/Profile.html',
-                              context={"list_of_Appointments": appoin(list_of_Appointments), "User_Details": User_Profile})
+                              context={"filter_type":"Date","list_of_Appointments": appoin(list_of_Appointments), "User_Details": User_Profile})
 
     elif (user.user_type == 'Doctor'):
         User_Profile=Doctor.objects.get(doctorid=user.userid)
@@ -173,7 +175,7 @@ def profile(request):
                       context={"available":available,"list_of_Appointments":appoin(list_of_Appointments) , "User_Details": User_Profile,
                                "no_of_Appointments_completed":no_of_Appointments_completed,
                                "no_of_Appointments": no_of_Appointments,
-                               "online_Appointments": online_Appointments})
+                               "online_Appointments": online_Appointments,"filter_type":"Date"})
 
     elif(user.user_type=="Testing Lab"):
         User_Profile=TestingLab.objects.get(tlabid=user.userid)
@@ -195,7 +197,7 @@ def profile(request):
                       context={"available":available,"dict_test": no_of_test_appointments, "Test_Names": json.dumps(tests),
                                "list_of_Appointments": appoin(list_of_Appointments), "User_Details": User_Profile,
                                "no_of_Appointments_completed": no_of_Appointments_completed,
-                               "no_of_Appointments": no_of_Appointments})
+                               "no_of_Appointments": no_of_Appointments,"filter_type":"Date"})
 
 
 
@@ -204,11 +206,16 @@ def index(request):
 def home(request):
     return render(request,'main_app/home.html')
 
+def set_location(request):
+    pass
 def Hospitals(request):
     lis_of_countries = geo_plug.all_CountryNames()
-    p=Hospital.objects.filter(verified="Yes")
     list_of_tests=list_of_medical_tests();
     list_of_speciality=get_specialities()
+    city=request.session['city']
+    state=request.session['state']
+    country=request.session['country']
+    p = Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
     return render(request,'main_app/Hospital_Selection.html',context={'list_of_countries':lis_of_countries,"list_of_hospitals":p,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
 
 
@@ -258,157 +265,197 @@ def create_zoom_meeting(date,time):
 
 
 def list_of_states(request):
-    list1 = geo_plug.all_Country_StateNames()[1:].split("},")
-    states={}
     country=request.GET.get("country")
-    for i in list1:
-        k = i.split(":")
-        header = re.sub("{", "", re.sub("\"", "", k[0])).strip()
-        trailing = re.sub("{", "", re.sub("\"", "", k[1])).strip()
-        trailing=re.sub("\'","",trailing)
-
-        states[header] =trailing[1:len(trailing) - 1]
-    for key, item in states.items():
-        if (key == country):
-            lis_of_states = item
+    lis_of_states=get_states(country)
     return JsonResponse(data=lis_of_states,safe=False)
 
 def list_of_city(request):
     state=request.GET.get("city")
-    state=re.sub("\"","",state).strip()
-    list_of_cities=[]
-    city = geo_plug.all_State_CityNames(str(state))
-    k = city.split(":")
-    trailing =re.sub("\"", "", k[1])
-    trailing=re.sub("}","",re.sub("\]","",re.sub("\[","",trailing))).strip()
-    lis_of_cities = trailing[0:len(trailing)].split(",")
-    #lis_of_cities=list(re.sub("\]","",re.sub("\'","",re.sub("\[","",str(lis_of_cities)))))
-    for i in lis_of_cities:
-        str1=i.replace("\\","")
-        #print(str1)
-        for key,value in replace_dictionary.items():
-            if(str1.find(key)!=-1):
-                str1=str1.replace(key,value)
-        list_of_cities.append(str1)
+    list_of_cities=list_of_cities1(state)
     return JsonResponse(data=list_of_cities, safe=False)
-
 def list_of_hospital(request):
-    try:
-        filter_type=request.POST.get("filter")
+     #try:
+        filter_type=request.GET.get("filter")
+        filter=filter_type
+        print(filter)
         lis_of_countries = geo_plug.all_CountryNames()
         list_of_speciality=get_specialities()
         list_of_tests=list_of_medical_tests()
-        #print("ppp:",filter_type)
-        filter1=''
+        p=[]
+        try:
+            city = request.session['city']
+            state = request.session['state']
+            country = request.session['country']
+
+        except:
+            city=""
+            state=""
+            country=""
         if(filter_type=='speciality'):
-           speciality = request.POST['speciality']
+           speciality = request.GET['speciality']
            list_of_hospital=[]
-           filter="Hospitals"
+           #filter="Hospitals"
            k1=HospitalSpeciality.objects.filter(speciality=speciality)
-           for i in k1:
-               list_of_hospital.append(Hospital.objects.get(hospitalid=i.hospitalid))
-           list_of_clinics=Doctor.objects.filter(specialization=speciality).exclude(clinic_name="")
+           list_of_doctors={}
+           if(country==""):
+               for i in k1:
+                   list_of_hospital.append(Hospital.objects.get(hospitalid=i.hospitalid))
+               list_of_clinics = Doctor.objects.filter(specialization=speciality)
+           else:
+               for i in k1:
+                   p12=Hospital.objects.filter(hospitalid=i.hospitalid).filter(country=country).filter(city=city)
+                   if(len(p12)>0):
+                       list_of_hospital.append(p12[0])
+               list_of_clinics=Doctor.objects.filter(specialization=speciality).filter(country=country).filter(city=city).exclude(clinic_name="")
+           for i in list_of_clinics:
+               list_of_doctors[i]=i.clinic_fee
            if(len(list_of_hospital)==0 and len(list_of_clinics)==0):
                 messages.info(request,"No Doctor Available for this Speciality")
            return render(request, "main_app/Hospital_Selection.html",
-                          context={"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality,"list_of_doctors": list_of_clinics,"list_of_hospitals":list_of_hospital,"filter":filter,'list_of_countries':lis_of_countries,})
-        elif(filter_type=='Test Name'):
-            print("hello")
-            testname=request.POST['Test_Name'];
-            print(testname)
+                          context={"search_value":speciality,"filter":filter,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality,"list_of_doctors": list_of_doctors,"list_of_hospitals":list_of_hospital,'list_of_countries':lis_of_countries,})
+        elif(filter_type=='Test_Name'):
+            testname=request.GET['Test_Name'];
             p=[]
             k=TestPricing.objects.filter(testname=testname)
-            for i in k:
-                p.append(TestingLab.objects.get(tlabid=i.tlabid))
-            filter="Testing_Lab"
+            if(country==""):
+                for i in k:
+                    p.append(TestingLab.objects.get(tlabid=i.tlabid))
+            else:
+                for i in k:
+                    p12=TestingLab.objects.filter(tlabid=i.tlabid).filter(country=country).filter(city=city)
+                    if (len(p12)>0):
+                        p.append(p12[0])
+            #filter="Testing_Lab"
             list_of_tests = list_of_medical_tests();
+
             if (len(p) == 0):
                 messages.info(request, "No Testing Lab Available for this test")
             return render(request, "main_app/Hospital_Selection.html",
-                          context={"list_of_testing_labs": p, "filter": filter,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality,'list_of_countries': lis_of_countries})
+                          context={"list_of_testing_labs": p,"filter":filter,"search_value":testname, "filter": filter,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality,'list_of_countries': lis_of_countries})
 
         elif(filter_type=='Hospitals'):
-            p = Hospital.objects.filter(verified="Yes")
-            filter="Hospitals"
+            print(filter_type)
+            if(country==""):
+                p = Hospital.objects.filter(verified="Yes")
+            else:
+                p = Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
+            #filter="Hospitals"
             if (len(p) == 0):
                 messages.info(request, "No Hospitals available")
         elif(filter_type=='Testing_Labs'):
-            p=TestingLab.objects.filter(verified="Yes")
-            filter="Testing_Labs"
+            if(country==""):
+                p = TestingLab.objects.filter(verified="Yes")
+            else:
+                p=TestingLab.objects.filter(verified="Yes").filter(country=country).filter(city=city)
+            #filter="Testing_Labs"
+            print(filter_type)
             if (len(p) == 0):
                 messages.info(request, "No Testing Lab Available")
             return render(request, "main_app/Hospital_Selection.html",
                           context={"list_of_testing_labs": p, "filter": filter,
                                    'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
         elif(filter_type=='Clinics'):
-            p=Doctor.objects.filter(verified="Yes").exclude(clinic_name='')
-            filter="Clinics"
+            list_of_doctors={}
+            if(country==""):
+                p = Doctor.objects.filter(verified="Yes").exclude(clinic_name='')
+            else:
+                p=Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(clinic_name='')
+            for i in p:
+                list_of_doctors[i]=i.clinic_fee
+            #filter="Clinics"
+            print(filter_type)
             print(p)
             if (len(p) == 0):
                 messages.info(request, "No Clinic Available")
             return render(request, "main_app/Hospital_Selection.html",
-                          context={"list_of_doctors": p, "filter": filter,
+                          context={"list_of_doctors": list_of_doctors, "filter": filter,
                                    'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
 
         elif (filter_type == 'Clinic_Name'):
-            search_value = request.POST.get("search_values")
-            p = Doctor.objects.filter(verified="Yes").filter(clinic_name__iexact=search_value)
-            filter = "Clinic"
+            search_value = request.GET.get("search_values")
+            if(country==""):
+                p = Doctor.objects.filter(verified="Yes").filter(clinic_name__iexact=search_value)
+            else:
+                p = Doctor.objects.filter(verified="Yes").filter(clinic_name__iexact=search_value).filter(country=country).filter(city=city)
+            #filter = "Clinic"
             print(p)
             if(len(p)==0):
                 messages.info(request, "No Clinic Available of this name")
             return render(request, "main_app/Hospital_Selection.html",
-                          context={"list_of_doctors": p, "filter": filter,
+                          context={"list_of_doctors": p, "filter": filter,"search_value":search_value,
                                    'list_of_countries': lis_of_countries, "list_of_tests": list_of_tests,
                                    "list_of_speciality": list_of_speciality})
 
         elif(filter_type=='Location'):
-            Country=request.POST.get("country")
-            City=request.POST.get("city")
-            State=request.POST.get("state")
+            print("jkfjmkf")
+            Country=request.GET.get("country").strip()
+            City=request.GET.get("city").strip()
+            State=request.GET.get("state").strip()
+            print(City,State,Country)
+            request.session['city']=City
+            request.session['state']=State
+            request.session['country']=Country
+            print(City,Country)
             p=Hospital.objects.filter(country__iexact=Country.strip()).filter(city__iexact=City.strip()).filter(verified="Yes")
-            filter="Hospital"
+            #filter="Hospital"
             if (len(p) == 0):
                 messages.info(request, "No Hospital available in this area")
         elif (filter_type == 'Doctor_Name'):
-            p = []
-            search_value = request.POST.get("search_values")
-            for i in Doctor.objects.filter(verified="Yes"):
+            p = {}
+            search_value = request.GET.get("search_values")
+            if(country==""):
+                k=Doctor.objects.filter(verified="Yes")
+            else:
+                k=Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city)
+            for i in k:
                 if (i.doctorid.name.casefold() == search_value.casefold()):
-                    p.append(i)
+                    if(i.clinic_name==''):
+                        k1=HospitalSpeciality.objects.filter(hospitalid=i.hospitalid).filter(speciality=i.specialization)
+                        p[i]=k1[0].price
+                    else:
+                       p[i]=i.clinic_fee
                     break;
             #print(p,search_value)
             if(len(p)==0):
                 messages.info(request, "No Doctor of this name")
             return render(request, "main_app/Hospital_Selection.html",
-                          context={"list_of_doctors": p,"filter":"Doctor", 'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
+                          context={"list_of_doctors": p,"filter":filter,"search_value":search_value, 'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
         elif(filter_type=='Hospital_Name'):
             p=[]
-            search_value=request.POST.get("search_values")
-            for i in Hospital.objects.filter(verified="Yes"):
+            search_value=request.GET.get("search_values")
+            if(country==""):
+                k=Hospital.objects.filter(verified="Yes")
+            else:
+                k=Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
+            for i in k:
                 if(i.hospitalid.name.casefold()==search_value.casefold()):
                     p.append(i)
                     break;
-            filter="Hospital"
+            #filter="Hospital"
             if(len(p)==0):
                 messages.info(request,"No Hospital Available with this Name")
-
+            return render(request, "main_app/Hospital_Selection.html",
+                          context={"list_of_hospitals": p,"search_value":search_value, "filter": filter, 'list_of_countries': lis_of_countries,
+                                   "list_of_tests": list_of_tests, "list_of_speciality": list_of_speciality})
         elif(filter_type=='Testing_Lab'):
-            search_value = request.POST.get("search_values")
+            search_value = request.GET.get("search_values")
             p=[]
-            for i in TestingLab.objects.filter(verified="Yes"):
+            if(country==""):
+                k=TestingLab.objects.filter(verified="Yes")
+            else:
+                k=TestingLab.objects.filter(verified="Yes").filter(country=country).filter(city=city)
+            for i in k:
                 if(i.tlabid.name.casefold()==search_value.casefold()):
                     p.append(i);
             if(len(p)==0):
                 messages.info(request,"No Testing lab available with this name")
 
             return render(request, "main_app/Hospital_Selection.html",
-                                  context={"list_of_testing_labs": p, "filter": "Doctor",
+                                  context={"list_of_testing_labs": p, "filter": filter,"search_value":search_value,
                                            'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
         return render(request,"main_app/Hospital_Selection.html",context={"list_of_hospitals":p,"filter":filter,'list_of_countries':lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
-
-    except:
-        return redirect("/Hospital_Selection/")
+     #except:
+     #   return redirect("/Hospital_Selection/")
 
 def Selected_Service_Provider(request,user_id):
     user=UserDetails.objects.get(userid=user_id)
@@ -457,6 +504,11 @@ def submit_Prescription(request):
     return redirect("/profile")
     #return render(request,"main_app/Profile.html",context={"list_of_Appointments":dict})
 def Payment(request):
+            try:
+                email = request.session['email']
+            except:
+                messages.info(request,"Please Login/Register")
+                return redirect('/')
             user = UserDetails.objects.get(userid=request.session['user_type_Id'])
             if(user.user_type=="Hospital" or user.user_type=="Doctor"):
                 mode=request.session['mode']
@@ -472,7 +524,11 @@ def Payment(request):
                     l1=HospitalSpeciality.objects.filter(hospitalid=i.hospitalid).filter(speciality=speciality)
                     amount_paid =l1[0].price
                 else:
-                    amount_paid = i.clinic_fee
+                    if(i.clinic_name==''):
+                        l1 = HospitalSpeciality.objects.filter(hospitalid=i.hospitalid).filter(speciality=speciality)
+                        amount_paid = l1[0].price
+                    else:
+                        amount_paid = i.clinic_fee
                 appointment_date=request.session["date"]
                 appointment_time=request.POST['time_slot']
                 request.session['time'] = appointment_time
@@ -485,8 +541,7 @@ def Payment(request):
                           context={"meeting_url":meeting_url,"mode": mode, "patientname": patientname, "patientemail": patientemail,
                                    "speciality": speciality, "amount_paid": amount_paid,"date":appointment_date,"time":appointment_time,"userdetails":doctordetails})
             elif(user.user_type=="Testing Lab"):
-                print("bad")
-                mode = "Remote"
+                mode = "Offline"
                 p1 = UserDetails.objects.get(email=request.session['email'])
                 patientname = p1.name
                 patientemail = p1.email
@@ -504,10 +559,54 @@ def Payment(request):
                                        "speciality": speciality, "amount_paid": amount_paid, "date": appointment_date,
                                        "time": appointment_time, "userdetails": TestingLabId})
 def cancel_appointment(request):
+    messages.info(request,"Appointment Canceled Sucessfully")
     return redirect('/Hospital_Selection')
+def change_date(request):
+    request.session['date']=request.POST['date']
+    service_provider = UserDetails.objects.get(userid=request.session['doctorid'])
+    if(service_provider.user_type=="Testing Lab"):
+        User_Profile = TestingLab.objects.get(tlabid=request.session['doctorid'])
+    else:
+        User_Profile=Doctor.objects.get(doctorid=request.session['doctorid'])
+    slots=available_slots(service_provider,request.session['date'])
+    return render(request, "main_app/Profile1.html",
+                      context={"date": request.session['date'], "User_Profile": User_Profile, 'slots': slots})
+def available_slots(service_provider,date1):
+    slots = []
+    t = Appointment_Timings.objects.filter(service_provider_id=service_provider).filter(date=date1)
+    if len(t) > 0:
+        if (t[0].available == False):
+            slots=[]
+        else:
+            for i in t:
+                if (i.Booked == False):
+                    t12 = i.time.split(":")
+                    d12 = str(i.date).split("-")
+                    print(d12)
+                    da = datetime.datetime(int(d12[0]), int(d12[1]), int(d12[2]), int(t12[0]), int(t12[1]), int(t12[2]))
+                    slots.append(da)
 
+    else:
+        start_time = [9, 0, 0]
+        end_time = [10, 0, 0]
+        date = date1.split("-")
+        x = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(start_time[0]), int(start_time[1]), 0)
+        y = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(end_time[0]), int(end_time[1]), 0)
+        while (x < y):
+            b12 = Appointment_Timings()
+            b12.service_provider_id = service_provider
+            b12.date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+            b12.time = x.strftime("%X")
+            t12 = b12.time.split(":")
+            d12 = str(b12.date).split("-")
+            da = datetime.datetime(int(d12[0]), int(d12[1]), int(d12[2]), int(t12[0]), int(t12[1]), int(t12[2]))
+            slots.append(da)
+            b12.save()
+            x += datetime.timedelta(minutes=30)
+    return slots
 def Appointment_Details_Submission(request):
             user = UserDetails.objects.get(userid=request.session['user_type_Id'])
+            doctordetails=""
             if(user.user_type=="Hospital" or user.user_type=="Doctor"):
                 a1=Appointments()
                 mode=request.session['mode']
@@ -526,7 +625,11 @@ def Appointment_Details_Submission(request):
                     l1=HospitalSpeciality.objects.filter(hospitalid=hospital_id).filter(speciality=speciality)
                     a1.amount_paid =l1[0].price
                 else:
-                    a1.amount_paid = i.clinic_fee
+                    if (i.clinic_name == ''):
+                        l1 = HospitalSpeciality.objects.filter(hospitalid=i.hospitalid).filter(speciality=speciality)
+                        a1.amount_paid = l1[0].price
+                    else:
+                        a1.amount_paid = i.clinic_fee
                 a1.appointment_date=request.session["date"]
                 d=a1.appointment_date
                 a1.appointment_time=request.session['time']
@@ -537,13 +640,14 @@ def Appointment_Details_Submission(request):
                 else:
                     a1.mode_of_meeting = mode
 
-                b1=Appointment_Timings.objects.filter(service_provider_id=UserDetails.objects.get(userid=int(doctorid))).filter(date=a1.appointment_date).filter(time=a1.appointment_time)
+
+                b1=Appointment_Timings.objects.filter(service_provider_id=user).filter(date=a1.appointment_date).filter(time=a1.appointment_time)
                 print(b1[0])
                 b1.update(Booked=True)
                 a1.save()
             elif(user.user_type=="Testing Lab"):
                 a1 = Appointments()
-                mode = "Remote"
+                mode = "Offline"
                 TestingLabId = request.session['user_type_Id']
                 p1 = UserDetails.objects.get(email=request.session['email'])
                 a1.patientname = p1.name
@@ -554,14 +658,16 @@ def Appointment_Details_Submission(request):
                 a1.amount_paid = l1[0].price
                 a1.TestingLabId = TestingLab.objects.get(tlabid=user.userid)
                 t = Appointment_Timings.objects.filter(service_provider_id=user).filter(date=request.session['date'])
-                a1.mode_of_meeting = "Remote"
+                a1.mode_of_meeting = "Offline"
                 a1.appointment_time = request.session['time']
                 a1.appointment_date=request.session['date']
-                b1 = Appointment_Timings.objects.filter(service_provider_id=UserDetails.objects.get(userid=user.userid)).filter(date=a1.appointment_date).filter(time=a1.appointment_time)
+
+                b1 = Appointment_Timings.objects.filter(service_provider_id=user).filter(date=a1.appointment_date).filter(time=a1.appointment_time)
                 print(len(b1))
                 b1.update(Booked=True)
                 a1.save()
-            return render(request,"main_app/Receipt.html",context={"Appointment_Details":a1})
+
+            return render(request,"main_app/Receipt.html",context={"Appointment_Details":a1,"service_provider":user,"doctor_details":doctor_details})
     #except:
     #    return redirect("/Doctor/")
 
@@ -605,15 +711,15 @@ def book_appointment1(request,speciality):
 
 def Appointment_Details_Submission1(request):
         try:
-            request.session["date"] = request.POST['date']
-            request.session['user_type_Id']=int(request.POST['doctorid'])
+            request.session["date"] = request.GET['date']
+            request.session['user_type_Id']=int(request.GET['doctorid'])
         except:
             pass
         user=UserDetails.objects.get(userid=request.session['user_type_Id'])
         if(user.user_type=='Doctor' or user.user_type=="Hospital"):
-                request.session['mode'] = request.POST['mode']
-                request.session['doctorid'] = request.POST['doctorid']
-                print(request.POST['doctorid'])
+                request.session['mode'] = request.GET['mode']
+                request.session['doctorid'] = request.GET['doctorid']
+                print(request.GET['doctorid'])
                 service_provider = UserDetails.objects.get(userid=int(request.session['doctorid']))
                 User_Profile=Doctor.objects.get(doctorid=request.session['doctorid'])
 
@@ -622,43 +728,21 @@ def Appointment_Details_Submission1(request):
                 request.session['doctorid']=request.session['user_type_Id']
                 service_provider = UserDetails.objects.get(userid=request.session['doctorid'])
                 User_Profile = TestingLab.objects.get(tlabid=request.session['doctorid'])
-                request.session['speciality1']=request.POST['speciality']
-
-        slots = []
-        t = Appointment_Timings.objects.filter(service_provider_id=service_provider).filter(date=request.session['date'])
-        if len(t) > 0:
-                if (t[0].available == False):
-                    messages.info(request, "Doctor not availaible on this date")
-                    return redirect('/Hospital_Selection')
+                request.session['speciality1']=request.GET['speciality']
+        list_of_speciality = get_specialities()
+        list_of_tests = list_of_medical_tests()
+        list_of_doctors=[]
+        slots = available_slots(service_provider,request.session['date'])
+        list_of_doctors.append(User_Profile)
+        if(len(slots)==0):
+                messages.info(request, "Doctor not availaible on this date")
+                if(user.user_type=="Doctor"):
+                    return render(request, "main_app/Hospital_Selection.html",
+                                  context={"list_of_doctors": list_of_doctors, "filter": "Doctor_Name", "search_value":User_Profile.doctorid.name ,
+                                           'list_of_countries': geo_plug.all_CountryNames(), "list_of_tests": list_of_tests,
+                                           "list_of_speciality": list_of_speciality})
                 else:
-                    for i in t:
-                        if (i.Booked==False):
-                            t12=i.time.split(":")
-                            d12=str(i.date).split("-")
-                            print(d12)
-                            da=datetime.datetime(int(d12[0]),int(d12[1]),int(d12[2]),int(t12[0]),int(t12[1]),int(t12[2]))
-                            slots.append(da)
-
-                    if(len(slots)==0):
-                        messages.info(request, "Doctor not availaible on this date")
-                        return redirect('/Hospital_Selection')
-        else:
-                start_time = [9, 0, 0]
-                end_time = [10, 0, 0]
-                date = request.session['date'].split("-")
-                x = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(start_time[0]), int(start_time[1]), 0)
-                y = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(end_time[0]), int(end_time[1]), 0)
-                while (x < y):
-                    b12 = Appointment_Timings()
-                    b12.service_provider_id = service_provider
-                    b12.date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
-                    b12.time = x.strftime("%X")
-                    t12 = b12.time.split(":")
-                    d12 = str(b12.date).split("-")
-                    da = datetime.datetime(int(d12[0]), int(d12[1]), int(d12[2]), int(t12[0]), int(t12[1]), int(t12[2]))
-                    slots.append(da)
-                    b12.save()
-                    x += datetime.timedelta(minutes=30)
+                    return redirect('/Hospital_Selection')
 
         return render(request, "main_app/Profile1.html", context={"date":request.session['date'],"User_Profile": User_Profile, 'slots': slots})
 
@@ -668,13 +752,31 @@ def chosen_date(request):
     print(request.GET.get("date"))
     return JsonResponse(request.session['date'],safe=False)
 
+def user_location(request):
+    geolocator = Nominatim(user_agent="geoapiExercises")
+    longitude=request.GET["longitude"]
+    latitude=request.GET["latitude"]
+    location=geolocator.reverse(str(latitude)+","+str(longitude))
+    address=location.raw['address']
+    request.session['country']=address['country']
+    request.session['state']=address['state']
+    lis=list_of_cities1(request.session['state'])
+    if address['county'] in lis:
+            request.session['city']=address['county']
+    else:
+        request.session['city'] = address['state_district']
+
+    print(request.session['city'])
+    #print(address)
+    return JsonResponse(request.GET['longitude'], safe=False)
+
 def search_appointments(request):
         no_of_Appointments_completed = 0;
         no_of_Appointments = 0;
         dt=datetime.datetime.now();
         email = request.session['email']
-        filter_type=request.POST['filter']
-        search_values=request.POST['search_values']
+        filter_type=request.GET['filter']
+        search_values=request.GET['search_values']
         dict = {}
         user=UserDetails.objects.get(email=email)
         if (user.user_type == 'Patient'):
@@ -694,7 +796,7 @@ def search_appointments(request):
                             dict[j] = "Upload Prescription"
 
             return render(request, 'main_app/Profile.html',
-                          context={"list_of_Appointments": dict, "User_Details": User_Profile})
+                          context={"list_of_Appointments": dict, "User_Details": User_Profile,"filter_type":filter_type,"search_value":search_values})
 
         elif (user.user_type == 'Doctor'):
                 i=Doctor.objects.get(doctorid=user)
@@ -719,7 +821,7 @@ def search_appointments(request):
                                        "User_Details": User_Profile,
                                        "no_of_Appointments_completed": no_of_Appointments_completed,
                                        "no_of_Appointments": no_of_Appointments,
-                                       "online_Appointments": online_Appointments})
+                                       "online_Appointments": online_Appointments,"filter_type":filter_type,"search_value":search_values})
 
         # print(p)
         elif(user.user_type=="Testing Lab"):
@@ -751,7 +853,7 @@ def search_appointments(request):
                                    "Test_Names": json.dumps(tests),
                                    "list_of_Appointments": appoin(list_of_Appointments), "User_Details": User_Profile,
                                    "no_of_Appointments_completed": no_of_Appointments_completed,
-                                   "no_of_Appointments": no_of_Appointments})
+                                   "no_of_Appointments": no_of_Appointments,"filter_type":filter_type,"search_value":search_values})
             # print(p)
 
     #except:
@@ -825,13 +927,13 @@ def admin_search_appointments(request):
             Appointments1.append(i)
 
     print(list_of_speciality)
-    filter_type = request.POST['filter']
+    filter_type = request.GET['filter']
     Appointments1 = []
     if (filter_type == "speciality"):
 
-        search_values = request.POST['search_values1']
+        search_values = request.GET['search_values1']
     else:
-        search_values = request.POST['search_values']
+        search_values = request.GET['search_values']
 
     print(search_values)
     for i in list_of_doctors:
@@ -840,12 +942,12 @@ def admin_search_appointments(request):
                     p1=Appointments.objects.filter(appointment_date=search_values).filter(doctoremail=i.doctorid.email)
                     for j in p1:
                         Appointments1.append(j)
-            elif (filter_type == "Doctor Name"):
+            elif (filter_type == "Doctor_Name"):
                 doctor = UserDetails.objects.filter(name__iexact=search_values).filter(user_type="Doctor")
                 for j in doctor:
                     Appointments1 = Appointments.objects.filter(appointment_date=dt).filter(doctoremail=j.email)
                 break;
-            elif(filter_type=="Patient"):
+            elif(filter_type=="Patient_Name"):
                 Appointments1 = Appointments.objects.filter(appointment_date=dt).filter(patientname__iexact=search_values)
                 break;
             elif(filter_type=="speciality"):
@@ -854,12 +956,12 @@ def admin_search_appointments(request):
                 break;
     print(Appointments1)
     return render(request, "main_app/Admin_Dashboard.html",
-                  context={"speciality":speciality,"list_of_Appointments": Appointments1, "doctors_data": doctors_data,
+                  context={"filter_type":filter_type,"search_value":search_values,"speciality":speciality,"list_of_Appointments": Appointments1, "doctors_data": doctors_data,
                            "list_of_speciality": json.dumps(list(list_of_speciality.keys())),"hospitalid":user.userid,
                            "list_of_speciality_appointments": list(list_of_speciality.values()),
                            "Online_consultations_today": Online_consultations_today,
                            "appointments_this_month": appointments_this_month, "earning_this_month": earning_this_month,
-                           "appointments_today": appointments_today})
+                           "appointments_today": appointments_today,"filter_type":filter_type,"search_value":search_values})
 
 
 def availablity(request):

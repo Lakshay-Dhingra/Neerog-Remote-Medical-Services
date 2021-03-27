@@ -24,7 +24,7 @@
                   <td>{{ userdetails.doctorid.email }}</td></tr>
             <tr>
                   <th>Address</th>
-                  <td>{{ userdetails.doctorid.area }}</td></tr>
+                  <td>{{ userdetails.area }},{{ userdetails.city }},{{ userdetails.country }} </td></tr>
                  {% elif userdetails.tlabid %}
             <tr>
                   <th>Testing Lab Name</th>
@@ -36,7 +36,7 @@
               </tr>
             <tr>
                   <th>Testing Lab Address</th>
-                  <td>{{  userdetails.tlabid.city }}</td>
+                  <td>{{  userdetails.area }},{{  userdetails.city }},{{  userdetails.country }}</td>
               </tr>
             <tr>
                   <th>Test Name</th>

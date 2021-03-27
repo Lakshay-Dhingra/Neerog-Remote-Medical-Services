@@ -177,7 +177,7 @@ class TestingLab(models.Model):
     about=models.TextField(max_length=2000)
     country=models.CharField(max_length=50)
     city=models.CharField(max_length=50)
-    address=models.CharField(max_length=200)
+    area=models.CharField(max_length=200)
     year_established=models.PositiveIntegerField(validators=[MinValueValidator(1700)], null=True)
     tlab_logo=models.ImageField(upload_to="testing_lab_logo/", null=True)
     profile_pic=models.ImageField(upload_to="testing_lab_photo/", null=True)
@@ -212,10 +212,10 @@ class Appointments(models.Model):
    amount_paid = models.PositiveIntegerField()
    appointment_date=models.DateField(blank=False, null=False)
    appointment_time=models.TimeField(blank=False, null=False)
-   DEFAULT_MODE_OF_MEETING = 'Remote'
+   DEFAULT_MODE_OF_MEETING = 'Offline'
    MEETING_CHOICES = [
        ('Online', 'Online'),
-       ('Remote', 'Remote'),
+       ('Offline', 'Offline'),
    ]
    mode_of_meeting = models.CharField(max_length=10, choices=MEETING_CHOICES, default=DEFAULT_MODE_OF_MEETING)
    meeting_url=models.CharField(max_length=300,unique=True,null=True)

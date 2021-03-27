@@ -1,5 +1,5 @@
 /* Profile Page CSS */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap');
 
 body
 {
@@ -20,7 +20,23 @@ body
         top:0;
         left:0;
         width: 100%;
-        height: 2000px;
+        height: 2250px;
+        z-index: -1;
+        opacity: 0.6;
+    } 
+
+    .editprofilebg::before
+    {
+        background-image: url("../images/doctor_bg.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        content:"";
+        position: absolute;
+        top:0;
+        left:0;
+        width: 100%;
+        height: 1000px;
         z-index: -1;
         opacity: 0.6;
     } 
@@ -30,7 +46,7 @@ body
 {
     width: 90vw;
     margin: 0 auto;
-    margin-top: 60px;
+    margin-top: 50px;
 }
 
 #edit_main_profile
@@ -40,11 +56,21 @@ body
     margin-top: 100px;
 }
 
+#edit_main_profile h2
+{
+   margin: 50px 0;
+}
+
+#edit_main_profile label
+{
+  font-weight: 600;
+}
+
 @media(max-width: 992px)
 {
   #edit_main_profile
   {
-      width: 90vw;
+      width: 95vw;
       margin: 0 auto;
       margin-top: 100px;
   }
@@ -73,8 +99,16 @@ body
 
 #profile_image
 {
-  padding:45px 90px;
+  padding:40px 90px;
+  /* height: 70px; */
 }
+
+#profile_image img
+{
+  height: 240px;
+  width: 220px;
+}
+
 
 #profile_image img
 {
@@ -273,7 +307,7 @@ body
   padding:0 25px;
 }
 
-#Appointment_Date, #mode
+#Appointment_Date, #mode, #fee
 {
   width: 85%;
   height: 50px;
@@ -334,4 +368,49 @@ body
     padding:0 5px;
     padding-top: 40px;
   }
+}
+
+.editpic
+{
+  text-align: center;
+}
+
+.editpic img
+{
+  border: solid #444;
+  margin-top: 20px;
+}
+
+.editpic label
+{
+  border: solid #444;
+  width: 200px;
+  border-top: none;
+  font-weight: 600;
+  color: #444;
+  background: rgba(128, 255, 212, 0.7);
+  padding: 5px 10px;
+}
+
+.editpic label:hover
+{
+  cursor: pointer;
+  background: rgba(128, 255, 212, 0.4);
+}
+
+.editbuttons button
+{
+  width: 120px;
+  height: 55px;
+  font-size: 23px;
+  font-weight: 600;
+  color: whitesmoke;
+  margin: 8px 10px 10px 0;
+}
+
+.form_feedback
+{
+    color: rgb(107, 107, 107);
+    font-size: 18px;
+    padding-left: 20px;
 }

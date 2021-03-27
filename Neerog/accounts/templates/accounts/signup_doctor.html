@@ -22,7 +22,9 @@
     <!-- Navbar -->
     {% include 'main_app/navbar.html' %}
 
-    <form method="post" class="login-form" action="{% url 'register_doctor' %}">
+    <div class="doctorbg"></div>
+
+    <form method="post" class="login-form" action="{% url 'register_doctor' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <h1>Register - Doctor</h1>
 
@@ -38,7 +40,7 @@
         <div class="placeholder">Phone or Mobile</div>
     </div>
 
-    <div class="textb" style="width: 48%; float: left; height: 70px; ">
+    <div class="textb" style="width: 49%; float: left; height: 70px; ">
         <select name="gender" class="gender" required style="height: 70px;">
             <option value="Unknown" selected>Gender</option>
             <option value="Male">Male</option>
@@ -47,7 +49,7 @@
         </select>
     </div>
 
-    <div class="textb" style="width: 48%; float: right;">
+    <div class="textb" style="width: 49%; float: right;">
         <input type="text" name="experience" required>
         <div class="placeholder">Years Of Experience</div>
     </div>
@@ -62,11 +64,49 @@
     </div>
 
     <div class="textb">
-        <input type="text" name="institution" required>
-        <div class="placeholder" id="institution_placeholder">Clinic Name</div>
+        <input type="number" name="hospitalid" required>
+        <div class="placeholder">Hospital Id</div>
+    </div>
+
+    <div class="textb" style="width: 49%; float: left;">
+        <input type="text" name="cname" required>
+        <div class="placeholder">Clinic Name</div>
+    </div>
+
+    <div class="textb" style="width: 49%; float: right;">
+        <input type="text" name="fee" required>
+        <div class="placeholder">Appointment Fee</div>
+    </div>
+
+    <div class="textb" style="clear:left; width: 49%; float: left; height: 60px; ">
+        <select name="country" class="country" required style="height: 60px;">
+            <option value="">Select Country</option>
+            <option value="India">India</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div class="textb" style="width: 49%; float: right; height: 60px; ">
+        <select name="city" class="city" required style="height: 60px;">
+            <option value="">Select City</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Other">Mumbai</option>
+            <option value="Other">Kolkata</option>
+            <option value="Other">Chennai</option>
+        </select>
+    </div>
+
+    <div class="textb" style="clear:left;">
+        <input type="text" name="area" required>
+        <div class="placeholder">Clinic Address</div>
     </div>
 
     <div class="textb">
+        <label for="cphoto" class="file_label">Clinic Photo</label>
+        <input type="file" class="file_input" name="cphoto" required>
+    </div>
+
+    <div class="textb" style="clear:left;">
         <label for="proof" class="file_label">Proof of claimed qualification</label>
         <input type="file" class="file_input" name="proof" required>
     </div>

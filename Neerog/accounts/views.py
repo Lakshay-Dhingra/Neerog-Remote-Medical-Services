@@ -135,7 +135,13 @@ def register_doctor(request):
     experience=request.POST['experience']
     specialization=request.POST['specialization']
     institution=request.POST['institution']
-    proof=request.POST['proof']
+    proof=None
+
+    if 'proof' in request.FILES:
+        proof = request.FILES['proof']
+    else:
+        messages.info(request,'Please Upload Proof of Claimed Qualification.')
+        return redirect("/accounts/signup/doctor")
 
     #Validation checks
     if(len(phone)==0):
@@ -147,13 +153,13 @@ def register_doctor(request):
     else:
         if(request.user.is_authenticated):
             uid=request.user.id
-            if(authenticate.registerDoctor(uid, int(phone), is_independent, gender, int(experience), specialization, institution, proof)):
+            if(authenticate.registerDoctor(uid, int(phone), is_independent, gender, int(experience), specialization, institution)):
                 messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
                 return redirect("/")
             else:
                 messages.info(request,"Registeration Failed!")
         else:
-            messages.info(request,"Please Login Before Submitting Details!")
+            messages.info(request,"Please Login Before Submitting Details.")
     return redirect("/accounts/signup/doctor")
 
 def register_hospital(request):

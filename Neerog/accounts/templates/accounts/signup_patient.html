@@ -22,6 +22,8 @@
     <!-- Navbar -->
     {% include 'main_app/navbar.html' %}
 
+    <div class="patientbg"></div>
+
     <form method="post" class="login-form" action="{% url 'register_patient' %}">
     {% csrf_token %}
     <h1>Register - User</h1>
@@ -44,6 +46,11 @@
         </select>
     </div>
 
+    <div class="textb" style="clear:left;">
+        <input type="text" name="area" required>
+        <div class="placeholder">Address</div>
+    </div>
+    
     <div class="textb" style="clear: left;">
         <input type="text" name="phone" required>
         <div class="placeholder">Phone or Mobile</div>
@@ -64,8 +71,8 @@
     </div>
 
     <div class="textb" style="clear: left;">
-        <input type="text" name="disability" required>
-        <div class="placeholder">Chronic Illness (Enter 'No' Otherwise)</div>
+        <input type="text" name="disability" value="NO" required>
+        <div class="placeholder">Chronic Illness (If Any)</div>
     </div>
 
     <div class="textb">

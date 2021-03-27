@@ -5,6 +5,7 @@ import datetime
 
 
 def profile(request, uid):
+    uid= int(uid)+1
     if(user_data.isUser(uid)):
         user_type=user_data.getUserType(uid)
         if(user_data.isRegisteredUser(uid)):
@@ -12,10 +13,13 @@ def profile(request, uid):
                 doctor_data = user_data.getDoctorData(uid)
                 try:
                     mydate=request.session['date']
+                    # print(mydate)
+                    mydate=datetime.datetime.strptime(mydate, '%Y-%m-%d')
+                    # print(str(mydate).split()[0])
                 except:
                     mydate = datetime.datetime.now() + datetime.timedelta(days=1)
-                doctor_data['AvailableSlots']=user_data.getFreeSlots(uid, mydate)
-                doctor_data['SelectedDate']= datetime.datetime.strptime(mydate, '%Y-%m-%d')
+                doctor_data['AvailableSlots']=user_data.getFreeSlots(uid, str(mydate).split()[0])
+                doctor_data['SelectedDate']= mydate
                 doctor_data['Today']= datetime.datetime.now()
                 # print(mydate)
                 # print(type(mydate))
@@ -55,8 +59,13 @@ def edit_profile(request):
         if(user_data.isRegisteredUser(uid)):
             if(user_type == "Doctor"):
                 doctor_data = user_data.getDoctorData(uid)
+                
                 doctor_data['AllSpecialities']=medical_speciality.get_specialities()
                 doctor_data['AllGenders']=['Male', 'Female', 'Trans', 'Unknown']
+                if(doctor_data["independent"]):
+                    doctor_data['HospitalId']=""
+                else:
+                    doctor_data['HospitalId']=user_data.getHospitalId(uid)
                 return render(request,'user_app/EditDoctorProfile.html',doctor_data)
             else:
                 messages.info(request,"You Are Not A Doctor!") #Temporary
@@ -73,7 +82,7 @@ def unfollow(request, uid):
         fid=request.user.id
         user_data.unfollow(uid, fid)
         messages.info(request,"Unfollowed Successfully!")
-        return redirect("/user/profile/"+str(uid))
+        return redirect("/user/profile/"+str(uid-1))
     else:
         #User not logged in
         messages.info(request,"You are not Logged In!")
@@ -84,7 +93,7 @@ def follow(request, uid):
         #User is logged in
         fid=request.user.id
         user_data.follow(uid, fid)
-        return redirect("/user/profile/"+str(uid))
+        return redirect("/user/profile/"+str(uid-1))
     else:
         #User not logged in
         messages.info(request,"You are not Logged In!")
@@ -96,7 +105,7 @@ def rate(request, uid, rating):
         rid=request.user.id
         user_data.rate(uid, rid, rating)
         messages.info(request,"Your Rating Updated!")
-        return redirect("/user/profile/"+str(uid))
+        return redirect("/user/profile/"+str(uid-1))
     else:
         #User not logged in
         messages.info(request,"You are not Logged In!")
@@ -104,8 +113,55 @@ def rate(request, uid, rating):
 
 def setDate(request, uid):
     request.session['date'] = request.POST['date']
-    return redirect("/user/profile/"+str(uid)+"#free_timing")
+    return redirect("/user/profile/"+str(uid-1)+"#free_timing")
 
 def setMode(request, uid):
     request.session['mode'] = request.POST['mode']
-    return redirect("/user/profile/"+str(uid)+"#free_timing")
+    return redirect("/user/profile/"+str(uid-1)+"#free_timing")
+
+def edit_doctor(request):
+    name=request.POST['name']
+    phone=request.POST['phone']
+    gender=request.POST['gender']
+    experience=request.POST['experience']
+
+    is_independent=request.POST['is_independent']
+    if(is_independent == "True"):
+        is_independent = True
+    else:
+        is_independent =False
+
+    specialization=request.POST['specialization']
+    about=request.POST['about']
+
+    if(is_independent):
+        country=request.POST['country']
+        city=request.POST['city']
+        area=request.POST['area']
+        cname=request.POST['cname']
+        fee=int(request.POST['fee'])
+        hospitalid=None
+    else:
+        hospitalid=int(request.POST['hospitalid'])
+        country=""
+        city=""
+        area=""
+        cname=""
+        fee=None
+
+    #Validation checks
+    if(len(phone)==0):
+        messages.info(request,"Invalid Phone Number! Phone Number can't be empty.")
+    elif(len(phone)>10):
+        messages.info(request,"Invalid Phone Number! Phone Number can't have more than 10 characters.")
+    else:
+        if(request.user.is_authenticated):
+            uid=request.user.id
+            if(user_data.editDoctor(request, uid, name, int(phone), gender, int(experience), is_independent, specialization, about, hospitalid, country, city, area, cname, fee)):
+                messages.info(request,'Profile Updated Successfully!')
+                return redirect("/user/profile/edit/")
+            else:
+                messages.info(request,"New Phone Number is already registered so can't be updated!")
+        else:
+            messages.info(request,"Please Login Before Submitting Details!")
+    return redirect("/user/profile/edit/")

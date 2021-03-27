@@ -26,80 +26,298 @@
 
     <!--Edit Profile Section -->
 
-    <div class="profilebg"></div>
+    <div class="editprofilebg"></div>
 
     <div id="edit_main_profile">
-        <h2>Edit Personal Details</h2>
-        <form>
+        <h2>Edit Profile Details</h2>
+        <form method="POST" action="{% url 'edit_doctor' %}" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-md-4">
-                <label for="Name">Name</label>
-                <input type="text" class="form-control" id="Name" placeholder="Name" value="{{Name}}">
-                </div>
-                <div class="form-group col-md-4">
-                <label for="Email">Email</label>
-                <input type="email" class="form-control" id="Email" placeholder="Email" value="{{Email}}">
-                </div>
-                <div class="form-group col-md-4">
-                <label for="Phone">Phone</label>
-                <input type="number" class="form-control" id="Phone" placeholder="Phone or Mobile Number" value="{{Phone}}">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col-md-5">
-                <label for="Specialization">Specialization</label>
-                <select id="Specialization" class="form-control">
-                    <option selected>{{SpecializedIn}}</option>
-                    {% for sp in AllSpecialities%}
-                        {% if sp != SpecializedIn%}
-                        <option>{{sp}}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                </div>
-                <div class="form-group col-md-4">
-                <label for="Experience">Experience (In Years)</label>
-                <input type="number" class="form-control" id="inputCity" placeholder="Experience In Years" value="{{Experience}}">
+                <div class="form-group col-md-3">
+                <label for="myname">Name</label>
+                <input type="text" class="form-control" name="name" id="myname" placeholder="Name" value="{{Name}}" required>
                 </div>
                 <div class="form-group col-md-3">
-                <label for="Gender">Gender</label>
-                <select id="Gender" class="form-control">
-                    <option selected>{{Gender}}</option>
-                    {% for gd in AllGenders%}
-                        {% if gd != Gender%}
-                        <option>{{gd}}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
+                <label for="Phone">Phone</label>
+                <input type="number" class="form-control" name="phone" id="Phone" placeholder="Phone or Mobile Number" value="{{Phone}}" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="Gender">Gender</label>
+                    <select id="Gender" class="form-control" name="gender" required>
+                        <option selected>{{Gender}}</option>
+                        {% for gd in AllGenders%}
+                            {% if gd != Gender%}
+                            <option>{{gd}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="Experience">Experience (In Yrs)</label>
+                    <input type="number" class="form-control" id="Experience" placeholder="Experience In Years" name="experience" value="{{Experience}}" required>
                 </div>
             </div>
 
             <div class="form-row">
-                <div class="form-group col-md-8">
-                    <label for="About">About Me</label>
-                    <textarea class="form-control" id="About" rows="4">{{About}}</textarea>
+                <div class="col-md-3">
+                    <div class="form-group editpic">
+                        <div>
+                            <img src="{{ProfilePictureUrl}}" height="200px" width="200px">
+                        </div>
+                        <div>
+                            <label for="profilepic">Edit Profile Pic</label>
+                            <input type="file" class="form-control-file" id="profilepic" name="profilepic" style="display: none;">
+                            <p>No File Selected</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="exampleFormControlFile1">Example file input</label>
-                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+
+                <div class="col-md-9">    
+                    <div class="form-row">
+                        <div class="form-group col-md-7">
+                            <label for="type">Type of Practice</label>
+                            <select name="is_independent" class="form-control" id="type" required>
+                                <option value="True" {% if independent %} selected {% endif %}>I'm Independent or Own A Clinic</option>
+                                <option value="False"{% if independent == False %} selected {% endif %}>I Work With A Hospital</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-5">
+                        <label for="Specialization">Specialization</label>
+                        <select name="specialization" id="Specialization" class="form-control" required>
+                            <option selected>{{SpecializedIn}}</option>
+                            {% for sp in AllSpecialities%}
+                                {% if sp != SpecializedIn%}
+                                <option>{{sp}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="exampleFormControlFile1">Example file input</label>
-                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                        <label for="About">About Me</label>
+                        <textarea name="about" class="form-control" id="About" rows="4" required>{{About}}</textarea>
                     </div>
+                </div>
+                
+            </div>
+
+            <div class="form-row" id="hospital_details" {% if independent %} style="display:none;"{% endif %}>
+                <div class="form-group col-md-3">
+                    <label for="HospitalId">Hospital Id</label>
+                    <input name="hospitalid" type="number" class="form-control" id="HospitalId" placeholder="Enter Hospital Id" value="{{HospitalId}}">
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Save</button>
-            <button class="btn btn-secondary">Reset</button>
+
+
+            <div id="clinic_details" {% if independent == False %} style="display:none;"{% endif %}>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="Country">Country</label>
+                    <select name="country" id="Country" class="form-control">
+                        <option selected>{{Country}}</option>
+                        {% for gd in AllGenders%}
+                            {% if gd != Country%}
+                            <option>{{gd}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="City">City</label>
+                    <select name="city" id="City" class="form-control">
+                        <option selected>{{City}}</option>
+                        {% for gd in AllGenders%}
+                            {% if gd != City%}
+                            <option>{{gd}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="Area">Area</label>
+                    <input name="area" type="text" class="form-control" id="Area" placeholder="Area" value="{{Area}}">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                <label for="ClinicName">Clinic Name</label>
+                <input type="text" name="cname" class="form-control" id="ClinicName" placeholder="Clinic Name" value="{{WorksAt}}">
+                </div>
+                <div class="form-group col-md-3">
+                <label for="Fee">Fee (In INR)</label>
+                <input type="number" name="fee" class="form-control" id="Fee" placeholder="Appointment Fee" value="{{Fee}}">
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="ClinicPhoto">Clinic Photo</label>
+                    <input name="cphoto" type="file" class="form-control-file" id="ClinicPhoto" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <a href="{{InstitutePhotoUrl}}">View Saved Clinic Photo</a>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-12 editbuttons">
+            <button type="submit" class="btn btn-primary save_button">Save</button>
+            <button class="btn btn-danger">Reset</button>
+            <span class="form_feedback"></span>
+        </div>
         </form>
-    </div>    
+    </div>
+
+    <script>
+        
+
+        var file = document.querySelector(".editpic input");
+        file.addEventListener("change",showFileName);
+
+        function showFileName()
+        {
+            let filename = document.querySelector(".editpic p");
+            if(file.value == "")
+            {
+                filename.innerHTML = "No File Selected"
+            }
+            else
+            {
+                filename.innerHTML = file.files.item(0).name;
+            }
+        }
+
+        var type=document.getElementById('type');
+        type.addEventListener("change",showMoreDetails);
+        type.addEventListener("change",checkClinic);
+        type.addEventListener("change",checkHospital);
+        var hd=document.getElementById('hospital_details');
+        var cd=document.getElementById('clinic_details');
+        
+        function showMoreDetails()
+        {
+            if(type.value == "True")
+            {
+                hd.style.display = "none";
+                cd.style.display = "block";
+            }
+            else
+            {
+                cd.style.display = "none";
+                hd.style.display = "block";
+            }
+        }
+
+        var myname=document.getElementById('myname');        
+        myname.addEventListener("keyup",check);
+        
+        var phone=document.getElementById('Phone');
+        phone.addEventListener("keyup",check);
+
+        var about=document.getElementById('About');
+        about.addEventListener("keyup",check);
+
+        var experience=document.getElementById('Experience');
+        experience.addEventListener("keyup",check);
+
+        var feedback = document.querySelector(".form_feedback");
+        var savebtn = document.querySelectorAll(".save_button")[0];
+        
+        function check()
+        {
+            savebtn.disabled = true;
+            if(myname.value=="")
+            {
+                feedback.innerHTML = "*Please Fill The Name Field..."; 
+            }
+            else
+            {
+                if(phone.value.length < 10)
+                {
+                    feedback.innerHTML = "*Phone Number Must Be of 10 digits.";
+                }
+                else
+                {
+                    if(experience.value=="")
+                    {
+                        feedback.innerHTML = "*Please Fill Experience Field."; 
+                    }
+                    else
+                    {
+                        if(about.value=="")
+                        {
+                            feedback.innerHTML = "*Please Write Something About Yourself..."; 
+                        }
+                        else
+                        {
+                            feedback.innerHTML = "";
+                            savebtn.disabled = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        var area=document.getElementById('Area');
+        area.addEventListener("keyup",checkClinic);
+
+        var cname=document.getElementById('ClinicName');
+        cname.addEventListener("keyup",checkClinic);
+
+        var fee=document.getElementById('Fee');
+        fee.addEventListener("keyup",checkClinic);
+
+        var cphoto = document.getElementById('ClinicPhoto');
+        cphoto.addEventListener("keyup",checkClinic);
+
+        function checkClinic()
+        {
+            if(type.value == "True")
+            {
+                savebtn.disabled = true;
+                if(area.value=="")
+                {
+                    feedback.innerHTML = "*Please Enter The Clinic Area/Location."; 
+                }
+                else
+                {
+                    if(cname.value=="")
+                    {
+                        feedback.innerHTML = "*Please Enter Your Clinic Name.";
+                    }
+                    else
+                    {
+                        if(fee.value=="")
+                        {
+                            feedback.innerHTML = "*Please Specify The Appointment Fee for Clinic."; 
+                        }
+                        else
+                        {
+                            feedback.innerHTML = "";
+                            savebtn.disabled = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        var hid=document.getElementById('HospitalId');
+        hid.addEventListener("keyup",checkHospital);
+
+        function checkHospital()
+        {
+            if(type.value == "False")
+            {
+                savebtn.disabled = true;
+                if(hid.value=="")
+                {
+                    feedback.innerHTML = "*Please Enter Your HospitalId."; 
+                }
+                else
+                {
+                    feedback.innerHTML = "";
+                    savebtn.disabled = false;
+                }
+            }
+        }
 
 
-
-    <!-- Footer -->
-    {% comment %} {% include 'main_app/footer.html' %} {% endcomment %}
+    </script>
       
     <!-- JavaScript -->
     {% include 'main_app/common_js.html' %}

@@ -22,6 +22,8 @@
     <!-- Navbar -->
     {% include 'main_app/navbar.html' %}
 
+    <div class="hospitalbg"></div>
+
     <form method="post" class="login-form" action="{% url 'register_hospital' %}">
     {% csrf_token %}
     <h1>Register - Hospital</h1>

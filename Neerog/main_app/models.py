@@ -28,10 +28,6 @@ class UserDetails(models.Model):
     class Meta:
         verbose_name_plural='User Details'
 
-    
-
-
-
 
 #Patient will be deleted if its Userid is deleted in UserDetails
 class Patient(models.Model):
@@ -159,7 +155,7 @@ class Doctor(models.Model):
     verified = models.CharField(max_length=10, default="No")
 
     nullable_strings=[about, country, city, area, clinic_name]
-    nullable_non_strings=[profile_pic, hospitalid, clinic_photo]
+    nullable_non_strings=[profile_pic, hospitalid, clinic_photo, clinic_fee]
 
     def save(self, *args, **kwargs):
         for i in self.nullable_non_strings:
@@ -181,7 +177,6 @@ class TestingLab(models.Model):
     about=models.TextField(max_length=2000)
     country=models.CharField(max_length=50)
     city=models.CharField(max_length=50)
-    fee=models.IntegerField(default=100)
     address=models.CharField(max_length=200)
     year_established=models.PositiveIntegerField(validators=[MinValueValidator(1700)], null=True)
     tlab_logo=models.ImageField(upload_to="testing_lab_logo/", null=True)

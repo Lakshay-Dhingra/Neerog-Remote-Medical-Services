@@ -66,6 +66,7 @@ def registerDoctor(uid, phone, is_independent, gender, experience, specializatio
             is_independent = False
             # hospitalid = hospital_object
         userobj=UserDetails.objects.get(userid=uid-1)
+        
         doctor=Doctor(doctorid=userobj, phone=phone, is_independent=is_independent, gender=gender, experience=experience, specialization=specialization, certificate=proof, clinic_name=clinic_name)
         doctor.save()
         return True

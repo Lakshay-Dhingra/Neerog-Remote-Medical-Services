@@ -1,5 +1,7 @@
-from main_app.models import UserDetails, Doctor, Hospital, Patient, TestingLab, Follow, Ratings, Appointment_Timings
+from main_app.models import UserDetails, Doctor, Hospital, Patient, TestingLab, Follow, Ratings, Appointment_Timings, HospitalSpeciality
 import sys, datetime
+from accounts import authenticate
+from django.core.files.storage import FileSystemStorage
 
 def getUserType(uid):
     userobj=UserDetails.objects.get(userid=uid-1)
@@ -93,22 +95,26 @@ def getDoctorData(uid):
     doctor_data['independent']=doctorobj.is_independent
 
     if(doctor_data['independent']):
-        doctor_data['WorksAt'] = doctorobj.clinic_name + " Clinic"
+        doctor_data['WorksAt'] = doctorobj.clinic_name
         doctor_data['InstitutePhotoUrl'] = doctorobj.clinic_photo.url
         doctor_data['Country'] = doctorobj.country
         doctor_data['City'] = doctorobj.city
         doctor_data['Area'] = doctorobj.area
+        doctor_data['Fee'] = doctorobj.clinic_fee
     else:
-        hospitalid = doctorobj.hospitalid
-        hospitaluserobj=UserDetails.objects.get(userid=hospitalid-1)
-        hospitalobj=Hospital.objects.get(hospitalid=hospitalid-1)
+        hospitalobj = doctorobj.hospitalid
+        # print(type(hospitalobj))
+        hospitaluserobj = hospitalobj.hospitalid
+        # print(type(hospitaluserobj))
+        hospitalid = hospitaluserobj.userid
+        hospitalspeciality=HospitalSpeciality.objects.get(hospitalid=hospitalid, speciality = doctor_data['SpecializedIn'])
 
-        doctor_data['Works At'] = hospitaluserobj.name + " Hospital"
+        doctor_data['WorksAt'] = hospitaluserobj.name
         doctor_data['InstitutePhotoUrl'] = hospitalobj.pic1.url
         doctor_data['Country'] = hospitalobj.country
         doctor_data['City'] = hospitalobj.city
         doctor_data['Area'] = hospitalobj.area
-
+        doctor_data['Fee'] = hospitalspeciality.price
     return doctor_data
 
 # def getNumberOfFollowers(uid):
@@ -208,6 +214,51 @@ def getFreeSlots(uid, mydate):
 
     return slots
 
+def getHospitalId(uid):
+    doctorobj=Doctor.objects.get(doctorid=uid-1)
+    return doctorobj.hospitalid
 
-                    
+def editDoctor(request, uid, name, phone, gender, experience, is_independent, specialization, about, hospitalid, country, city, area, cname, fee):
+    success=True
+    userobj=UserDetails.objects.get(userid=uid-1)
+    userobj.name = name
+    userobj.save()
+
+    doctorobj=Doctor.objects.get(doctorid=uid-1)
+
+    if(doctorobj.phone != phone):
+        if(authenticate.hasRegisteredPhone(phone, "Doctor")):
+            success=False
+        else:
+            doctorobj.phone=phone
+    
+    doctorobj.gender = gender
+    doctorobj.experience = experience
+    doctorobj.is_independent = is_independent
+    doctorobj.specialization = specialization
+    doctorobj.about = about
+
+    if hospitalid is not None:
+        doctorobj.hospitalid = Hospital.objects.get(hospitalid = hospitalid)
+    
+    doctorobj.country = country
+    doctorobj.city = city
+    doctorobj.area = area
+    doctorobj.clinic_name = cname
+    doctorobj.clinic_fee =fee
+
+
+    if 'profilepic' in request.FILES:
+        doctorobj.profile_pic=request.FILES['profilepic']
+
+    if 'cphoto' in request.FILES:
+        doctorobj.clinic_photo=request.FILES['cphoto']
+
+    doctorobj.save()
+
+    # doctor=Doctor(doctorid=userobj, phone=phone, about=about, is_independent=is_independent, gender=gender, experience=experience, specialization=specialization, profile_pic = profilepic, city= city, country= country, area=area, certificate=proof, clinic_name=cname, verified=verified, clinic_photo=cphoto, clinic_fee =fee, hospitalid = hospitalid)
+    # doctor.save()
+
+    return success
+    
         

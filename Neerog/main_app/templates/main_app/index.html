@@ -6,7 +6,6 @@
 <head>
     <!-- Meta Tags -->
     {% include 'main_app/common_meta.html' %}
-
     <!-- Link or CSS Tags -->
     {% include 'main_app/common_css.html' %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -17,6 +16,11 @@
     <link rel="stylesheet" href="{% static 'main_app/css/footer_style.css' %}">
     <link rel="stylesheet" href="{% static 'main_app/css/features_style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+<<<<<<< HEAD
+=======
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+>>>>>>> aa086fbb2d4610d23f6110fa809e7e89a1445394
     <script>
                 $(document).ready(function(){
                 if (navigator.geolocation)
@@ -92,6 +96,32 @@
       
     <!-- JavaScript -->
     {% include 'main_app/common_js.html' %}
+
      <!--{% include 'main_app/header.html' %}-->
+
+     <script>
+        var myNav = document.getElementById('nav_default');
+        window.onscroll = function()
+        { 
+            if(screen.width > 1140)
+            {
+            
+                if (document.body.scrollTop >= document.documentElement.clientHeight || document.documentElement.scrollTop >= document.documentElement.clientHeight )
+                {
+                    myNav.classList.add("nav_bg_gray");
+                    // alert("hello");
+                    // myNav.classList.remove("nav-transparent");
+                } 
+                else
+                {
+                    // myNav.classList.add("nav-transparent");
+                    myNav.classList.remove("nav_bg_gray");
+                    // alert("hello");
+                }
+            }
+        };
+
+    </script>
+
 </body>
 </html> 

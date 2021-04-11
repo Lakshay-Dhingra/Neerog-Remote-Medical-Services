@@ -28,19 +28,17 @@ class UserDetails(models.Model):
     class Meta:
         verbose_name_plural='User Details'
 
-    
-
-
-
 
 #Patient will be deleted if its Userid is deleted in UserDetails
 class Patient(models.Model):
     patientid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
     about=models.TextField(max_length=500, blank=True)
-    country=models.CharField(max_length=50, blank=True)
-    city=models.CharField(max_length=50, blank=True)
-    address=models.CharField(max_length=200, blank=True)
+    country=models.CharField(max_length=100, blank=True)
+    state=models.CharField(max_length=100, blank=True)
+    city=models.CharField(max_length=100, blank=True)
+    area=models.CharField(max_length=200, blank=True)
+    zip = models.PositiveSmallIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
     DEFAULT_GENDER='U'
     GENDER_CHOICES = [
         ('Male', 'Male'),
@@ -69,8 +67,8 @@ class Patient(models.Model):
     disability=models.CharField(max_length=50, default='NO')
     profile_pic=models.ImageField(upload_to="patient_profile_photo/", blank=True, null=True)
 
-    nullable_strings=[about, country, city, address, blood_group]
-    nullable_non_strings=[profile_pic]
+    nullable_strings=[about, country, state, city, area, blood_group]
+    nullable_non_strings=[profile_pic, zip]
 
     def __str__(self):
         return str(self.patientid)
@@ -89,11 +87,13 @@ class Patient(models.Model):
 class Hospital(models.Model):
     hospitalid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
-    about=models.TextField(max_length=2000)
-    country=models.CharField(max_length=50)
-    city=models.CharField(max_length=50)
+    about=models.TextField(max_length=2000, blank=True)
+    country=models.CharField(max_length=100)
+    state=models.CharField(max_length=100)
+    city=models.CharField(max_length=100)
     area=models.CharField(max_length=200)
-    year_established=models.PositiveIntegerField(validators=[MinValueValidator(1500)], null=True)
+    zip = models.PositiveSmallIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
+    year_established=models.PositiveIntegerField(validators=[MinValueValidator(1500)], blank=True, null=True)
     hospital_logo=models.ImageField(upload_to="hospital_logo/", null=True, blank=True)
     pic1=models.ImageField(upload_to="hospital_photo/")
     pic2=models.ImageField(upload_to="hospital_photo/", null=True, blank=True)
@@ -102,7 +102,7 @@ class Hospital(models.Model):
     verified = models.CharField(max_length=10, default="No")
 
     nullable_strings=[about]
-    nullable_non_strings=[hospital_logo, pic2, pic3, year_established]
+    nullable_non_strings=[hospital_logo, pic2, pic3, year_established, zip]
 
     def save(self, *args, **kwargs):
         for i in self.nullable_non_strings:
@@ -146,20 +146,25 @@ class Doctor(models.Model):
     experience=models.PositiveSmallIntegerField(validators=[MaxValueValidator(100),MinValueValidator(0)])
     profile_pic=models.ImageField(upload_to="doctor_profile_photo/", blank=True, null=True)
     certificate=models.FileField(upload_to="doctor_certificate/")
+    start_time = models.CharField(max_length=5)
+    end_time = models.CharField(max_length=5)
+
     #hospitalid will become null when a hospital is deleted
-    hospitalid = models.ForeignKey(Hospital, models.SET_NULL, blank=True, null=True)
+    hospitalid = models.ForeignKey(Hospital, models.SET_NULL, null=True)
     
     clinic_name = models.CharField(max_length=100, blank=True)
     clinic_photo = models.ImageField(upload_to="clinic_photo/", blank=True, null=True)
-    country=models.CharField(max_length=50, blank=True)
-    city=models.CharField(max_length=50, blank=True)
+    country=models.CharField(max_length=100, blank=True)
+    state=models.CharField(max_length=100, blank=True)
+    city=models.CharField(max_length=100, blank=True)
     area=models.CharField(max_length=200, blank=True)
-    clinic_fee=models.PositiveIntegerField(null=True)
+    zip = models.PositiveSmallIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], blank=True, null=True)
+    clinic_fee=models.PositiveIntegerField(blank=True, null=True)
     is_independent = models.BooleanField()
     verified = models.CharField(max_length=10, default="No")
 
-    nullable_strings=[about, country, city, area, clinic_name]
-    nullable_non_strings=[profile_pic, hospitalid, clinic_photo]
+    nullable_strings=[about, country, state, city, area, clinic_name]
+    nullable_non_strings=[profile_pic, hospitalid, clinic_photo, clinic_fee, zip]
 
     def save(self, *args, **kwargs):
         for i in self.nullable_non_strings:
@@ -179,15 +184,28 @@ class TestingLab(models.Model):
     tlabid = models.OneToOneField(UserDetails, on_delete=models.CASCADE, primary_key=True)
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True)
     about=models.TextField(max_length=2000)
-    country=models.CharField(max_length=50)
-    city=models.CharField(max_length=50)
-    fee=models.IntegerField(default=100)
-    area=models.CharField(max_length=200)
-    year_established=models.PositiveIntegerField(validators=[MinValueValidator(1700)], null=True)
-    tlab_logo=models.ImageField(upload_to="testing_lab_logo/", null=True)
-    profile_pic=models.ImageField(upload_to="testing_lab_photo/", null=True)
-    certificate=models.FileField(upload_to="testing_lab_certificate/", null=True)
+    country=models.CharField(max_length=100)
+    state=models.CharField(max_length=100)
+    city=models.CharField(max_length=100)
+    area=models.CharField(max_length=200, blank=True)
+    zip = models.PositiveSmallIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
+    year_established=models.PositiveIntegerField(validators=[MinValueValidator(1700)], null=True, blank=True)
+    tlab_logo=models.ImageField(upload_to="testing_lab_logo/", null=True, blank=True)
+    lab_photo=models.ImageField(upload_to="testing_lab_photo/", null=True, blank=True)
+    certificate=models.FileField(upload_to="testing_lab_certificate/")
     verified = models.CharField(max_length=10, default="No")
+
+    nullable_strings=[about]
+    nullable_non_strings=[lab_photo, tlab_logo, zip, year_established]
+
+    def save(self, *args, **kwargs):
+        for i in self.nullable_non_strings:
+            if not i:
+                self.i = None
+        for i in self.nullable_strings:
+            if not i:
+                self.i = ""
+        super(TestingLab, self).save(*args, **kwargs)
 
     def __str__(self):
         return str(self.tlabid)

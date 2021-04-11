@@ -1,4 +1,4 @@
-<nav>
+<nav id="nav_default">
   <div class="menu-icon">
   <span class="fas fa-bars"></span></div>
   <div class="logo">
@@ -8,7 +8,7 @@
   <li><a href="{% url 'index' %}#features_section">About</a></li>
   <li><a href="#">Contact</a></li>
   {% if user.is_authenticated %}
-  <li><a href="{% url 'index' %}">Profile</a></li>
+  <li><a href="{% url 'profile' user.get_username %}">Profile</a></li>
   <li><a href="{% url 'signup_redirect' %}">Verify</a></li>
   <li><a id="logout_button" href="{% url 'logout' %}">Logout</a></li>
   {% else %}

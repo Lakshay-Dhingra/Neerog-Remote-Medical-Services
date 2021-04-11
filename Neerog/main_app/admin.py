@@ -42,9 +42,9 @@ admin.site.register(HospitalSpeciality,HospitalSpecialityAdmin)
 admin.site.register(Appointments,AppointmentsAdmin)
 class DoctorAdmin(admin.ModelAdmin):
     #columns which will be displayed in outer view
-    list_display = ('doctorid','city','country','gender','experience','verified')
+    list_display = ('doctorid','city','country','gender','experience','verified', 'hospitalid')
     #columns that have  a filter-by option
-    list_filter=['city','country','gender','experience','verified','is_independent']
+    list_filter=['city','country','gender','experience','verified','is_independent', 'hospitalid']
 
 admin.site.register(Doctor,DoctorAdmin)
 

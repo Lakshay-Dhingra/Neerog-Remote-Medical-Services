@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User,auth
-from main_app.models import UserDetails, Doctor, Patient, Hospital, HospitalSpeciality
+from main_app.models import UserDetails, Doctor, Patient, Hospital, HospitalSpeciality, TestingLab, TestPricing
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -56,28 +56,23 @@ def register(name,user_type,password,email):
         print(sys.exc_info())
         return False
 
-def registerDoctor(uid, phone, is_independent, gender, experience, specialization, institution, proof):
+def registerDoctor(uid, start_time, end_time, phone, is_independent, gender, experience, specialization, proof, hospitalid, cname, cphoto, fee, country, state, city, area, zip):
     try:
-        clinic_name = ""
-        if(is_independent == "True"):
-            is_independent = True
-            clinic_name = institution
-        else:
-            is_independent = False
-            # hospitalid = hospital_object
         userobj=UserDetails.objects.get(userid=uid-1)
-        
-        doctor=Doctor(doctorid=userobj, phone=phone, is_independent=is_independent, gender=gender, experience=experience, specialization=specialization, certificate=proof, clinic_name=clinic_name)
+        if hospitalid is not None:
+            hospitalid=Hospital.objects.get(hospitalid=hospitalid)
+
+        doctor=Doctor(doctorid=userobj,start_time=start_time, end_time=end_time, phone=phone, is_independent=is_independent, gender=gender, experience=experience, specialization=specialization, certificate=proof, clinic_name=cname, clinic_photo = cphoto, country=country, state=state, city=city, zip=zip, area=area, hospitalid=hospitalid, clinic_fee=fee)
         doctor.save()
         return True
     except:
         print(sys.exc_info())
         return False
 
-def registerHospital(uid, phone, country, city, area, speciality_pricing, pic1, certificate):
+def registerHospital(uid, phone, country, state, city, zip, area, speciality_pricing, pic1, certificate):
     try:
         userobj=UserDetails.objects.get(userid=uid-1)
-        hospital=Hospital(hospitalid=userobj, phone=phone, country=country, city=city, area=area, pic1=pic1, certificate=certificate)
+        hospital=Hospital(hospitalid=userobj, phone=phone, country=country, state=state, city=city, zip=zip, area=area, pic1=pic1, certificate=certificate)
         hospital.save()
         for sp in speciality_pricing:
             hospitalspeciality = HospitalSpeciality(hospitalid=hospital, speciality = sp, price=speciality_pricing[sp])
@@ -87,10 +82,24 @@ def registerHospital(uid, phone, country, city, area, speciality_pricing, pic1, 
         print(sys.exc_info())
         return False
 
-def registerPatient(uid, phone, country, city, gender, age, disability, profilepic):
+
+def registerTLab(uid, phone, country, state, city, zip, area, test_pricing, pic1, certificate):
     try:
         userobj=UserDetails.objects.get(userid=uid-1)
-        patient=Patient(patientid=userobj, phone=phone, country=country, city=city, gender=gender, age=age, disability=disability, profile_pic=profilepic)
+        tlab=TestingLab(tlabid=userobj, phone=phone, country=country, state=state, city=city, zip=zip, area=area, lab_photo=pic1, certificate=certificate)
+        tlab.save()
+        for sp in test_pricing:
+            testpricing = TestPricing(tlabid=tlab, testname = sp, price=test_pricing[sp])
+            testpricing.save()
+        return True
+    except:
+        print(sys.exc_info())
+        return False
+
+def registerPatient(uid, phone, country, state, city, area, zip, gender, age, disability, profilepic):
+    try:
+        userobj=UserDetails.objects.get(userid=uid-1)
+        patient=Patient(patientid=userobj, phone=phone, country=country,state=state, city=city, area=area, zip=zip, gender=gender, age=age, disability=disability, profile_pic=profilepic)
         patient.save()
         return True
     except:

@@ -4,6 +4,9 @@ replace_dictionary={"u00e1":"e","u0101":"a","u012b":"i","u016b":"u","u0100":"A",
 
 #lis_of_countries = geo_plug.all_CountryNames() To get list of countries
 
+def getCountries():
+    return geo_plug.all_CountryNames()
+
 def get_states(country):
     list1 = geo_plug.all_Country_StateNames()[1:].split("},")
     states = {}

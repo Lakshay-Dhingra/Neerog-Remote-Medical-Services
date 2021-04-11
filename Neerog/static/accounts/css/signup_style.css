@@ -5,6 +5,15 @@
     font-family: "Ubuntu",sans-serif;
   }
   
+  body
+  {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: silver;
+  }
+
   @media(min-width: 992px)
   {
     .doctorbg::before
@@ -18,7 +27,7 @@
         top:0;
         left:0;
         width: 100%;
-        height: 1230px;
+        height: 1400px;
         z-index: -1;
         opacity: 0.7;
     }
@@ -55,14 +64,37 @@
         opacity: 0.8;
     } 
 
-  }
-  
-  body{
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: silver;
+    .tlabbg::before
+    {
+        background-image: url("../images/tlabbg.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        content:"";
+        position: absolute;
+        top:0;
+        left:0;
+        width: 100%;
+        height: 2000px;
+        z-index: -1;
+        opacity: 0.8;
+    }
+    .tlabbg::after
+    {
+        background-image: url("../images/tlabbg2.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        content:"";
+        position: absolute;
+        top:2000px;
+        left:0;
+        width: 100%;
+        height: 2000px;
+        z-index: -1;
+        opacity: 0.8;
+    }
+
   }
   
   .login-form{

@@ -3,8 +3,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User,auth
 from . import tokens
 from . import authenticate
-from main_app import user_data
-from main_app import medical_speciality
+from main_app import user_data, location
+from main_app import medical_speciality, medical_tests
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes
@@ -33,6 +33,8 @@ def signup_redirect(request):
         return redirect("/accounts/signup/patient")
     elif(user_data.getUserType(request.user.id) == "Hospital"):
         return redirect("/accounts/signup/hospital")
+    elif(user_data.getUserType(request.user.id) == "Testing Lab"):
+        return redirect("/accounts/signup/testinglab")
 
 def signup_doctor(request):
     if(user_data.getUserType(request.user.id) == "Doctor"):
@@ -40,7 +42,9 @@ def signup_doctor(request):
             messages.info(request,"You're Details Have Already Been Submitted!")
             return redirect("/")
         else:
-            return render(request,'accounts/signup_doctor.html',{'specialities':medical_speciality.get_specialities()})
+            data={'specialities':medical_speciality.get_specialities()}
+            data['countries']=location.getCountries()
+            return render(request,'accounts/signup_doctor.html',data)
     else:
         messages.info(request,"You Can't Access This Page!")
         return redirect("/")
@@ -51,7 +55,22 @@ def signup_hospital(request):
             messages.info(request,"You're Details Have Already Been Submitted!")
             return redirect("/")
         else:
-            return render(request,'accounts/signup_hospital.html',{'specialities':medical_speciality.get_specialities()})
+            data={'specialities':medical_speciality.get_specialities()}
+            data['countries']=location.getCountries()
+            return render(request,'accounts/signup_hospital.html',data)
+    else:
+        messages.info(request,"You Can't Access This Page!")
+        return redirect("/")
+
+def signup_tlab(request):
+    if(user_data.getUserType(request.user.id) == "Testing Lab"):
+        if(user_data.isVerifiedUser(request.user.id)):
+            messages.info(request,"You're Details Have Already Been Submitted!")
+            return redirect("/")
+        else:
+            data={'tests':medical_tests.list_of_medical_tests()}
+            data['countries']=location.getCountries()
+            return render(request,'accounts/signup_tlab.html',data)
     else:
         messages.info(request,"You Can't Access This Page!")
         return redirect("/")
@@ -62,7 +81,9 @@ def signup_patient(request):
             messages.info(request,"You're Details Have Already Been Submitted!")
             return redirect("/")
         else:
-            return render(request,'accounts/signup_patient.html')
+            data=dict()
+            data['countries']=location.getCountries()
+            return render(request,'accounts/signup_patient.html', data)
     else:
         messages.info(request,"You Can't Access This Page!")
         return redirect("/")
@@ -129,19 +150,44 @@ def register(request):
     return redirect("/accounts/signup")
 
 def register_doctor(request):
+    start_time=request.POST['start_time']
+    end_time=request.POST['end_time']
     phone=request.POST['phone']
-    is_independent=request.POST['is_independent']
+    is_independent=(request.POST['is_independent']=="True")
     gender=request.POST['gender']
-    experience=request.POST['experience']
+    experience=int(request.POST['experience'])
     specialization=request.POST['specialization']
-    institution=request.POST['institution']
-    proof=None
 
+    proof=None
     if 'proof' in request.FILES:
         proof = request.FILES['proof']
     else:
         messages.info(request,'Please Upload Proof of Claimed Qualification.')
         return redirect("/accounts/signup/doctor")
+
+    hospitalid=None
+    cname=""
+    cphoto=None
+    fee=None
+    country=""
+    state=""
+    city=""
+    area=""
+    zip=None
+
+    if(is_independent):
+        cname=request.POST['cname']
+        if 'cphoto' in request.FILES:
+            cphoto = request.FILES['cphoto']
+        fee=int(request.POST['fee'])
+        country=request.POST['country']
+        state=request.POST['state']
+        city=request.POST['city']
+        area=request.POST['area']
+        zip=int(request.POST['zip'])
+    else:
+        hospitalid=int(request.POST['hospitalid'])
+
 
     #Validation checks
     if(len(phone)==0):
@@ -151,9 +197,10 @@ def register_doctor(request):
     elif(authenticate.hasRegisteredPhone(phone, "Doctor")):
         messages.info(request,'This Phone is already registered!')
     else:
+        phone=int(phone)
         if(request.user.is_authenticated):
             uid=request.user.id
-            if(authenticate.registerDoctor(uid, int(phone), is_independent, gender, int(experience), specialization, institution)):
+            if(authenticate.registerDoctor(uid, start_time, end_time, phone, is_independent, gender, experience, specialization, proof, hospitalid, cname, cphoto, fee, country, state, city, area, zip)):
                 messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
                 return redirect("/")
             else:
@@ -165,11 +212,22 @@ def register_doctor(request):
 def register_hospital(request):
     phone=request.POST['phone']
     country=request.POST['country']
+    state=request.POST['state']
     city=request.POST['city']
     area=request.POST['area']
-    pic1=request.POST['pic1']
+    zip=int(request.POST['zip'])
+    pic1=None
     specialization=request.POST.getlist('specialization')
-    certificate=request.POST['proof']
+    certificate=None
+
+    if 'proof' in request.FILES:
+        certificate = request.FILES['proof']
+    else:
+        messages.info(request,'Please Upload A Valid Licsense Or Certification Of Hospital.')
+        return redirect("/accounts/signup/hospital")
+
+    if 'pic1' in request.FILES:
+        pic1 = request.FILES['pic1']
 
     speciality_pricing=dict()
     for sp in specialization:
@@ -183,9 +241,54 @@ def register_hospital(request):
     elif(authenticate.hasRegisteredPhone(phone, "Hospital")):
         messages.info(request,'This Phone is already registered!')
     else:
+        phone=int(phone)
         if(request.user.is_authenticated):
             uid=request.user.id
-            if(authenticate.registerHospital(uid, int(phone), country, city, area, speciality_pricing, pic1, certificate)):
+            if(authenticate.registerHospital(uid, phone, country, state, city, zip, area, speciality_pricing, pic1, certificate)):
+                messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
+                return redirect("/")
+            else:
+                messages.info(request,"Registeration Failed!")
+        else:
+            messages.info(request,"Please Login Before Submitting Details!")
+    return redirect("/accounts/signup/hospital")
+
+def register_tlab(request):
+    phone=request.POST['phone']
+    country=request.POST['country']
+    state=request.POST['state']
+    city=request.POST['city']
+    area=request.POST['area']
+    zip=int(request.POST['zip'])
+    pic1=None
+    specialization=request.POST.getlist('specialization')
+    certificate=None
+
+    if 'proof' in request.FILES:
+        certificate = request.FILES['proof']
+    else:
+        messages.info(request,'Please Upload A Valid Licsense Or Certification Of Hospital.')
+        return redirect("/accounts/signup/hospital")
+
+    if 'pic1' in request.FILES:
+        pic1 = request.FILES['pic1']
+
+    test_pricing=dict()
+    for sp in specialization:
+        test_pricing[sp]=request.POST[sp]
+
+    # Validation checks
+    if(len(phone)==0):
+        messages.info(request,"Invalid Phone Number! Phone Number can't be empty.")
+    elif(len(phone)>10):
+        messages.info(request,"Invalid Phone Number! Phone Number can't have more than 10 characters.")
+    elif(authenticate.hasRegisteredPhone(phone, "Hospital")):
+        messages.info(request,'This Phone is already registered!')
+    else:
+        phone=int(phone)
+        if(request.user.is_authenticated):
+            uid=request.user.id
+            if(authenticate.registerTLab(uid, phone, country, state, city, zip, area, test_pricing, pic1, certificate)):
                 messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
                 return redirect("/")
             else:
@@ -195,14 +298,21 @@ def register_hospital(request):
     return redirect("/accounts/signup/hospital")
 
 
+
 def register_patient(request):
     phone=request.POST['phone']
     country=request.POST['country']
+    state=request.POST['state']
     city=request.POST['city']
+    area=request.POST['area']
+    zip=int(request.POST['zip'])
     gender=request.POST['gender']
-    age=request.POST['age']
+    age=int(request.POST['age'])
     disability=request.POST['disability']
-    profilepic=request.POST['profilepic']
+    
+    profilepic=None
+    if 'profilepic' in request.FILES:
+        profilepic = request.FILES['profilepic']
 
     #Validation checks
     if(len(phone)==0):
@@ -212,9 +322,10 @@ def register_patient(request):
     elif(authenticate.hasRegisteredPhone(phone, "Patient")):
         messages.info(request,'This Phone is already registered!')
     else:
+        phone=int(phone)
         if(request.user.is_authenticated):
             uid=request.user.id
-            if(authenticate.registerPatient(uid, int(phone), country, city, gender, int(age), disability, profilepic)):
+            if(authenticate.registerPatient(uid, phone, country, state, city, area, zip, gender, age, disability, profilepic)):
                 messages.info(request,'Registeration Successful! Your account is fully activated.')
                 return redirect("/")
             else:

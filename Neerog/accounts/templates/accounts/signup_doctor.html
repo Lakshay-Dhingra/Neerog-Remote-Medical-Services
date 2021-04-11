@@ -10,8 +10,78 @@
     <!-- Link or CSS Tags -->
     {% include 'main_app/common_css.html' %}
     <link rel="stylesheet" href="{% static 'accounts/css/signup_style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title>Neerog - Doctor Registeration</title>
+
+    <script>
+        $(document).ready(function(){
+        $("#countries").on("change",function(){
+        var country=$("#countries").val();
+        if(country=="Select")
+             alert("Select Appropriate Country");
+        $.ajax(
+        {
+             type:"get",
+             url:"/Hospital_Selection/states/",
+             data:
+             {
+              country:$("#countries").val()
+             },
+             success:function(data)
+             {
+             var states=JSON.stringify(data);
+             var p=states.split(",");
+
+             $("#states").empty();
+             $("#states").append('<option value="">Select State</option>');
+             for(var i=0;i<p.length;i++)
+             {
+             var optionText=p[i].replace("\"","");
+                $("#states").append(`<option value="${optionText}">
+                                       ${optionText}
+                                  </option>`);
+             }
+             }
+        });
+        });
+        $("#states").on("change",function(){
+        var state=$("#states").val();
+        if(state=="")
+             alert("Select Appropriate State");
+        $.ajax(
+        {
+             type:"get",
+             url:"/Hospital_Selection/city/",
+             data:
+             {
+              city:$("#states").val()
+             },
+             success:function(data)
+             {
+             var states=JSON.stringify(data);
+             var p=states.split(",");
+
+             $("#cities").empty();
+             $("#cities").append(`<option value="Select">
+                                       Select City
+                                  </option>`);
+
+             for(var i=0;i<p.length;i++)
+             {
+             var k=p[i].replace("\[","")
+             var n=k.replace("\]","")
+             var optionText=n.slice(1,n.length-1)
+
+                $("#cities").append(`<option value="${optionText}">
+                                       ${optionText}
+                                  </option>`);
+             }
+             }
+        });
+        });
+        });
+    </script>
 
 </head>
 <body>
@@ -24,19 +94,29 @@
 
     <div class="doctorbg"></div>
 
-    <form method="post" class="login-form" action="{% url 'register_doctor' %}" enctype="multipart/form-data">
+    <form method="post" id="doctorform" class="login-form" action="{% url 'register_doctor' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <h1>Register - Doctor</h1>
 
-    <div class="textb">
-        <select name="is_independent" class="is_independent" required>
+    <div class="textb" style="width: 49%; float: left;">
+        <label for="start_time" class="file_label">Available From</label>
+        <input type="time" class="time_input" style="height: 60px; width: 100%; padding:0 15px;" name="start_time" value="09:00" required>
+    </div>
+
+    <div class="textb" style="width: 49%; float: right;">
+        <label for="end_time" class="file_label">Available Till</label>
+        <input type="time" class="time_input" style="height: 60px; width: 100%; padding:0 15px;" name="end_time" value="18:00" required>
+    </div>
+
+    <div class="textb" style="clear:left;" >
+        <select name="is_independent" id="type" class="is_independent" required>
             <option value="True" selected>I'm Independent or Own A Clinic</option>
             <option value="False">I Work With A Hospital</option>
         </select>
     </div>
 
     <div class="textb">
-        <input type="text" name="phone" required>
+        <input type="number" name="phone" id="Phone" required>
         <div class="placeholder">Phone or Mobile</div>
     </div>
 
@@ -50,12 +130,12 @@
     </div>
 
     <div class="textb" style="width: 49%; float: right;">
-        <input type="text" name="experience" required>
+        <input type="number" name="experience" id="Experience" required>
         <div class="placeholder">Years Of Experience</div>
     </div>
 
     <div class="textb" style="clear: left;">
-        <select name="specialization" required>
+        <select name="specialization" id="Specialization" required>
             <option value="">Select Specialization</option>
             {% for sp in specialities%}
             <option value="{{sp}}">{{sp}}</option>            
@@ -63,91 +143,78 @@
         </select>
     </div>
 
+    <div id="hospital_details" style="display:none; clear:left;">
     <div class="textb">
-        <input type="number" name="hospitalid" required>
+        <input type="number" name="hospitalid" id="HospitalId">
         <div class="placeholder">Hospital Id</div>
     </div>
-
-    <div class="textb" style="width: 49%; float: left;">
-        <input type="text" name="cname" required>
-        <div class="placeholder">Clinic Name</div>
     </div>
 
-    <div class="textb" style="width: 49%; float: right;">
-        <input type="text" name="fee" required>
-        <div class="placeholder">Appointment Fee</div>
-    </div>
+    <div id="clinic_details" style="clear:left;">
+        <div class="textb" style="width: 49%; float: left;">
+            <input type="text" name="cname" id="ClinicName" required>
+            <div class="placeholder">Clinic Name</div>
+        </div>
 
-    <div class="textb" style="clear:left; width: 49%; float: left; height: 60px; ">
-        <select name="country" class="country" required style="height: 60px;">
-            <option value="">Select Country</option>
-            <option value="India">India</option>
-            <option value="Other">Other</option>
-        </select>
-    </div>
+        <div class="textb" style="width: 49%; float: right;">
+            <input type="number" name="fee" id="Fee" required>
+            <div class="placeholder">Appointment Fee</div>
+        </div>
 
-    <div class="textb" style="width: 49%; float: right; height: 60px; ">
-        <select name="city" class="city" required style="height: 60px;">
-            <option value="">Select City</option>
-            <option value="Delhi">Delhi</option>
-            <option value="Other">Mumbai</option>
-            <option value="Other">Kolkata</option>
-            <option value="Other">Chennai</option>
-        </select>
-    </div>
+        <div class="textb" style="clear:left;">
+            <input type="text" name="area" id="Area" required>
+            <div class="placeholder">Clinic Address</div>
+        </div>
 
-    <div class="textb" style="clear:left;">
-        <input type="text" name="area" required>
-        <div class="placeholder">Clinic Address</div>
-    </div>
 
-    <div class="textb">
-        <label for="cphoto" class="file_label">Clinic Photo</label>
-        <input type="file" class="file_input" name="cphoto" required>
+        <div class="textb" style="clear:left; width: 49%; float: left; height: 70px; ">
+            <select name="country" class="country" id="countries" required style="height: 70px;">
+                <option value="">Select Country</option>
+                {% for country in countries %}
+                <option value="{{country}}">{{country}}</option>
+                {% endfor%}
+            </select>
+        </div>
+
+        <div class="textb" style="width: 49%; float: right; height: 70px; ">
+            <select name="state" class="state" id="states" required style="height: 70px;">
+                <option value="">Select State</option>
+            </select>
+        </div>
+
+        <!-- Make a hidden country form that copies values of country and submits on change. -->
+        <div class="textb" style="clear:left; width: 49%; float: left; height: 70px; ">
+            <select name="city" class="city" id="cities" required style="height: 70px;">
+                <option value="">Select City</option>
+            </select>
+        </div>
+
+        <div class="textb" style="width: 49%; float: right;">
+            <input type="number" name="zip" id="ZIP" required>
+            <div class="placeholder">ZIP Code</div>
+        </div>
+
+        <div class="textb" style="clear:left;">
+            <label for="cphoto" class="file_label">Clinic Photo</label>
+            <input type="file" class="file_input" name="cphoto" id="ClinicPhoto" required>
+        </div>
     </div>
 
     <div class="textb" style="clear:left;">
         <label for="proof" class="file_label">Proof of claimed qualification</label>
-        <input type="file" class="file_input" name="proof" required>
+        <input type="file" class="file_input" id="Proof" name="proof" required>
     </div>
-    
-    <div class="textb form_feedback"></div>
 
-    <button class="btn" disabled>Submit</button>
+    <div style="clear:left;" class="textb form_feedback"></div>
+
+    <button style="clear:left;" class="btn" disabled>Submit</button>
     </form>
 
     <script>
 
-    function validateNumber(mynumber) 
-    {
-        if (/^\d+$/.test(mynumber))
-        {
-            return (true)
-        }
-        return (false)
-    }
-
-    function validatePhone(myphone)
-    {
-        if(myphone.length == 10 && validateNumber(myphone) == true)
-        {
-            return (true)
-        }
-        return (false)
-    }
-
-    function validateExperience(myexp)
-    {
-        if(myexp.length < 3 && myexp.length > 0 && validateNumber(myexp) == true)
-        {
-            return (true)
-        }
-        return (false)
-    }
-
     function validateFile(filePath)
     {
-        var allowedExtensions =  /(\.doc|\.docx|\.odt|\.pdf|\.jpeg|\.jpg|\.rtf|\.png)$/i;     
+        let allowedExtensions =  /(\.doc|\.docx|\.odt|\.pdf|\.jpeg|\.jpg|\.rtf|\.png)$/i;     
         if (!allowedExtensions.exec(filePath)) 
         { 
             filePath = '';
@@ -159,87 +226,225 @@
         }
     }
 
-    var fields = document.querySelectorAll(".textb input");
-    var btn = document.querySelector(".btn");
-
-    phone=fields[0];
-    phone.addEventListener("keyup",check);
-
-    specialization=fields[2];
-    specialization.addEventListener("click",check);
-
-    experience=fields[1];
-    experience.addEventListener("keyup",check);
-
-    institution=fields[2];
-    institution.addEventListener("keyup",check);
-
-    var fileInput =  document.querySelector('.file_input');
-    fileInput.addEventListener("change",check);
-
-    var feedback = document.querySelector(".form_feedback")
-    function check()
+    function validateImage(filePath)
     {
-        if(institution.value != "")
+        let allowedExtensions =  /(\.jpeg|\.jpg|\.gif\.png)$/i;     
+        if (!allowedExtensions.exec(filePath)) 
+        { 
+            filePath = '';
+            return false;
+        }
+        else
         {
-            if(validateFile(fileInput.value))
+            return true;
+        }
+    }
+
+    var type=document.getElementById('type');
+    type.addEventListener("change",showMoreDetails);
+    type.addEventListener("change",checkClinic);
+    type.addEventListener("change",checkHospital);
+
+    var hd=document.getElementById('hospital_details');
+    var cd=document.getElementById('clinic_details');
+    var hdinputs = document.querySelectorAll('#hospital_details input');
+    var cdinputs = document.querySelectorAll('#clinic_details input,select');
+
+    function showMoreDetails()
+    {
+        if(type.value == "True")
+        {
+            hd.style.display = "none";
+            cd.style.display = "block";
+            for (inp of hdinputs)
             {
-                if(validatePhone(phone.value) == true)
-                {
-                    if(validateExperience(experience.value) == true)
-                    {
-                        if(specialization.value != "")
-                        {
-                            feedback.innerHTML = "";
-                            btn.disabled = false;
-                        }
-                        else
-                        {
-                            feedback.innerHTML = "*Please Select Your Specialization.";
-                            btn.disabled = true;
-                        }
-                    }
-                    else
-                    {
-                        feedback.innerHTML = "*Please Enter Your Experience (In Years).";
-                        btn.disabled = true;
-                    }
-                }
-                else
-                {
-                    feedback.innerHTML = "*Please Enter A Valid Phone Number!";
-                    btn.disabled = true;
-                }
+                inp.required=false;
+            }
+            for (inp of cdinputs)
+            {
+                inp.required=true;
+            }
+        }
+        else
+        {
+            cd.style.display = "none";
+            hd.style.display = "block";
+            for (inp of cdinputs)
+            {
+                inp.required=false;
+                // console.log(inp);
+            }
+            for (inp of hdinputs)
+            {
+                inp.required=true;
+                // console.log(inp);
+            }
+        }
+    }
+        
+    var phone=document.getElementById('Phone');
+    phone.addEventListener("change",check);
+
+    var experience=document.getElementById('Experience');
+    experience.addEventListener("change",check);
+
+    var specialization = document.getElementById('Specialization');
+    specialization.addEventListener("change",check);
+
+    var feedback = document.querySelector(".form_feedback");
+    var savebtn = document.querySelectorAll(".btn")[0];
+
+    var proof = document.getElementById('Proof');
+    proof.addEventListener("change",check);
+
+        function check()
+        {
+            savebtn.disabled = true;
+            if(phone.value.length != 10)
+            {
+                feedback.innerHTML = "*Phone Number Must Be of 10 digits.";
             }
             else
             {
-                feedback.innerHTML = "*Please Submit Proof Of Claimed Qualification.";
-                btn.disabled = true;
+                if(experience.value=="")
+                {
+                    feedback.innerHTML = "*Please Fill Experience Field."; 
+                }
+                else
+                {
+                    if(specialization.value=="")
+                    {
+                        feedback.innerHTML = "*Please Select Your Specialization."; 
+                    }
+                    else
+                    {
+                        if(!validateFile(proof.value))
+                        {
+                            feedback.innerHTML = "*Please Upload A Valid Proof Of Claimed Qualification."; 
+                        }
+                        else
+                        {
+                            if(type.value == "True")
+                            {
+                                if(checkClinic())
+                                {
+                                    feedback.innerHTML = "";
+                                    savebtn.disabled = false;
+                                }
+                            }
+                            else
+                            {
+                                if(checkHospital())
+                                {
+                                    feedback.innerHTML = "";
+                                    savebtn.disabled = false;
+                                }
+                            }
+                        }
+                    }    
+                }
             }
         }
-        else
-        {
-            feedback.innerHTML = "*Please Enter Your "+document.getElementById("institution_placeholder").innerHTML;
-            btn.disabled = true;
-        }       
-    }
 
-    var is_independent=document.querySelector(".textb .is_independent");
-    is_independent.addEventListener("click",changeInstitute);
-    is_independent.addEventListener("click",check);
 
-    function changeInstitute()
-    {
-        if(is_independent.value == 'True')
+        var country=document.getElementById('countries');
+        country.addEventListener("change",check);
+
+        var state=document.getElementById('states');
+        state.addEventListener("change",check);
+
+        var city=document.getElementById('cities');
+        city.addEventListener("change",check);
+
+        var zip=document.getElementById('ZIP');
+        zip.addEventListener("change",check);
+
+        var area=document.getElementById('Area');
+        area.addEventListener("change",check);
+
+        var cname=document.getElementById('ClinicName');
+        cname.addEventListener("keyup",check);
+
+        var fee=document.getElementById('Fee');
+        fee.addEventListener("change",check);
+
+        var cphoto = document.getElementById('ClinicPhoto');
+        cphoto.addEventListener("change",check);
+
+        function checkClinic()
         {
-            document.getElementById("institution_placeholder").innerHTML = "Clinic Name";
+            if(type.value == "True")
+            {
+                savebtn.disabled = true;
+                if(country.value=="")
+                {
+                    feedback.innerHTML = "*Please Select the Country."; 
+                }
+                else if(state.value=="")
+                {
+                    feedback.innerHTML = "*Please Select the State."; 
+                }
+                else if(city.value=="")
+                {
+                    feedback.innerHTML = "*Please Select the City."; 
+                }
+                else if(zip.value.length > 6 || zip.value.length==0)
+                {
+                    feedback.innerHTML = "*Please Enter A Valid ZIP Code of your Area."; 
+                }
+                else if(area.value=="")
+                {
+                    feedback.innerHTML = "*Please Enter The Clinic Area/Location."; 
+                }
+                else
+                {
+                    if(cname.value=="")
+                    {
+                        feedback.innerHTML = "*Please Enter Your Clinic Name.";
+                    }
+                    else
+                    {
+                        if(fee.value=="")
+                        {
+                            feedback.innerHTML = "*Please Specify The Appointment Fee for Clinic."; 
+                        }
+                        else
+                        {
+                            if(!validateImage(cphoto.value))
+                            {
+                                // console.log(cphoto.value);
+                                feedback.innerHTML = "*Please Upload A Valid Clinic Photo."; 
+                            }
+                            else
+                            {
+                                feedback.innerHTML = "";
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
         }
-        else
-        {
-            document.getElementById("institution_placeholder").innerHTML = "Hospital Id";
-        }
-    } 
 
+        var hid=document.getElementById('HospitalId');
+        hid.addEventListener("keyup",check);
+
+        function checkHospital()
+        {
+            if(type.value == "False")
+            {
+                savebtn.disabled = true;
+                if(hid.value=="")
+                {
+                    feedback.innerHTML = "*Please Enter Your HospitalId."; 
+                }
+                else
+                {
+                    feedback.innerHTML = "";
+                    return true;
+                }
+            }
+        }
 
     </script>
 

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{% static 'accounts/css/signup_style.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <title>Neerog - Hospital Registeration</title>
+    <title>Neerog - Testing Lab Registeration</title>
 
     <script>
         $(document).ready(function(){
@@ -84,7 +84,7 @@
     </script>
 
 </head>
-<body>
+<body style="background-color: #ddd;">
 
     <!-- Messages -->
     {% include 'main_app/show_messages.html' %}
@@ -92,11 +92,11 @@
     <!-- Navbar -->
     {% include 'main_app/navbar.html' %}
 
-    <div class="hospitalbg"></div>
+    <div class="tlabbg"></div>
 
-    <form method="post" class="login-form" action="{% url 'register_hospital' %}" enctype="multipart/form-data">
+    <form method="post" class="login-form" action="{% url 'register_tlab' %}" enctype="multipart/form-data">
     {% csrf_token %}
-    <h1>Register - Hospital</h1>
+    <h1>Register - Testing Lab</h1>
 
     <div class="textb" style="clear:left; width: 49%; float: left; height: 70px; ">
         <select name="country" class="country" id="countries" required style="height: 70px;">
@@ -137,9 +137,11 @@
 
     <div class="specialization">
         <div class="textb">
-        <label for="specialization" class="file_label">Select Hospital Specializations</label>
+        <label for="specialization" class="file_label">Select Tests Available</label>
         </div>
-        {% for sp in specialities%}         
+        {% for sp in tests%}
+        <div style="padding: 10px 0; overflow: hidden;
+        text-overflow: ellipsis;">      
         <div class="checkbox" style="width: 45%; float: left; padding-left: 10px; height: 20px; clear: left;">
             <input type="checkbox" name="specialization" value="{{sp}}">
             <div class="fas fa-check"></div>
@@ -149,17 +151,18 @@
             <input type="text" name="{{sp}}" id="{{sp}}" disabled>
             <div class="placeholder">Pricing In Rupees</div>
         </div>
+        </div>  
         {% endfor %}
     </div>
     <div style="padding-top: 20px; clear: left;"></div>
     
     <div class="textb">
-        <label for="pic1" class="file_label">Hospital Image</label>
+        <label for="pic1" class="file_label">Testing Lab Photo</label>
         <input type="file" class="file_input" name="pic1" required>
     </div>
 
     <div class="textb">
-        <label for="proof" class="file_label">License or Certification Of Hospital</label>
+        <label for="proof" class="file_label">License or Certification Of Lab</label>
         <input type="file" class="file_input" name="proof" required>
     </div>
     
@@ -299,7 +302,7 @@
                                     }
                                     else
                                     {
-                                        feedback.innerHTML = "*Please Enter Numeric Price for All Selected Specialities.";
+                                        feedback.innerHTML = "*Please Enter Numeric Price for All Selected Tests.";
                                         btn.disabled = true;
                                     }    
                                 }
@@ -345,6 +348,7 @@
             btn.disabled = true;
         } 
     }
+
 
     allprice = document.querySelectorAll('.price input');
 

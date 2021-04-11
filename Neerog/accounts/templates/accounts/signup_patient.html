@@ -10,8 +10,78 @@
     <!-- Link or CSS Tags -->
     {% include 'main_app/common_css.html' %}
     <link rel="stylesheet" href="{% static 'accounts/css/signup_style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title>Sign Up - Neerog</title>
+
+    <script>
+        $(document).ready(function(){
+        $("#countries").on("change",function(){
+        var country=$("#countries").val();
+        if(country=="Select")
+             alert("Select Appropriate Country");
+        $.ajax(
+        {
+             type:"get",
+             url:"/Hospital_Selection/states/",
+             data:
+             {
+              country:$("#countries").val()
+             },
+             success:function(data)
+             {
+             var states=JSON.stringify(data);
+             var p=states.split(",");
+
+             $("#states").empty();
+             $("#states").append('<option value="">Select State</option>');
+             for(var i=0;i<p.length;i++)
+             {
+             var optionText=p[i].replace("\"","");
+                $("#states").append(`<option value="${optionText}">
+                                       ${optionText}
+                                  </option>`);
+             }
+             }
+        });
+        });
+        $("#states").on("change",function(){
+        var state=$("#states").val();
+        if(state=="")
+             alert("Select Appropriate State");
+        $.ajax(
+        {
+             type:"get",
+             url:"/Hospital_Selection/city/",
+             data:
+             {
+              city:$("#states").val()
+             },
+             success:function(data)
+             {
+             var states=JSON.stringify(data);
+             var p=states.split(",");
+
+             $("#cities").empty();
+             $("#cities").append(`<option value="Select">
+                                       Select City
+                                  </option>`);
+
+             for(var i=0;i<p.length;i++)
+             {
+             var k=p[i].replace("\[","")
+             var n=k.replace("\]","")
+             var optionText=n.slice(1,n.length-1)
+
+                $("#cities").append(`<option value="${optionText}">
+                                       ${optionText}
+                                  </option>`);
+             }
+             }
+        });
+        });
+        });
+    </script>
 
 </head>
 <body>
@@ -24,39 +94,48 @@
 
     <div class="patientbg"></div>
 
-    <form method="post" class="login-form" action="{% url 'register_patient' %}">
+    <form method="post" class="login-form" action="{% url 'register_patient' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <h1>Register - User</h1>
 
-    <div class="textb" style="width: 48%; float: left; height: 60px; ">
-        <select name="country" class="country" required style="height: 60px;">
-            <option value="">Select Country</option>
-            <option value="India">India</option>
-            <option value="Other">Other</option>
-        </select>
-    </div>
-
-    <div class="textb" style="width: 48%; float: right; height: 60px; ">
-        <select name="city" class="city" required style="height: 60px;">
-            <option value="">Select City</option>
-            <option value="Delhi">Delhi</option>
-            <option value="Other">Mumbai</option>
-            <option value="Other">Kolkata</option>
-            <option value="Other">Chennai</option>
-        </select>
-    </div>
-
-    <div class="textb" style="clear:left;">
-        <input type="text" name="area" required>
-        <div class="placeholder">Address</div>
-    </div>
-    
     <div class="textb" style="clear: left;">
-        <input type="text" name="phone" required>
+        <input type="text" name="phone" id="Phone" required>
         <div class="placeholder">Phone or Mobile</div>
     </div>
 
-    <div class="textb" style="width: 48%; float: left; height: 70px; ">
+    <div class="textb" style="clear:left; width: 49%; float: left; height: 70px; ">
+        <select name="country" class="country" id="countries" required style="height: 70px;">
+            <option value="">Select Country</option>
+            {% for country in countries %}
+            <option value="{{country}}">{{country}}</option>
+            {% endfor%}
+        </select>
+    </div>
+
+    <div class="textb" style="width: 49%; float: right; height: 70px; ">
+        <select name="state" class="state" id="states" required style="height: 70px;">
+            <option value="">Select State</option>
+        </select>
+    </div>
+
+    <!-- Make a hidden country form that copies values of country and submits on change. -->
+    <div class="textb" style="clear:left; width: 49%; float: left; height: 70px; ">
+        <select name="city" class="city" id="cities" required style="height: 70px;">
+            <option value="">Select City</option>
+        </select>
+    </div>
+
+    <div class="textb" style="width: 49%; float: right;">
+        <input type="number" name="zip" id="ZIP" required>
+        <div class="placeholder">ZIP Code</div>
+    </div>
+
+    <div class="textb" style="clear:left;">
+        <input type="text" name="area" id="Area" required>
+        <div class="placeholder">Address or Area</div>
+    </div>
+
+    <div class="textb" style="width: 49%; float: left; height: 70px; ">
         <select name="gender" class="gender" required style="height: 70px;">
             <option value="Unknown" selected>Gender</option>
             <option value="Male">Male</option>
@@ -65,13 +144,13 @@
         </select>
     </div>
 
-    <div class="textb" style="width: 48%; float: right;">
-        <input type="text" name="age" required>
+    <div class="textb" style="width: 49%; float: right;">
+        <input type="text" name="age" id="Age" required>
         <div class="placeholder">Age</div>
     </div>
 
     <div class="textb" style="clear: left;">
-        <input type="text" name="disability" value="NO" required>
+        <input type="text" name="disability" id="Disability" value="NO" required>
         <div class="placeholder">Chronic Illness (If Any)</div>
     </div>
 
@@ -134,63 +213,97 @@
     var fields = document.querySelectorAll(".textb input");
     var btn = document.querySelector(".btn");
 
-    var country = document.querySelectorAll(".textb select")[0];
-    country.addEventListener("click",check);
+    var country=document.getElementById('countries');
+    country.addEventListener("change",check);
 
-    var city = document.querySelectorAll(".textb select")[1];
-    city.addEventListener("click",check);
+    var state=document.getElementById('states');
+    state.addEventListener("change",check);
 
-    var phone=fields[0];
+    var city=document.getElementById('cities');
+    city.addEventListener("change",check);
+
+    var zip=document.getElementById('ZIP');
+    zip.addEventListener("change",check);
+
+    var area=document.getElementById('Area');
+    area.addEventListener("change",check);
+
+    var phone=document.getElementById('Phone');
     phone.addEventListener("keyup",check);
 
-    var age=fields[1];
+    var age=document.getElementById('Age');
     age.addEventListener("keyup",check);
 
-    var disability=fields[2];
+    var disability=document.getElementById('Disability');
     disability.addEventListener("keyup",check);
 
     var feedback = document.querySelector(".form_feedback")
-    function check(){
+    function check()
+    {
         if(country.value != "")
         {
-            if(city.value != "")
+            if(state.value != "")
             {
-                if(validatePhone(phone.value) == true)
-                {
-                    if(validateAge(age.value) == true)
+                if(city.value != "")
+                {   
+                    if(area.value != "")
                     {
-                        if(disability.value != "")
+                        if(zip.value.length <= 6 && zip.value.length>0)
                         {
-                            feedback.innerHTML = ""
-                            btn.disabled = false;
+                            if(validatePhone(phone.value) == true)
+                            {
+                                if(validateAge(age.value) == true)
+                                {
+                                    if(disability.value != "")
+                                    {
+                                        feedback.innerHTML = "";
+                                        btn.disabled = false;
+                                    }
+                                    else
+                                    {
+                                        feedback.innerHTML = "*Please Fill Chronic Illness Field...";
+                                        btn.disabled = true;
+                                    }
+                                }
+                                else
+                                {
+                                    feedback.innerHTML = "*Please Enter A Valid Age...";
+                                    btn.disabled = true;
+                                }
+                            }
+                            else
+                            {
+                                feedback.innerHTML = "*Please Enter A Valid Phone Number!"
+                                btn.disabled = true;
+                            }
                         }
                         else
                         {
-                            feedback.innerHTML = "*Please Fill Chronic Illness Field..."
+                            feedback.innerHTML = "*Please Enter A ZIP Code of your area!";
                             btn.disabled = true;
                         }
                     }
                     else
                     {
-                        feedback.innerHTML = "*Please Enter A Valid Age..."
+                        feedback.innerHTML = "*Please Enter Your Address.";
                         btn.disabled = true;
                     }
                 }
                 else
                 {
-                    feedback.innerHTML = "*Please Enter A Valid Phone Number!"
+                    feedback.innerHTML = "*Please Select Your City...";
                     btn.disabled = true;
                 }
             }
             else
             {
-                feedback.innerHTML = "*Please Select Your City..."
+                feedback.innerHTML = "*Please Select Your State...";
                 btn.disabled = true;
             }
         }
         else
         {
-            feedback.innerHTML = "*Please Select Your Country..."
+            feedback.innerHTML = "*Please Select Your Country...";
             btn.disabled = true;
         }         
     }

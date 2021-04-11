@@ -148,6 +148,10 @@
         {
          font-size:10px;
         }
+        .col-12 button
+     {
+       margin-top:10px !important;
+     }
         #profile_pic
         {
             height:200px;
@@ -185,6 +189,7 @@
      font-size:18px;
      color:black;
      }
+
     .card-header
     {
     background-color:#404040;
@@ -197,11 +202,7 @@
      color:blue;
      text-align:center;
      }
-     .col-6
-     {
 
-      margin-top:10px;
-      }
     </style>
 </head>
 <body style="overflow-x:hidden;background-color:light-grey;" class="container-fluid">
@@ -347,14 +348,13 @@ var myChart = new Chart(ctx, {
             <form action="{% url 'search_appointments' %}" method="get">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-lg-6 form-group"></div>
-                    <div class="col-lg-1 col-sm-1 col-6">
+
+                    <div class="col-lg-1 col-sm-1 col-6 offset-lg-6">
                         <label for="filters" style="float:right;"><b>Filter By:</b></label></div>
                        <input type="text" hidden value="{{ filter_type }}" id="filter_type">
                     <div class="col-lg-1 col-sm-1 col-6 form-group">
 
                 <select id="filters" name="filter" class="form-control" style="float:right;"required>
-
                     <option value="Date" class="Date" selected>Date</option>
                     {% if User_Details.patientid %}
                     <option value="Doctor_Name" class="Doctor_Name">Doctor Name</option>
@@ -369,7 +369,7 @@ var myChart = new Chart(ctx, {
                                   </div>
 
                 <div class="col-lg-2 col-sm-2 col-12">
-                    <button type="submit" value="submit" class="form-control btn btn-success">Apply</button>
+                    <button type="submit"  class="form-control btn btn-success">Apply</button>
 
                 </div>
                     </div>

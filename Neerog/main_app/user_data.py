@@ -12,8 +12,10 @@ def isVerifiedUser(uid):
         try:
             doctorobj=Doctor.objects.get(doctorid=uid-1)
             if(str(doctorobj.verified) == "No"):
+                print(uid)
                 return False
             else:
+                print(uid)
                 return True
         except:
             return False

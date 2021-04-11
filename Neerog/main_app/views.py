@@ -212,11 +212,12 @@ def Hospitals(request):
     lis_of_countries = geo_plug.all_CountryNames()
     list_of_tests=list_of_medical_tests();
     list_of_speciality=get_specialities()
-    city=request.session['city']
-    state=request.session['state']
-    country=request.session['country']
+    city=request.session['city'].strip()
+    state=request.session['state'].strip()
+    country=request.session['country'].strip()
+    location=city+','+state+','+country
     p = Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
-    return render(request,'main_app/Hospital_Selection.html',context={'list_of_countries':lis_of_countries,"list_of_hospitals":p,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
+    return render(request,'main_app/Hospital_Selection.html',context={"location":location,'list_of_countries':lis_of_countries,"list_of_hospitals":p,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
 
 
 def create_jwt_token():  # To create jwt token for zoom api
@@ -286,7 +287,7 @@ def list_of_hospital(request):
             city = request.session['city']
             state = request.session['state']
             country = request.session['country']
-
+            location = city + ',' + state + ',' + country
         except:
             city=""
             state=""
@@ -312,7 +313,7 @@ def list_of_hospital(request):
            if(len(list_of_hospital)==0 and len(list_of_clinics)==0):
                 messages.info(request,"No Doctor Available for this Speciality")
            return render(request, "main_app/Hospital_Selection.html",
-                          context={"search_value":speciality,"filter":filter,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality,"list_of_doctors": list_of_doctors,"list_of_hospitals":list_of_hospital,'list_of_countries':lis_of_countries,})
+                          context={"search_value":speciality,"filter":filter,"location":location,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality,"list_of_doctors": list_of_doctors,"list_of_hospitals":list_of_hospital,'list_of_countries':lis_of_countries,})
         elif(filter_type=='Test_Name'):
             testname=request.GET['Test_Name'];
             p=[]
@@ -331,7 +332,7 @@ def list_of_hospital(request):
             if (len(p) == 0):
                 messages.info(request, "No Testing Lab Available for this test")
             return render(request, "main_app/Hospital_Selection.html",
-                          context={"list_of_testing_labs": p,"filter":filter,"search_value":testname, "filter": filter,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality,'list_of_countries': lis_of_countries})
+                          context={"list_of_testing_labs": p,"location":location,"filter":filter,"search_value":testname, "filter": filter,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality,'list_of_countries': lis_of_countries})
 
         elif(filter_type=='Hospitals'):
             print(filter_type)
@@ -352,7 +353,7 @@ def list_of_hospital(request):
             if (len(p) == 0):
                 messages.info(request, "No Testing Lab Available")
             return render(request, "main_app/Hospital_Selection.html",
-                          context={"list_of_testing_labs": p, "filter": filter,
+                          context={"location":location,"list_of_testing_labs": p, "filter": filter,
                                    'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
         elif(filter_type=='Clinics'):
             list_of_doctors={}
@@ -368,7 +369,7 @@ def list_of_hospital(request):
             if (len(p) == 0):
                 messages.info(request, "No Clinic Available")
             return render(request, "main_app/Hospital_Selection.html",
-                          context={"list_of_doctors": list_of_doctors, "filter": filter,
+                          context={"location":location,"list_of_doctors": list_of_doctors, "filter": filter,
                                    'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
 
         elif (filter_type == 'Clinic_Name'):
@@ -382,7 +383,7 @@ def list_of_hospital(request):
             if(len(p)==0):
                 messages.info(request, "No Clinic Available of this name")
             return render(request, "main_app/Hospital_Selection.html",
-                          context={"list_of_doctors": p, "filter": filter,"search_value":search_value,
+                          context={"location":location,"list_of_doctors": p, "filter": filter,"search_value":search_value,
                                    'list_of_countries': lis_of_countries, "list_of_tests": list_of_tests,
                                    "list_of_speciality": list_of_speciality})
 
@@ -395,6 +396,7 @@ def list_of_hospital(request):
             request.session['city']=City
             request.session['state']=State
             request.session['country']=Country
+            location = City + ',' + State + ',' + Country
             print(City,Country)
             p=Hospital.objects.filter(country__iexact=Country.strip()).filter(city__iexact=City.strip()).filter(verified="Yes")
             #filter="Hospital"
@@ -419,7 +421,7 @@ def list_of_hospital(request):
             if(len(p)==0):
                 messages.info(request, "No Doctor of this name")
             return render(request, "main_app/Hospital_Selection.html",
-                          context={"list_of_doctors": p,"filter":filter,"search_value":search_value, 'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
+                          context={"location":location,"list_of_doctors": p,"filter":filter,"search_value":search_value, 'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
         elif(filter_type=='Hospital_Name'):
             p=[]
             search_value=request.GET.get("search_values")
@@ -435,7 +437,7 @@ def list_of_hospital(request):
             if(len(p)==0):
                 messages.info(request,"No Hospital Available with this Name")
             return render(request, "main_app/Hospital_Selection.html",
-                          context={"list_of_hospitals": p,"search_value":search_value, "filter": filter, 'list_of_countries': lis_of_countries,
+                          context={"location":location,"list_of_hospitals": p,"search_value":search_value, "filter": filter, 'list_of_countries': lis_of_countries,
                                    "list_of_tests": list_of_tests, "list_of_speciality": list_of_speciality})
         elif(filter_type=='Testing_Lab'):
             search_value = request.GET.get("search_values")
@@ -451,9 +453,9 @@ def list_of_hospital(request):
                 messages.info(request,"No Testing lab available with this name")
 
             return render(request, "main_app/Hospital_Selection.html",
-                                  context={"list_of_testing_labs": p, "filter": filter,"search_value":search_value,
+                                  context={"location":location,"list_of_testing_labs": p, "filter": filter,"search_value":search_value,
                                            'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
-        return render(request,"main_app/Hospital_Selection.html",context={"list_of_hospitals":p,"filter":filter,'list_of_countries':lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
+        return render(request,"main_app/Hospital_Selection.html",context={"location":location,"list_of_hospitals":p,"filter":filter,'list_of_countries':lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
      #except:
      #   return redirect("/Hospital_Selection/")
 
@@ -758,13 +760,13 @@ def user_location(request):
     latitude=request.GET["latitude"]
     location=geolocator.reverse(str(latitude)+","+str(longitude))
     address=location.raw['address']
-    request.session['country']=address['country']
-    request.session['state']=address['state']
+    request.session['country']=address['country'].strip()
+    request.session['state']=address['state'].strip()
     lis=list_of_cities1(request.session['state'])
     if address['county'] in lis:
-            request.session['city']=address['county']
+            request.session['city']=address['county'].strip()
     else:
-        request.session['city'] = address['state_district']
+        request.session['city'] = address['state_district'].strip()
 
     print(request.session['city'])
     #print(address)

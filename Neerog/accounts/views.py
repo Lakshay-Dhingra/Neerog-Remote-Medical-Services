@@ -27,6 +27,7 @@ def signup(request):
     return render(request,'accounts/signup.html')
 
 def signup_redirect(request):
+    print(request.user.id)
     if(user_data.getUserType(request.user.id) == "Doctor"):
         return redirect("/accounts/signup/doctor")
     elif(user_data.getUserType(request.user.id) == "Patient"):
@@ -70,7 +71,6 @@ def signup_patient(request):
 def login(request):
     email=request.POST['email']
     password=request.POST['password']
-
     #Validation checks
     if(len(email)>254):
         messages.info(request,"Invalid Email! Email can't have more than 254 characters.")

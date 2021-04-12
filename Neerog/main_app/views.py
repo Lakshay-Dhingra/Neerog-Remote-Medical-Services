@@ -563,6 +563,7 @@ def Payment(request):
 def cancel_appointment(request):
     messages.info(request,"Appointment Canceled Sucessfully")
     return redirect('/Hospital_Selection')
+
 def change_date(request):
     request.session['date']=request.POST['date']
     service_provider = UserDetails.objects.get(userid=request.session['doctorid'])
@@ -573,6 +574,7 @@ def change_date(request):
     slots=available_slots(service_provider,request.session['date'])
     return render(request, "main_app/Profile1.html",
                       context={"date": request.session['date'], "User_Profile": User_Profile, 'slots': slots})
+
 def available_slots(service_provider,date1):
     slots = []
     t = Appointment_Timings.objects.filter(service_provider_id=service_provider).filter(date=date1)
@@ -589,8 +591,17 @@ def available_slots(service_provider,date1):
                     slots.append(da)
 
     else:
-        start_time = [9, 0, 0]
-        end_time = [10, 0, 0]
+        p13=UserDetails.objects.get(userid=service_provider.userid)
+        if(p13.user_type=="Doctor"):
+            d1=Doctor.objects.get(doctorid=service_provider)
+            start_time=d1.start_time.split(":")
+            end_time=d1.end_time.split(":")
+            print(start_time,end_time)
+        else:
+            t1 = TestingLab.objects.get(tlabid=service_provider)
+            start_time = t1.start_time.split(":")
+            end_time = t1.end_time.split(":")
+            print(start_time, end_time)
         date = date1.split("-")
         x = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(start_time[0]), int(start_time[1]), 0)
         y = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(end_time[0]), int(end_time[1]), 0)
@@ -979,8 +990,16 @@ def availablity(request):
     date=start1
     list_of_appointments = []
     print(start,end)
-    start_time = [9, 0, 0]
-    end_time = [16, 0, 0]
+    if (user.user_type == "Doctor"):
+        d1 = Doctor.objects.get(doctorid=user.userid)
+        start_time = d1.start_time.split(":")
+        end_time = d1.end_time.split(":")
+        print(start_time, end_time)
+    else:
+        t1 = TestingLab.objects.get(tlabid=user.userid)
+        start_time = t1.start_time.split(":")
+        end_time = t1.end_time.split(":")
+        print(start_time, end_time)
     user_start_time = datetime.datetime(int(start[0]), int(start[1]), int(start[2]), int(start_time[0]), int(start_time[1]), 0)
     user_end_time=datetime.datetime(int(start[0]), int(start[1]), int(start[2]), int(end_time[0]), int(end_time[1]), 0)
     while(user_start_time<=end1):

@@ -157,11 +157,7 @@
             height:200px;
             width:300px !important;
         }
-
-
-
     }
-
     #profile_pic
         {
             height:300px;
@@ -189,7 +185,12 @@
      font-size:18px;
      color:black;
      }
-
+     .sticky th
+     {
+     background-color:#404040;
+     position:sticky;
+     top:0;
+     }
     .card-header
     {
     background-color:#404040;
@@ -377,7 +378,7 @@ var myChart = new Chart(ctx, {
         </div>
                 <div class="card-body">
                 <div class="table-responsive" style="overflow-y:scroll; height:300px;">
-        <table class="table" style="margin-top:30px;position: sticky;">
+        <table class="table sticky" style="margin-top:30px;">
             {% if list_of_Appointments %}
             <thead style="background-color:#404040;">
               <tr>

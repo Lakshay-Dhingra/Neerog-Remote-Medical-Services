@@ -89,7 +89,7 @@ class Hospital(models.Model):
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
     about=models.TextField(max_length=2000, blank=True)
     country=models.CharField(max_length=100)
-    state=models.CharField(max_length=100)
+    state=models.CharField(max_length=100,default="delhi")
     city=models.CharField(max_length=100)
     area=models.CharField(max_length=200)
     zip = models.PositiveSmallIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
@@ -146,8 +146,8 @@ class Doctor(models.Model):
     experience=models.PositiveSmallIntegerField(validators=[MaxValueValidator(100),MinValueValidator(0)])
     profile_pic=models.ImageField(upload_to="doctor_profile_photo/", blank=True, null=True)
     certificate=models.FileField(upload_to="doctor_certificate/")
-    start_time = models.CharField(max_length=5)
-    end_time = models.CharField(max_length=5)
+    start_time = models.CharField(max_length=5,default=0)
+    end_time = models.CharField(max_length=5,default=0)
 
     #hospitalid will become null when a hospital is deleted
     hospitalid = models.ForeignKey(Hospital, models.SET_NULL, null=True)
@@ -185,7 +185,7 @@ class TestingLab(models.Model):
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True)
     about=models.TextField(max_length=2000)
     country=models.CharField(max_length=100)
-    state=models.CharField(max_length=100)
+    state=models.CharField(max_length=100,default="delhi")
     city=models.CharField(max_length=100)
     area=models.CharField(max_length=200, blank=True)
     zip = models.PositiveSmallIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)

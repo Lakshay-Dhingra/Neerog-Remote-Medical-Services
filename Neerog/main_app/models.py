@@ -163,8 +163,8 @@ class Doctor(models.Model):
     is_independent = models.BooleanField()
     verified = models.CharField(max_length=10, default="No")
 
-    nullable_strings=[about, country, state, city, area, clinic_name]
-    nullable_non_strings=[profile_pic, hospitalid, clinic_photo, clinic_fee, zip]
+    nullable_strings=[about, country,hospitalid, state, city, area, clinic_name]
+    nullable_non_strings=[profile_pic, clinic_photo, clinic_fee, zip]
 
     def save(self, *args, **kwargs):
         for i in self.nullable_non_strings:

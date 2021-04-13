@@ -43,10 +43,14 @@
 <div style="margin-top:10px;">
     <div class="row container-fluid">
         {% if User_Profile.tlabid %}
+        {% if User_Profile.tlab_logo %}
         <image src="{{ User_Profile.tlab_logo.url }}" style="width:100px;height:40px;"></image>
+        {% endif %}
         <h3>{{ User_Profile.tlabid.name }}</h3>
         {% elif User_Profile.hospitalid %}
+        {% if User_Profile.hospitalid.hospital_logo %}
         <image src="{{ User_Profile.hospitalid.hospital_logo.url }}" style="width:100px;height:40px;"></image>
+        {% endif %}
         <h3>{{ User_Profile.hospitalid.name }}</h3>
         {% else %}
         <image src="{{ User_Profile.clinic_photo.url }}" style="width:100px;height:40px;"></image>
@@ -60,12 +64,12 @@
       <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/Hospital_Selection">Home</a></li>
     {% elif User_Profile.tlabid %}
       <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=User_Profile.tlabid %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'select_speciality' %}">Speciality</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'select_speciality' service_provider_id=User_Profile.tlabid %}">Speciality</a></li>
      <li class="breadcrumb-item active" aria-current="page">Book Slot</li>
     {% else %}
        <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=User_Profile.hospitalid %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'select_speciality' %}">Speciality</a></li>
-     <li class="breadcrumb-item"><a href="{% url 'book_appointment1' speciality=User_Profile.specialization %}">Doctor</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'select_speciality' service_provider_id=User_Profile.hospitalid %}">Speciality</a></li>
+     <li class="breadcrumb-item"><a href="{% url 'book_appointment1' speciality=User_Profile.specialization service_provider_id=User_Profile.hospitalid %}">Doctor</a></li>
       <li class="breadcrumb-item active" aria-current="page">Book Slot</li>
       {% endif %}
        </ol>
@@ -85,9 +89,17 @@
     {% if slots|length > 0 %}
     {% for i in slots %}
         <div class="col-lg-3 col-md-4 col-6" style="margin-top:10px;">
-            <form action="{% url 'Payment' %}" method="post">
+            <form action="{% url 'Payment' %}" method="get">
                 {% csrf_token %}
-            <input type="text" value="{{ i|time:'H:i:s' }}" name="time_slot" hidden>
+            {% if User_Profile.tlabid %}
+            <input type="text" hidden name="service_provider_id" value="{{ User_Profile.tlabid }}">
+            {% elif User_Profile.clinic_name|length > 0 %}
+                <input type="text" hidden name="service_provider_id" value="{{ User_Profile.doctorid }}">
+            {% else %}
+                <!--<input type="text" hidden name="service_provider_id" value="{{ User_Profile.hospitalid }}">
+                --><input type="text" hidden name="service_provider_id" value="{{ User_Profile.doctorid }}">
+                {% endif %}
+                <input type="text" value="{{ i|time:'H:i:s' }}" name="time_slot" hidden>
             <div class="card">
             <button type="submit" class="btn">{{ i|time }}</button></div>
             </form>

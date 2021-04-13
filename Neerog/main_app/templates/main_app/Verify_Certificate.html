@@ -18,11 +18,10 @@
 <div class="container-fluid">
  <image src="{% static 'image6.jpeg' %}" height="300px" width="100%"></image>
  <h1 style="position:absolute;margin-top:-200px;color:white;">Verify Certificate</h1>
-<div class="card-body" style="position:absolute;margin-top:-100px;">
+<div class="card-body">
         <div class="table-responsive">
-        <table class="table table-striped" style="margin-top:30px;" width="100%">
+        <table class="table table-stripped" style="margin-top:30px;" width="100%" >
             {% if list_of_certificates %}
-
             <thead style="background-color:#404040;">
               <tr>
                 <th> Id</th>
@@ -38,7 +37,7 @@
         {% for k in j %}
           <tr>
               {% ifequal i "Hospital" %}
-              <td>{{ k.hospitalid }}</td>
+              <td><a href='/selected/{{ k.hospitalid }}'>{{ k.hospitalid }}</a></td>
             <td>{{  k.hospitalid.name }}</td>
             <td>{{  k.hospitalid.email }}</td>
                <td>Hospital</td>
@@ -52,20 +51,20 @@
               {% endifequal %}
                {% endifequal %}
                {% ifequal i "Doctor" %}
-              <td>{{ k.doctorid }}</td>
+              <td><a href='/user/profile/{{ k.doctorid }}'>{{ k.doctorid }}</a></td>
             <td>{{  k.doctorid.name }}</td>
             <td>{{  k.doctorid.email }}</td>
               <td>Doctor</td>
               <td>{{  k.phone }}</td>
               <td><a href="{{ k.certificate.url }}">{{ k.certificate }}</a></td>
               {% ifequal k.verified "No" %}
-            <td><button onclick="loaction.href='{% url 'verify_certificate' id=k.doctorid %}">Verify Certificate</button></td>
+            <td><button class="btn btn-success" onclick="location.href='{% url 'verify_certificate' id=k.doctorid %}'">Verify Certificate</button></td>
               {% else %}
               <td>Certificate Verified</td>
               {% endifequal %}
                {% endifequal %}
                {% ifequal i "Testing_Lab" %}
-              <td>{{ k.tlabid }}</td>
+              <td><a href='/selected/{{ k.tlabid }}'>{{ k.tlabid }}</a></td>
             <td>{{  k.tlabid.name }}</td>
             <td>{{  k.tlabid.email }}</td>
               <td>Testing Lab</td>
@@ -73,7 +72,7 @@
 
               <td><a href="{{ k.certificate.url }}">{{ k.certificate }}</a></td>
               {% ifequal k.verified "No" %}
-            <td><button onclick="loaction.href='{% url 'verify_certificate'  id=k.tlabid %}">Verify Certificate</button></td>
+            <td><button class="btn btn-success" onclick="location.href='{% url 'verify_certificate'  id=k.tlabid %}'">Verify Certificate</button></td>
               {% else %}
               <td>Certificate Verified</td>
               {% endifequal %}

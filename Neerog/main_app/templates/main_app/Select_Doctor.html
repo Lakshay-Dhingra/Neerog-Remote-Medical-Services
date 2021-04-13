@@ -52,7 +52,7 @@
     <div class="container-fluid" style="margin-top:10px;">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Hospital_Details.hospitalid %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'select_speciality' %}">Speciality</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'select_speciality' service_provider_id=Hospital_Details.hospitalid %}">Speciality</a></li>
       <li class="breadcrumb-item active" aria-current="page">List Of Doctors</li>
   </ol>
 </div>
@@ -87,6 +87,7 @@
                     <form action="{% url 'Appointment_Details_Submission1' %}"  id="form1" method="get">
 
                         <input type="text" hidden value="{{ i.doctorid }}" name="doctorid">
+                        <input type="text" hidden value="{{ Hospital_Details.hospitalid }}" name="service_provider_id">
                         <input type="text" hidden value="" name="mode" class="mode">
                     <th><button class="btn btn-primary col-12" style="font-size:14px;" id="Online" type="submit">Book Online Consultation</button></th>
                 <td><button class="btn btn-primary col-12"  style="font-size:14px;" id="Offline" type="submit">Book Offline Appointment</button></td>

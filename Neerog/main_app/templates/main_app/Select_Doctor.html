@@ -51,7 +51,7 @@
     </div>
     <div class="container-fluid" style="margin-top:10px;">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Hospital_Details.hospitalid %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Hospital_Details.hospitalid %}">{{ Hospital_Details.hospitalid.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'select_speciality' service_provider_id=Hospital_Details.hospitalid %}">Speciality</a></li>
       <li class="breadcrumb-item active" aria-current="page">List Of Doctors</li>
   </ol>
@@ -64,7 +64,12 @@
              <div class="col-lg-4 col-md-6" style="margin-top:10px;">
                  <div class="card">
                      <center>
-            <image src="{{ i.profile_pic.url }}" class="img1"></image></center>
+             {% if i.profile_pic %}
+            <a href='/user/profile/{{ i.doctorid }}'><image src="{{ i.profile_pic.url }}" class="img1"></image></a>
+              {% else %}
+                         <a href='/user/profile/{{ i.doctorid }}'><image src="{% static 'image6.jpeg' %}" class="img1"></image></a>
+                         {% endif %}
+                     </center>
             <table class="table-stripped">
                 <tr>
                     <th>Name:</th>

@@ -177,8 +177,8 @@ def rate(influencer, rater, rating):
 
 def getFreeSlots(uid, mydate):
     slots = []
-    service_provider=UserDetails.objects.get(userid=uid)
-    t = Appointment_Timings.objects.filter(service_provider_id=uid).filter(date=mydate)
+    service_provider=UserDetails.objects.get(userid=uid-1)
+    t = Appointment_Timings.objects.filter(service_provider_id=uid-1).filter(date=mydate)
     if len(t) > 0:
         if (t[0].available == False):
             # messages.info(request, "Doctor not availaible on this date")
@@ -188,15 +188,29 @@ def getFreeSlots(uid, mydate):
                 if (i.Booked==False):
                     t12=i.time.split(":")
                     d12=str(i.date).split("-")
-                    print(d12)
+                    #print(d12)
                     da=datetime.datetime(int(d12[0]),int(d12[1]),int(d12[2]),int(t12[0]),int(t12[1]),int(t12[2]))
                     slots.append(da)
             if(len(slots)==0):
                 # messages.info(request, "Doctor not availaible on this date")
                 return None
     else:
-        start_time = [9, 0, 0]
-        end_time = [18, 0, 0]
+        p13 = UserDetails.objects.get(userid=uid-1)
+        print(p13.user_type)
+        if (p13.user_type == "Doctor"):
+            d1 = Doctor.objects.get(doctorid=service_provider)
+            start_time = d1.start_time.split(":")
+            end_time = d1.end_time.split(":")
+            print(start_time, end_time)
+        else:
+                    """t1 = TestingLab.objects.get(tlabid=service_provider)
+                    start_time = t1.start_time.split(":")
+                    end_time = t1.end_time.split(":")
+                    print(start_time, end_time)"""
+                    start_time = [9, 0, 0]
+                    end_time = [16, 0, 0]
+
+
         date = mydate.split("-")
         x = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(start_time[0]), int(start_time[1]), 0)
         y = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(end_time[0]), int(end_time[1]), 0)

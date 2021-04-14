@@ -18,6 +18,8 @@ def profile(request, uid):
                     # print(str(mydate).split()[0])
                 except:
                     mydate = datetime.datetime.now() + datetime.timedelta(days=1)
+                    request.session['date']=str(mydate.date())
+                    print("fvv",request.session['date'])
                 doctor_data['AvailableSlots']=user_data.getFreeSlots(uid, str(mydate).split()[0])
                 doctor_data['SelectedDate']= mydate
                 doctor_data['Today']= datetime.datetime.now()
@@ -29,6 +31,7 @@ def profile(request, uid):
                     mode = request.session['mode']
                 except:
                     mode = "Online"
+                    request.session['mode']="Online"
                 doctor_data['SelectedMode'] = mode
                 if(request.user.is_authenticated):
                     #User is logged in

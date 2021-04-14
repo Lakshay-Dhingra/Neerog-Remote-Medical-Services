@@ -61,15 +61,15 @@
 <div class="container-fluid" style="margin-top:10px;">
   <ol class="breadcrumb">
     {% if User_Profile.clinic_name|length > 0 %}
-      <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/Hospital_Selection">Home</a></li>
+      <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/Hospital_Selection">{{ User_Profile.clinic_name }} </a></li>
     {% elif User_Profile.tlabid %}
-      <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=User_Profile.tlabid %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=User_Profile.tlabid %}">{{ User_Profile.tlabid.name }} </a></li>
     <li class="breadcrumb-item"><a href="{% url 'select_speciality' service_provider_id=User_Profile.tlabid %}">Speciality</a></li>
      <li class="breadcrumb-item active" aria-current="page">Book Slot</li>
     {% else %}
-       <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=User_Profile.hospitalid %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'select_speciality' service_provider_id=User_Profile.hospitalid %}">Speciality</a></li>
-     <li class="breadcrumb-item"><a href="{% url 'book_appointment1' speciality=User_Profile.specialization service_provider_id=User_Profile.hospitalid %}">Doctor</a></li>
+       <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=User_Profile.hospitalid %}">{{ User_Profile.hospitalid.hospitalid.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'select_speciality' service_provider_id=User_Profile.hospitalid %}">{{ User_Profile.specialization }}</a></li>
+     <li class="breadcrumb-item"><a href="{% url 'book_appointment1' speciality=User_Profile.specialization service_provider_id=User_Profile.hospitalid %}">{{ User_Profile.doctorid.name }}</a></li>
       <li class="breadcrumb-item active" aria-current="page">Book Slot</li>
       {% endif %}
        </ol>
@@ -81,6 +81,15 @@
        <hr>
        <form action="{% url 'change_date' %}" id="form1" method="post">
            {% csrf_token %}
+            {% if User_Profile.tlabid %}
+            <input type="text" hidden name="service_provider_id" value="{{ User_Profile.tlabid }}">
+            {% elif User_Profile.clinic_name|length > 0 %}
+                <input type="text" hidden name="service_provider_id" value="{{ User_Profile.doctorid }}">
+            {% else %}
+                <!--<input type="text" hidden name="service_provider_id" value="{{ User_Profile.hospitalid }}">
+                --><input type="text" hidden name="service_provider_id" value="{{ User_Profile.doctorid }}">
+                {% endif %}
+
            <input type="date" id="Appointment_Date" value="{{ date }}"class="form-control" name="date">
        </form>
    <h2 style="color:#3291a8;margin-top:20px;">Select Time Slot</h2>

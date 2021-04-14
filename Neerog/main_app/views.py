@@ -523,6 +523,7 @@ def Payment(request):
                 messages.info(request,"Please Login/Register")
                 return redirect('/')
             service_provider_id=request.GET['service_provider_id']
+            request.session['user_type_Id']=service_provider_id
             user = UserDetails.objects.get(userid=service_provider_id)
             if(user.user_type=="Hospital" or user.user_type=="Doctor"):
                 mode=request.session['mode']
@@ -579,11 +580,11 @@ def cancel_appointment(request):
 
 def change_date(request):
     request.session['date']=request.POST['date']
-    service_provider = UserDetails.objects.get(userid=request.session['doctorid'])
+    service_provider = UserDetails.objects.get(userid=request.POST['service_provider_id'])
     if(service_provider.user_type=="Testing Lab"):
-        User_Profile = TestingLab.objects.get(tlabid=request.session['doctorid'])
+        User_Profile = TestingLab.objects.get(tlabid=request.POST['service_provider_id'])
     else:
-        User_Profile=Doctor.objects.get(doctorid=request.session['doctorid'])
+        User_Profile=Doctor.objects.get(doctorid=request.POST['service_provider_id'])
     slots=available_slots(service_provider,request.session['date'])
     return render(request, "main_app/Profile1.html",
                       context={"date": request.session['date'], "User_Profile": User_Profile, 'slots': slots})
@@ -599,7 +600,7 @@ def available_slots(service_provider,date1):
                 if (i.Booked == False):
                     t12 = i.time.split(":")
                     d12 = str(i.date).split("-")
-                    print(d12)
+                    #print(d12)
                     da = datetime.datetime(int(d12[0]), int(d12[1]), int(d12[2]), int(t12[0]), int(t12[1]), int(t12[2]))
                     slots.append(da)
 
@@ -633,12 +634,12 @@ def available_slots(service_provider,date1):
             x += datetime.timedelta(minutes=30)
     return slots
 def Appointment_Details_Submission(request):
-            user = UserDetails.objects.get(userid=request.session['user_type_Id'])
+            user = UserDetails.objects.get(userid=int(request.session['user_type_Id']))
             doctordetails=""
             if(user.user_type=="Hospital" or user.user_type=="Doctor"):
                 a1=Appointments()
                 mode=request.session['mode']
-                doctorid=request.session['doctorid']
+                doctorid=int(request.session['user_type_Id'])
                 email=request.session['email']
                 i=UserDetails.objects.get(email=email)
                 a1.patientname=i.name
@@ -667,10 +668,8 @@ def Appointment_Details_Submission(request):
                    a1.mode_of_meeting = mode
                 else:
                     a1.mode_of_meeting = mode
-
-
                 b1=Appointment_Timings.objects.filter(service_provider_id=user).filter(date=a1.appointment_date).filter(time=a1.appointment_time)
-                print(b1[0])
+                #print(b1)
                 b1.update(Booked=True)
                 a1.save()
             elif(user.user_type=="Testing Lab"):

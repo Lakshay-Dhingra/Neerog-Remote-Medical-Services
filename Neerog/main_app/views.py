@@ -1147,15 +1147,15 @@ def report(request):
         for i in l23:
             Appointments1.append(i)
     print(list_of_speciality)
-    return render(request, "main_app/Admin_Dashboard1.html",
-                  context={"speciality": speciality, "list_of_Appointments": Appointments1,
-                           "doctors_data": doctors_data,
-                           "start":start,"end":end,
-                           "list_of_speciality": json.dumps(list(list_of_speciality.keys())),
-                           "list_of_speciality_appointments": list(list_of_speciality.values()),
-                           "Online_consultations_today": Online_consultations_today,
-                           "appointments_this_month": appointments_this_month, "earning_this_month": earning_this_month,
-                           "appointments_today": appointments_today})
+    data={"speciality": speciality, "list_of_Appointments": Appointments1,
+    "doctors_data": doctors_data,
+    "start":start,"end":end,
+    "list_of_speciality": json.dumps(list(list_of_speciality.keys())),
+    "list_of_speciality_appointments": list(list_of_speciality.values()),
+    "Online_consultations_today": Online_consultations_today,
+    "appointments_this_month": appointments_this_month, "earning_this_month": earning_this_month,
+    "appointments_today": appointments_today}
+    return render(request, "main_app/Admin_Dashboard1.html", context=data)
 
 def add_news(request,id):
     return render(request,"main_app/News.html",context={"id":id})

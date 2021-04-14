@@ -97,29 +97,5 @@
 
      <!--{% include 'main_app/header.html' %}-->
 
-     <script>
-        var myNav = document.getElementById('nav_default');
-        window.onscroll = function()
-        { 
-            if(screen.width > 1140)
-            {
-            
-                if (document.body.scrollTop >= document.documentElement.clientHeight || document.documentElement.scrollTop >= document.documentElement.clientHeight )
-                {
-                    myNav.classList.add("nav_bg_gray");
-                    // alert("hello");
-                    // myNav.classList.remove("nav-transparent");
-                } 
-                else
-                {
-                    // myNav.classList.add("nav-transparent");
-                    myNav.classList.remove("nav_bg_gray");
-                    // alert("hello");
-                }
-            }
-        };
-
-    </script>
-
 </body>
 </html> 

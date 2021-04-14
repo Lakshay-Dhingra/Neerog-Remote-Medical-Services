@@ -4,7 +4,12 @@
   <div class="logo">
   <a href="{% url 'index' %}">Neerog</a></div>
   <div class="nav-items">
-  <li><a href="{% url 'index' %}">Home</a></li>
+  {% if user.is_authenticated %}
+  <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    {% else %}
+    <li><a href="{% url 'index' %}">Home</a></li>
+
+    {% endif %}
   <li><a href="{% url 'index' %}#features_section">About</a></li>
   <li><a href="#">Contact</a></li>
   {% if user.is_authenticated %}

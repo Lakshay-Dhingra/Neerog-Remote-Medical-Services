@@ -5,13 +5,25 @@
   <a href="{% url 'index' %}">Neerog</a></div>
   <div class="nav-items">
   {% if user.is_authenticated %}
-  <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    {% else %}
-    <li><a href="{% url 'index' %}">Home</a></li>
-
-    {% endif %}
+  <li><a href="{% url 'dashboard' %}">Home</a></li>
+  {% else %}
+  <li><a href="{% url 'index' %}">Home</a></li>
+  {% endif %}
   <li><a href="{% url 'index' %}#features_section">About</a></li>
-  <li><a href="#">Contact</a></li>
+
+  <li>
+    <div class="dropdown show">
+      <a class="dropdown-toggle" href="{% url 'index' %}#features_section" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Our Services
+      </a>
+      <div style="width: 250px; margin-left: -55px;" class="dropdown-menu" aria-labelledby="dropdownMenuLink" id="services_menu">
+        <a class="dropdown-item" href="{% url 'index' %}#features_section">Know More</a>
+        <a class="dropdown-item" href="{% url 'Dashboard' %}">Book Appointment</a>
+        <a class="dropdown-item" href="#">Explore Services</a>
+      </div>
+    </div>
+  </li>
+  
   {% if user.is_authenticated %}
   <li><a href="{% url 'profile' user.get_username %}">Profile</a></li>
   <li><a href="{% url 'signup_redirect' %}">Verify</a></li>
@@ -62,4 +74,51 @@
   }
 </script>
 
-    
+<script>
+  var myNav = document.getElementById('nav_default');
+  var mydp = document.getElementById('services_menu');
+  var navlogo = document.querySelector('nav .logo a');
+  var navlinks = document.querySelectorAll('nav .nav-items li a');
+  var dplinks = document.querySelectorAll('.dropdown-menu a');
+
+  window.onscroll = function()
+  { 
+      if(screen.width > 1140)
+      {
+      
+          if (document.body.scrollTop >= document.documentElement.clientHeight || document.documentElement.scrollTop >= document.documentElement.clientHeight )
+          {
+              myNav.classList.add("nav_bg");
+              mydp.classList.add("dropdown_bg");
+              navlogo.classList.add("nav_txt");
+              for(navlink of navlinks)
+              {
+                navlink.classList.add("nav_txt");
+              }
+              for(dplink of dplinks)
+              {
+                dplink.classList.add("dropdown-item_bg");
+              }
+              // alert("hello");
+              // myNav.classList.remove("nav-transparent");
+          } 
+          else
+          {
+              // myNav.classList.add("nav-transparent");
+              myNav.classList.remove("nav_bg");
+              mydp.classList.remove("dropdown_bg");
+              navlogo.classList.remove("nav_txt");
+              for(navlink of navlinks)
+              {
+                navlink.classList.remove("nav_txt");
+              }
+              for(dplink of dplinks)
+              {
+                dplink.classList.remove("dropdown-item_bg");
+              }
+              // alert("hello");
+          }
+      }
+  };
+
+</script>

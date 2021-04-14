@@ -732,7 +732,7 @@ def book_appointment1(request,speciality,service_provider_id):
                 list_of_doctors.append(i)
             else:
                 #print(t[0].Slots_Booked)
-                print("availabel",t[0].available)
+                #print("availabel",t[0].available)
                 if(t[0].available==True):
                     list_of_doctors.append(i)
                     #list_of_doctors[i] = time_slots.split(",")
@@ -751,9 +751,9 @@ def Appointment_Details_Submission1(request):
         if(user.user_type=='Doctor' or user.user_type=="Hospital"):
                 request.session['mode'] = request.GET['mode']
                 #request.session['doctorid'] = request.GET['doctorid']
-                print(request.GET['doctorid'])
-                service_provider = UserDetails.objects.get(userid=int(request.GET['doctorid']))
-                User_Profile=Doctor.objects.get(doctorid=int(request.GET['doctorid']))
+                #print(request.GET['doctorid'])
+                service_provider = UserDetails.objects.get(userid=user.userid)#int(request.GET['doctorid']))
+                User_Profile=Doctor.objects.get(doctorid=user.userid)#int(request.GET['doctorid']))
 
         elif(user.user_type=='Testing Lab'):
                 request.session['mode']="Remote"

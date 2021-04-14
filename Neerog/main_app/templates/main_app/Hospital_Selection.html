@@ -535,8 +535,8 @@
          <form  action="{% url 'Appointment_Details_Submission1' %}"   onsubmit="return validate()"  method="get">
                         {% csrf_token %}
       <div class="modal-body">
-     <input type="text" class="doctor1" hidden value="" name="doctorid">
-          <input type="text" class="doctor1" hidden value="" name="service_provider_id">
+     <input type="text" class="doctor1" hidden value="" name="service_provider_id">
+          <!--<input type="text" class="doctor1" hidden value="" name="service_provider_id"-->
           <input type="text" hidden value="" name="mode" class="mode1">
                 <input type="date" name="date" class="form-control" id="Appointment_Date">
       </div>

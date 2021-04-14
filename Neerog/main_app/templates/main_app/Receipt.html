@@ -28,8 +28,12 @@
                   <td>{{ Appointment_Details.doctoremail }}</td></tr>
               <tr>
                   <th>Address</th>
+                  {% if doctor_details.hospitalid %}
+                  <td>{{ doctor_details.hospitalid.area }},{{ doctor_details.hospitalid.city }},{{ doctor_details.hospitalid.country }}</td></tr>
+                  {% else %}
                   <td>{{ doctor_details.area }},{{ doctor_details.city }},{{ doctor_details.country }}</td></tr>
-                 {% elif Appointment_Details.TestingLabId %}
+                  {% endif %}
+            {% elif Appointment_Details.TestingLabId %}
             <tr>
                   <th>Testing Lab Name</th>
                   <td>{{  Appointment_Details.TestingLabId.tlabid.name }}</td>

@@ -24,7 +24,11 @@
                   <td>{{ userdetails.doctorid.email }}</td></tr>
             <tr>
                   <th>Address</th>
+                {% if userdetails.hospitalid %}
+                <td>{{ userdetails.hospitalid.area }},{{ userdetails.hospitalid.city }},{{ userdetails.hospitalid.country }} </td></tr>
+                {% else %}
                   <td>{{ userdetails.area }},{{ userdetails.city }},{{ userdetails.country }} </td></tr>
+            {% endif %}
                  {% elif userdetails.tlabid %}
             <tr>
                   <th>Testing Lab Name</th>

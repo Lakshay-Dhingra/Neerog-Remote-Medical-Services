@@ -635,7 +635,7 @@ def available_slots(service_provider,date1):
     return slots
 def Appointment_Details_Submission(request):
             user = UserDetails.objects.get(userid=int(request.session['user_type_Id']))
-            doctordetails=""
+            doctor_details=""
             if(user.user_type=="Hospital" or user.user_type=="Doctor"):
                 a1=Appointments()
                 mode=request.session['mode']

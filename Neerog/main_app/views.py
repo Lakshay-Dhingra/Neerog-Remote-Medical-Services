@@ -216,11 +216,32 @@ def Hospitals(request):
     lis_of_countries = geo_plug.all_CountryNames()
     list_of_tests=list_of_medical_tests();
     list_of_speciality=get_specialities()
-    city=request.session['city'].strip()
-    state=request.session['state'].strip()
-    country=request.session['country'].strip()
-    location=city+','+state+','+country
-    p = Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
+    try:
+        city=request.session['city'].strip()
+        state=request.session['state'].strip()
+        country=request.session['country'].strip()
+        location=city+','+state+','+country
+        p = Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
+    except:
+        user=UserDetails.objects.get(email=request.session['email'])
+        if(user.user_type=='Patient'):
+            d1=Patient.objects.get(patientid=user.userid)
+            p = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
+            location = d1.city + ',' + d1.state + ',' + d1.country
+        elif(user.user_type == 'Doctor'):
+            d1 = Doctor.objects.get(doctorid=user.userid)
+            p = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
+            location = d1.city + ',' + d1.state + ',' + d1.country
+        elif (user.user_type == 'Testing Lab'):
+            d1 = TestingLab.objects.get(tlabid=user.userid)
+            p = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
+            location = d1.city + ',' + d1.state + ',' + d1.country
+        elif (user.user_type == 'Hospital'):
+            d1 = Hospital.objects.get(hospitalid=user.userid)
+            p = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
+            location = d1.city + ',' + d1.state + ',' + d1.country
+    if(len(p)==0):
+        messages.info("No Hospitals Available in This Area")      
     return render(request,'main_app/Hospital_Selection.html',context={"location":location,'list_of_countries':lis_of_countries,"list_of_hospitals":p,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
 
 

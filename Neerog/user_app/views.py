@@ -18,9 +18,12 @@ def profile(request, uid):
                     # print(str(mydate).split()[0])
                 except:
                     mydate = datetime.datetime.now() + datetime.timedelta(days=1)
+                    request.session['date']=str(mydate.date())
+                    print("fvv",request.session['date'])
                 doctor_data['AvailableSlots']=user_data.getFreeSlots(uid, str(mydate).split()[0])
                 doctor_data['SelectedDate']= mydate
                 doctor_data['Today']= datetime.datetime.now()
+
                 # print(mydate)
                 # print(type(mydate))
 
@@ -28,6 +31,7 @@ def profile(request, uid):
                     mode = request.session['mode']
                 except:
                     mode = "Online"
+                    request.session['mode']="Online"
                 doctor_data['SelectedMode'] = mode
                 if(request.user.is_authenticated):
                     #User is logged in
@@ -42,6 +46,7 @@ def profile(request, uid):
                     #User not logged in
                     doctor_data['Following']=False
                     doctor_data['MyRating']=0
+
                 return render(request,'user_app/DoctorProfile.html',doctor_data)
             else:
                 messages.info(request,"You Are Not A Doctor!") #Temporary

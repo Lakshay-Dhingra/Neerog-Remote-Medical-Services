@@ -12,7 +12,14 @@
     <link rel="stylesheet" href="{% static 'user_app/css/profile_style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
-
+     <script>
+        $(document).ready(function(){
+        $(".t2").on("click",function(){
+        var id2=$(this).attr('id');
+        $(".t1").val(id2);
+        });
+        });
+        </script>
     <title>Neerog - Remote Medical Services</title>
 
 </head>
@@ -152,7 +159,7 @@
                     {% csrf_token %}
                     <select id="mode" name="mode">
                         <option value="Online" {% if SelectedMode == "Online"%}selected{% endif %}>Remote (via Zoom Call)</option>
-                        <option value="Remote" {% if SelectedMode == "Remote"%}selected{% endif %}>Offline (Physical Meeting)</option>
+                        <option value="Offline" {% if SelectedMode == "Offline"%}selected{% endif %}>Offline (Physical Meeting)</option>
                     </select>
                     </form>
 
@@ -161,13 +168,14 @@
                 </div>
                 <div class="col-lg-9 col-12"> 
                     <h3>Time Slots Available for Appointment on {{ SelectedDate|date:"l, d F, Y" }}</h3>
-                    <form action="{% url 'Payment' %}" method="post">
+                    <form action="{% url 'Payment' %}" method="get">
                         {% csrf_token %}
                     <div class="row slot_buttons">
                         {% for slot in AvailableSlots %}
                         <div class="col-lg-3 col-md-4 col-6">
-                            <input type="text" value="{{ i|time:'H:i:s' }}" name="time_slot" hidden>
-                            <button type="submit" class="btn">{{ slot|time:"h:i A" }}</button>
+                            <input type="text"  name="service_provider_id" value="{{ uid|add:'-1' }}" hidden>
+                            <input type="text" class="t1" value="" name="time_slot" hidden>
+                            <button type="submit" id="{{ slot|time:'H:i:s' }}" class="btn t2">{{ slot|time }}</button>
                         </div>
                         {% endfor %}
                     </div>

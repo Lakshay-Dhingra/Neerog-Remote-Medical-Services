@@ -68,25 +68,33 @@
 <body class="container-fluid">
 {% if Hospital_Details %}
 <div class="row">
+    {% if Hospital_Details.hospital_logo %}
         <div class="col-lg-1">
        <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"></image></div>
          <div class="col-lg-5">
+             {% else %}
+             <div class="col-lg-6">
+                 {% endif %}
              <h3>{{ Hospital_Details.hospitalid.name }}</h3></div>
     </div>
     {% elif Testing_Lab_Details %}
     <div class="row">
+        {% if Testing_Lab_Details.tlab_logo %}
         <div class="col-lg-1">
        <image src="{{ Testing_Lab_Details.tlab_logo.url }}" style="width:100px;height:40px;"></image></div>
          <div class="col-lg-5">
+             {% else %}
+             <div class="col-lg-6">
+                 {% endif %}
              <h3>{{ Testing_Lab_Details.tlabid.name }}</h3></div>
     </div>
     {% endif %}
 <div class="container-fluid" style="margin-top:20px;">
     <ol class="breadcrumb">
     {% if Testing_Lab_Details %}
-    <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Testing_Lab_Details.tlabid %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Testing_Lab_Details.tlabid %}">{{ Testing_Lab_Details.tlabid.name }}</a></li>
     {% else %}
-    <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Hospital_Details.hospitalid %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Hospital_Details.hospitalid %}">{{ Hospital_Details.hospitalid.name }}</a></li>
     {% endif %}
         <li class="breadcrumb-item active" aria-current="page">Speciality</li>
     </ol>
@@ -94,14 +102,14 @@
 <div class="jumbotron" style="margin-top:50px;">
          <div class="form-group">
              <label for="Appointment_Date" style="color:#3291a8;"><h3>Date Of Appointment:</h3></label>
-                <input type="date" required class="form-control" id="Appointment_Date" name="date">
+                <input type="date" required class="form-control" value="{{ date }}"id="Appointment_Date" name="date">
          </div>
     {% if Hospital_Details %}
          <h3 style="color:#3291a8;"> Select Speciality </h3>
          <div class="row">
         {% for i in specialities %}
              <div class="col-lg-4 col-md-4 col-sm-4">
-                     <form action='{% url "book_appointment1" speciality=i %}' onsubmit="return validate()">
+                     <form action='{% url "book_appointment1" speciality=i service_provider_id=Hospital_Details.hospitalid %}' onsubmit="return validate()">
                          <div class="card">
                      <button type="submit" class="btn" style="margin-top:10px;" >{{ i }}<span style="float:right;"> ></span></a></button>
                         </div>
@@ -117,6 +125,7 @@
                      <form action="{% url 'Appointment_Details_Submission1' %}" onsubmit="return validate()" method="get" >
                          {% csrf_token %}
                          <div class="card">
+                      <input type="text" hidden value="{{ Testing_Lab_Details.tlabid }}" name="service_provider_id">
                       <input type="text" name="speciality" value="{{ i }}" hidden >
                      <button type="submit" class="btn" style="margin-top:10px;" >{{ i }}<span style="float:right;"> ></span></a></button>
                         </div>

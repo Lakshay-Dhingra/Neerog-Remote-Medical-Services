@@ -39,23 +39,24 @@
           }
     </style>
 </head>
-<body>
-<div style="margin-top:10px;">
-    <div class="row container-fluid">
+{% include 'main_app/navbar.html' %}
+<body class="container-fluid" style="margin-top:80px;">
+    <div>
         {% if User_Profile.tlabid %}
         {% if User_Profile.tlab_logo %}
         <image src="{{ User_Profile.tlab_logo.url }}" style="width:100px;height:40px;"></image>
+         <h3>{{ User_Profile.tlabid.name }}</h3>
         {% endif %}
         <h3>{{ User_Profile.tlabid.name }}</h3>
         {% elif User_Profile.hospitalid %}
         {% if User_Profile.hospitalid.hospital_logo %}
         <image src="{{ User_Profile.hospitalid.hospital_logo.url }}" style="width:100px;height:40px;"></image>
+        <h3>{{ User_Profile.hospitalid.name }}</h3>
         {% endif %}
         <h3>{{ User_Profile.hospitalid.name }}</h3>
         {% else %}
         <image src="{{ User_Profile.clinic_photo.url }}" style="width:100px;height:40px;"></image>
         <h3>{{ User_Profile.clinic_name }}</h3>
-
         {% endif %}
     </div>
 <div class="container-fluid" style="margin-top:10px;">
@@ -122,6 +123,5 @@
 
 </div>
 </div>
-
 </body>
 </html>

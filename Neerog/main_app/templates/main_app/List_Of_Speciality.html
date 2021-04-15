@@ -65,7 +65,8 @@
         });
     </script>
 </head>
-<body class="container-fluid">
+{% include 'main_app/navbar.html' %}
+<body class="container-fluid" style="width:95%;margin-top:80px;">
 {% if Hospital_Details %}
 <div class="row">
     {% if Hospital_Details.hospital_logo %}

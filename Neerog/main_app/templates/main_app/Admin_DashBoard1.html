@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
     {% include "main_app/header.html" %}
+    {% include 'main_app/common_css.html' %}
     <style>
     .cha
     {
@@ -30,7 +31,8 @@
      }
     </style>
 </head>
-<body>
+{% include 'main_app/navbar.html' %}
+<body style="margin-top:150px;">
     <h2 style="text-align:center;">Report <span style="font-size:15px;">(From {{ start }} to {{ end }})</span></h2>
     <div class="row" style="margin-top:20px;">
     <div class="col-lg-4 col-md-4 col-sm-4">

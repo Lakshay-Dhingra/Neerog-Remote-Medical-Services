@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     {% load static %}
      {% include "main_app/header.html" %}
+    {% include 'main_app/common_css.html' %}
      <script src="{% static 'Hospital_Selection.js' %}"></script>
     <title>Add Prescription</title>
 </head>
+{% include 'main_app/navbar.html' %}
 <body>
-<div class="container-fluid">
+<div class="container-fluid" style="margin-top:80px;">
     <h3 style="color:#3291a8;">Add Prescription</h3>
     <h4 style="text-align:center;">Information</h4>
     <form action="{% url 'submit_Prescription' %}" method="POST" enctype="multipart/form-data">

@@ -4,7 +4,11 @@
     {% load static %}
     <meta charset="UTF-8">
     <title>Dashboard</title>
-     {% include "main_app/header.html" %}
+
+      {% include 'main_app/header.html' %}
+      {% include 'main_app/common_css.html' %}
+
+
     <style>
      @media only screen and (max-width: 720px) {
      *
@@ -89,8 +93,9 @@ h6
 
     </style>
 </head>
-<body class="container-fluid">
-<div class="container-fluid" style="width:95%;margin-top:30px;">
+{% include 'main_app/navbar.html' %}
+<body>
+<div class="container-fluid" style="width:95%;margin-top:80px;">
     {% if Testing_Lab_Details %}
     <div class="row">
         {% if Testing_Lab_Details.tlab_logo %}
@@ -102,6 +107,7 @@ h6
         <div class="col-lg-6">
         {% endif %}
         <h3>{{ Testing_Lab_Details.tlabid.name }}</h3>
+            <i class="fa fa-map-marker" style="color:green;font-size:20px;" aria-hidden="true"></i><strong style="margin-left:10px;">{{ Testing_Lab_Details.area }}</strong>
             </div>
         <div class="col-lg-2"></div>
 
@@ -110,11 +116,11 @@ h6
                   <span style="float:right;"> <i style="color:red;">{{ Testing_Lab_Details.tlabid.name }} Lifeline:</i> <i class="fa fa-telephone" style="font-size:24px;color:#3291a8;"></i>{{ Testing_Lab_Details.phone }}</span>
             </div>
     </div>
-    <nav aria-label="breadcrumb" style="margin-top:10px;">
+    <div aria-label="breadcrumb" style="margin-top:10px;">
           <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page">{{ Testing_Lab_Details.tlabid.name }}</li>
           </ol>
-    </nav>
+    </div>
 
     <div id="carouselExampleSlidesOnly1" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner">
@@ -152,6 +158,7 @@ h6
         <div class="col-lg-6">
             {% endif %}
         <h3>{{ Hospital_Details.hospitalid.name }}</h3>
+             <i class="fa fa-map-marker" style="color:green;font-size:20px;" aria-hidden="true"></i><strong style="margin-left:10px;">{{ Hospital_Details.area }}</strong>
             </div>
         <div class="col-lg-3">
 
@@ -161,11 +168,11 @@ h6
             <button type="button" class="btn btn-success"style="float:right;" onclick="location.href='{% url 'select_speciality' service_provider_id=Hospital_Details.hospitalid  %}'">Book Appointment</button>
        </div>
     </div>
-    <nav aria-label="breadcrumb" style="margin-top:10px;">
+    <div aria-label="breadcrumb" style="margin-top:10px;">
           <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page">{{ Hospital_Details.hospitalid.name }}</li>
           </ol>
-    </nav>
+    </div>
     <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner">
       {% if Hospital_Details.pic1 %}

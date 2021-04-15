@@ -81,6 +81,13 @@
   var navlinks = document.querySelectorAll('nav .nav-items li a');
   var dplinks = document.querySelectorAll('.dropdown-menu a');
 
+  navlogo.classList.add("nav_txt");
+  for(navlink of navlinks)
+  {
+    navlink.classList.add("nav_txt");
+  }
+
+
   window.onscroll = function()
   { 
       if(screen.width > 1140)
@@ -90,11 +97,6 @@
           {
               myNav.classList.add("nav_bg");
               mydp.classList.add("dropdown_bg");
-              navlogo.classList.add("nav_txt");
-              for(navlink of navlinks)
-              {
-                navlink.classList.add("nav_txt");
-              }
               for(dplink of dplinks)
               {
                 dplink.classList.add("dropdown-item_bg");
@@ -104,11 +106,6 @@
           {
               myNav.classList.remove("nav_bg");
               mydp.classList.remove("dropdown_bg");
-              navlogo.classList.remove("nav_txt");
-              for(navlink of navlinks)
-              {
-                navlink.classList.remove("nav_txt");
-              }
               for(dplink of dplinks)
               {
                 dplink.classList.remove("dropdown-item_bg");

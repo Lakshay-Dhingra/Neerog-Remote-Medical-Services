@@ -5,8 +5,8 @@
     padding: 100px 0 130px 0;
     color:white;
     display: table;
-    font-family: 'Noto Serif';
     z-index: 0;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .prompt_content

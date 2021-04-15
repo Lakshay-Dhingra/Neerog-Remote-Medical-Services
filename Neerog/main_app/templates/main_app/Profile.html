@@ -5,19 +5,13 @@
     {% load static %}
     <title>Profile</title>
      <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--{% include "main_app/header.html" %}-->
+
     <!-- Meta Tags -->
     {% include 'main_app/common_meta.html' %}
 
     <!-- Link or CSS Tags -->
     {% include 'main_app/common_css.html' %}
     {% include 'main_app/common_js.html' %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script>
 
@@ -207,7 +201,14 @@
     </style>
 </head>
 <body style="overflow-x:hidden;background-color:light-grey;" class="container-fluid">
- <!--{% include 'main_app/navbar.html' %}-->
+
+<!-- Messages -->
+{% include 'main_app/show_messages.html' %}
+
+<!-- Navbar -->
+{% include 'main_app/navbar_light.html' %}
+
+
 <div>
 {% if User_Details.doctorid %}
 <div class="row">

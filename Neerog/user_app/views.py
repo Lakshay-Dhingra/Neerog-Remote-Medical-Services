@@ -9,7 +9,9 @@ def profile(request, uid):
     if(user_data.isUser(uid)):
         user_type=user_data.getUserType(uid)
         if(user_data.isRegisteredUser(uid)):
-            if(user_type == "Doctor"):
+            if(user_type == "Patient"):
+                return redirect("/dashboard")
+            elif(user_type == "Doctor"):
                 doctor_data = user_data.getDoctorData(uid)
                 try:
                     mydate=request.session['date']
@@ -49,7 +51,7 @@ def profile(request, uid):
 
                 return render(request,'user_app/DoctorProfile.html',doctor_data)
             else:
-                messages.info(request,"You Are Not A Doctor!") #Temporary
+                return redirect("/selected/"+str(uid-1))
         else:
             messages.info(request,"This User Hasn't Completed Registeration yet!")
     else:

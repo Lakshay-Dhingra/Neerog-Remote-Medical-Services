@@ -1,0 +1,136 @@
+ 
+#services_section
+{
+    font-family: 'Domine', serif;
+    padding:30px 0px;
+}
+
+.service
+{
+    padding: 0px;
+    box-sizing: border-box;
+    padding:40px 0px;
+    /* border: solid; */
+}
+
+
+#services_section .service_image
+{
+    height: 580px;
+}
+
+#image1
+{
+    background: url("../images/service_section_img1.jpg") no-repeat center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.9;
+}
+
+#image2
+{
+    background: url("../images/service_section_img2.jpg") no-repeat center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.9;
+}
+
+#image3
+{
+    background: url("../images/service_section_img3.jpg") no-repeat center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.9;
+}
+
+#image4
+{
+    background: url("../images/service_section_img4.jpg") no-repeat center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.9;
+}
+
+.service_image_container:nth-of-type(odd)
+{
+    padding: 0px;
+    box-sizing: border-box;
+    padding:10px 100px 10px 15px;
+}
+
+.service_image_container:nth-of-type(even)
+{
+    padding: 0px;
+    box-sizing: border-box;
+    padding:10px 15px 10px 100px;
+}
+
+.service_text_container
+{
+    padding: 0px calc(2vw + 15px);
+    height: 600px;
+    box-sizing: border-box;
+    /* border: solid; */
+    display: table;
+}
+
+.service_text
+{
+  display: table-cell;
+  margin:auto;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.service_text h2
+{
+    font-size: 40px;
+    margin: 0px 10px 50px 10px;
+}
+
+.service_text p
+{
+    font-size: 20px;
+}
+
+@media only screen and (max-width: 992px)
+{
+    #services_section .service_image_container
+    {
+        padding: 0px 0px;
+    }
+    #services_section .service
+    {
+        padding:0px 0px;
+        display: flex;
+    }
+    .service .service_image_container:nth-of-type(even)
+    {
+        order:-1;        
+    }
+}
+
+@media only screen and (max-width: 576px)
+{
+    .service_text h2
+    {
+        font-size: 28px;
+        margin: 0px 10px 15px 10px;
+    }
+    .service_text p
+    {
+        font-size: 18px;
+    }
+    #services_section .service_image
+    {
+        height:350px;
+    }
+    #services_section .service_text_container
+    {
+        height:450px;
+    }
+}

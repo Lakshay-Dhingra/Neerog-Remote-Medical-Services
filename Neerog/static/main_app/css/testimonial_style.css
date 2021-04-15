@@ -37,7 +37,8 @@
 }
 
 
-.testimonial-contents{
+.testimonial-contents
+{
   max-width: 600px;
   margin: auto;
 }
@@ -52,7 +53,9 @@
 
 .testimonial p{
   color: #5c5c5c;
+  font-family: 'Domine', serif;
   margin-bottom: 20px;
+  
 }
 
 .testimonial .description{

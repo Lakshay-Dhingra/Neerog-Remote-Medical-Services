@@ -29,7 +29,7 @@
 
 .dropdown_bg
 {
-  background: rgba(60, 64, 92);
+  background: rgba(52, 58, 84, 0.9);
   /* margin-top: 10px; */
   /* border:1px solid skyblue; */
   /* border-top: none; */
@@ -38,8 +38,9 @@
 
 .nav_txt
 {
-  color: #fff !important;
+  color: whitesmoke !important;
 }
+
 
 nav
 {
@@ -61,7 +62,7 @@ nav
 {
   /* background:rgba(255, 239, 213, 0.9); */
   background: rgba(52, 58, 84, 0.9);
-  border:1px solid skyblue;
+  /* border:1px solid skyblue; */
 }
 
 

@@ -5,16 +5,14 @@
     {% load static %}
     <title>Profile</title>
      <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    {% include "main_app/header.html" %}
     <!-- Meta Tags -->
-    {% include 'main_app/common_meta.html' %}
-
     <!-- Link or CSS Tags -->
     {% include 'main_app/common_css.html' %}
     {% include 'main_app/common_js.html' %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script>
 
+    <script>
         $(document).ready(function()
         {
            var dt=new Date();
@@ -58,6 +56,7 @@
     <script>
         $(document).ready(function()
         {
+
         $("#available").click(function()
         {
          if($(this).prop("checked") == false){
@@ -117,6 +116,10 @@
     <script>
         $(document).ready(function()
         {
+        $('#form1').on('submit',function(){
+             document.getElementById("loader").style.display = "block";
+             document.getElementById("myDiv").style.display = "none";
+});
         $('.Appointment').css({"background-color":"lightblue","border":"none"});
           $('.profile').click(function()
           {
@@ -136,7 +139,6 @@
         })
     </script>
     <style>
-
     @media only screen and (max-width: 400px) {
         *
         {
@@ -197,19 +199,39 @@
      color:blue;
      text-align:center;
      }
-
     </style>
+    <style>
+/* Center the loader */
+#loader {
+  position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url(https://smallenvelop.com/wp-content/uploads/2014/08/Preloader_11.gif) center no-repeat #fff;
+}
+</style>
+    <script>
+        document.onreadystatechange = function() {
+    if (document.readyState !== "complete") {
+        document.querySelector("body").style.visibility = "hidden";
+        document.querySelector("#loader").style.visibility = "visible";
+    } else {
+        document.querySelector("#loader").style.display = "none";
+        document.querySelector("body").style.visibility = "visible";
+    }
+};
+    </script>
 </head>
-<body style="overflow-x:hidden;background-color:light-grey;" class="container-fluid">
-
-<!-- Messages -->
+{% include 'main_app/navbar.html' %}
+<!--{% include 'main_app/navbar.html' %}-->
 {% include 'main_app/show_messages.html' %}
+<body  style="overflow-x:hidden;background-color:light-grey;" class="container-fluid">
+<div id="loader"></div>
 
-<!-- Navbar -->
-{% include 'main_app/navbar_light.html' %}
-
-
-<div>
+ <div style="margin-top:100px;" id="myDiv">
+     <div>
 {% if User_Details.doctorid %}
 <div class="row">
 
@@ -318,7 +340,7 @@ var myChart = new Chart(ctx, {
         <div class="col-md-12">
             <div class="card">
             <div class="card-header">List Of Appointments</div>
-            <form action="{% url 'availablity' %}" method="post" onsubmit="return validate()">
+            <form action="{% url 'availablity' %}" id="form1" method="post" onsubmit="return validate()">
                 {% csrf_token %}
             <div style="margin-top:10px;" class="row">
                 {% if User_Details.patientid %}
@@ -563,6 +585,7 @@ var myChart = new Chart(ctx, {
         </div>
     </div>
 </div>
-</div>
+     </div>
+ </div>
 </body>
 </html>

@@ -29,6 +29,10 @@
     </script>
     <script>
         $(document).ready(function(){
+        /*{% if country %}
+        var str1="#"+'{{ country }}'
+            $(str1).attr("selected","selected");
+            {% endif %}*/
         $("#countries").on("change",function(){
         var country=$("#countries").val();
         if(country=="Select")
@@ -53,7 +57,9 @@
 
              for(var i=0;i<p.length;i++)
              {
-             var optionText=p[i].replace("\"","");
+             var k=p[i].replace("\[","")
+             var n=k.replace("\]","")
+             var optionText=n.slice(1,n.length-1)
                 $("#states").append(`<option value="${optionText}">
                                        ${optionText}
                                   </option>`);
@@ -312,7 +318,8 @@
 
     </style>
 </head>
-<body style="background-image:url('https://apollowebsiteprod.blob.core.windows.net/apollohospitals/assets/images/bg-equipment.png');width:100%;"class="container-fluid" >
+{% include 'main_app/navbar.html' %}
+<body style="background-image:url('https://apollowebsiteprod.blob.core.windows.net/apollohospitals/assets/images/bg-equipment.png');width:100%;margin-top:100px;"class="container-fluid" >
 <div class="row">
     <div class="col-lg-1 col-2 col-md-1 col-sm-1">
         <b style="font-size:18px;float:left;">Filter By:</b>
@@ -374,13 +381,14 @@
                 <select id="countries" class="form-control" name="country">
                  <option value="Select">Select Country</option>
                 {% for i in list_of_countries %}
-                        <option value="{{ i }}">{{ i }}</option>
+                        <option  id={{ i }} value="{{ i }}">{{ i }}</option>
                 {% endfor %}
                 </select></div>
             {% endif %}
                 <div class="col-lg-2 col-md-3 col-6">
                 <select id="states" class="form-control" name="state">
                         <option value="Select">Select State</option>
+
                 </select></div>
                 <div class="col-lg-2 col-md-3 col-6">
                 <select id="cities" class="form-control" name="city">

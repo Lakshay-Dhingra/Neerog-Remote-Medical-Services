@@ -42,14 +42,15 @@
         });
     </script>
 </head>
-<body class="container-fluid">
+{% include 'main_app/navbar.html' %}
+<body class="container-fluid" style="margin-top:80px;width:95%;">
 
 <div style="margin-top:10px;">
     <div class="row">
         <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"></image>
         <h3>{{ Hospital_Details.hospitalid.name }}</h3>
     </div>
-    <div class="container-fluid" style="margin-top:10px;">
+    <div style="margin-top:10px;">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=Hospital_Details.hospitalid %}">{{ Hospital_Details.hospitalid.name }}</a></li>
     <li class="breadcrumb-item"><a href="{% url 'select_speciality' service_provider_id=Hospital_Details.hospitalid %}">Speciality</a></li>

@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     {% load static %}
      {% include "main_app/header.html" %}
+     {% include "main_app/common_css.html" %}
+
     <title>Appointment Details</title>
 </head>
-<body class="jumbotron" onkeydown="return (event.keyCode != 116)">
+{% include 'main_app/navbar.html' %}
+<body class="jumbotron container-fluid" style="margin-top:60px;width:95%;">
 <h5 style="text-align:center;color:#3291a8;">Confirm Appointment Details</h5>
 <div class="card table-responsive">
         <table class="table table-striped container" style="margin-top:30px">
@@ -24,7 +27,11 @@
                   <td>{{ userdetails.doctorid.email }}</td></tr>
             <tr>
                   <th>Address</th>
+                {% if userdetails.hospitalid %}
+                <td>{{ userdetails.hospitalid.area }},{{ userdetails.hospitalid.city }},{{ userdetails.hospitalid.country }} </td></tr>
+                {% else %}
                   <td>{{ userdetails.area }},{{ userdetails.city }},{{ userdetails.country }} </td></tr>
+            {% endif %}
                  {% elif userdetails.tlabid %}
             <tr>
                   <th>Testing Lab Name</th>

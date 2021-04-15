@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     {% load static %}
      {% include "main_app/header.html" %}
+    {% include "main_app/common_css.html" %}
     {% if Details %}
     <title>Appointment Details</title>
     {% else %}
     <title>Receipt</title>
     {% endif %}
 </head>
-<body class="jumbotron" onkeydown="return (event.keyCode != 116)">
+{% include 'main_app/navbar.html' %}
+<body class="jumbotron container-fluid" style="margin-top:60px;width:95%;" >
 <h5 style="text-align:center;color:#3291a8;">Receipt</h5>
 <div class="card table-responsive">
         <table class="table table-striped container" style="margin-top:30px">
@@ -28,8 +30,12 @@
                   <td>{{ Appointment_Details.doctoremail }}</td></tr>
               <tr>
                   <th>Address</th>
+                  {% if doctor_details.hospitalid %}
+                  <td>{{ doctor_details.hospitalid.area }},{{ doctor_details.hospitalid.city }},{{ doctor_details.hospitalid.country }}</td></tr>
+                  {% else %}
                   <td>{{ doctor_details.area }},{{ doctor_details.city }},{{ doctor_details.country }}</td></tr>
-                 {% elif Appointment_Details.TestingLabId %}
+                  {% endif %}
+            {% elif Appointment_Details.TestingLabId %}
             <tr>
                   <th>Testing Lab Name</th>
                   <td>{{  Appointment_Details.TestingLabId.tlabid.name }}</td>

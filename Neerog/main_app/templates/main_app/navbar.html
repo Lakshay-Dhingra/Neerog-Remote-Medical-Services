@@ -26,7 +26,7 @@
   
   {% if user.is_authenticated %}
   <li><a href="{% url 'profile' user.get_username %}">Profile</a></li>
-  <li><a href="{% url 'signup_redirect' %}">Verify</a></li>
+  {% comment %}<li><a href="{% url 'signup_redirect' %}">Verify</a></li>{% endcomment %}
   <li><a id="logout_button" href="{% url 'logout' %}">Logout</a></li>
   {% else %}
   <li><a id="login_button" href="{% url 'signin' %}">Login</a></li>

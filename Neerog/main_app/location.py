@@ -1,6 +1,6 @@
 import re
 from geosky import geo_plug
-replace_dictionary={"u00e1":"e","u0101":"a","u012b":"i","u016b":"u","u0100":"A","u016a":"u"}
+replace_dictionary={"u00e9":"e","u00e1":"e","u0101":"a","u012b":"i","u016b":"u","u0100":"A","u016a":"u"}
 
 #lis_of_countries = geo_plug.all_CountryNames() To get list of countries
 
@@ -21,8 +21,15 @@ def get_states(country):
     for key, item in states.items():
         if (key == country):
             lis_of_states = item
-
-    return lis_of_states
+    list_of_states=[]
+    for i in lis_of_states.split(','):
+        str1 = i.replace("\\", "")
+        # print(str1)
+        for key, value in replace_dictionary.items():
+            if (str1.find(key) != -1):
+                str1 = str1.replace(key, value)
+        list_of_states.append(str1.strip())
+    return list_of_states
 
 def list_of_cities1(state):
     list_of_cities = []

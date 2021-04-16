@@ -25,7 +25,7 @@ urlpatterns = [
     path('book_appointment/',views.Book_Appointment,name="book_appointment"),
     path('search_appointments',views.search_appointments,name='search_appointments'),
     path('admin_search_appointments',views.admin_search_appointments,name='admin_search_appointments'),
-    path('admin1',views.admin,name='admin1'),
+    #path('admin1',views.admin,name='admin1'),
     #path('Selected/<str:user_id>/', views.Selected_Service_Provider, name="Selected"),
     path('Appointment_Details_Submission1/', views.Appointment_Details_Submission1,
          name='Appointment_Details_Submission1'),

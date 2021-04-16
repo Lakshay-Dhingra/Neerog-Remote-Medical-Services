@@ -135,25 +135,36 @@
         <div class="placeholder">Phone or Mobile</div>
     </div>
 
-    <div class="specialization">
-        <div class="textb">
-        <label for="specialization" class="file_label">Select Tests Available</label>
-        </div>
-        {% for sp in tests%}
-        <div style="padding: 10px 0; overflow: hidden;
-        text-overflow: ellipsis;">      
-        <div class="checkbox" style="width: 45%; float: left; padding-left: 10px; height: 20px; clear: left;">
-            <input type="checkbox" name="specialization" value="{{sp}}">
-            <div class="fas fa-check"></div>
-            {{sp}}
-        </div>
-        <div class="textb price" style="width: 53%; float: right; height: 20px; ">
-            <input type="text" name="{{sp}}" id="{{sp}}" disabled>
-            <div class="placeholder">Pricing In Rupees</div>
-        </div>
+    <div class="textb" style="height: 70px; ">
+        <label for="testcategory" class="file_label" style="width: 24%; float: left; height: 70px; padding:5px 0; text-align: center;">Select Type Of Test</label>
+        <select class="testcategory" id="testcategory" required style="height: 70px; width: 74%; float: right;">
+            {% for tc in tests %}
+            <option value="{{tc.category}}">{{tc.category}}</option>
+            {% endfor%}
+        </select>
+    </div>
+
+    <div class="specialization" style="clear:left;">
+        {% for tc in tests%}
+        <div class = "testgroup" id="{{tc.category}}">
+            {% for sp in tc.testlist %}
+            <div style="padding: 10px 0; overflow: hidden;
+            text-overflow: ellipsis;">
+            <div class="checkbox" style="width: 45%; float: left; padding-left: 10px; height: 20px; clear: left;">
+                <input type="checkbox" name="specialization" value="{{sp}}">
+                <div class="fas fa-check"></div>
+                {{sp}}
+            </div>
+            <div class="textb price" style="width: 53%; float: right; height: 20px; ">
+                <input type="text" name="{{sp}}" id="{{sp}}" disabled>
+                <div class="placeholder">Pricing In Rupees</div>
+            </div>
+            </div>
+            {% endfor %}
         </div>  
         {% endfor %}
     </div>
+
     <div style="padding-top: 20px; clear: left;"></div>
     
     <div class="textb">
@@ -366,6 +377,27 @@
             pricebox.addEventListener("keyup",check);
         }
     }
+
+    var testcategory = document.getElementById('testcategory');
+    testcategory.addEventListener("change",hideTests);
+    var alltests = document.querySelectorAll(".testgroup");
+
+    function hideTests()
+    {
+        for(testgroup of alltests)
+        {
+            if(testgroup.id == testcategory.value)
+            {
+                testgroup.style.display = "block";
+            }
+            else
+            {
+                testgroup.style.display = "none";
+            }
+        }
+    }
+
+    hideTests();
     </script>
 
     <!-- JavaScript -->

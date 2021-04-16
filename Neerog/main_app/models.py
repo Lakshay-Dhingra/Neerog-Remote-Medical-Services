@@ -194,6 +194,8 @@ class TestingLab(models.Model):
     lab_photo=models.ImageField(upload_to="testing_lab_photo/", null=True, blank=True)
     certificate=models.FileField(upload_to="testing_lab_certificate/")
     verified = models.CharField(max_length=10, default="No")
+    start_time = models.CharField(max_length=5,default="09:00")
+    end_time = models.CharField(max_length=5,default="18:00")
 
     nullable_strings=[about]
     nullable_non_strings=[lab_photo, tlab_logo, zip, year_established]
@@ -215,6 +217,7 @@ class TestPricing(models.Model):
     tlabid = models.ForeignKey(TestingLab, on_delete=models.CASCADE)
     testname = models.CharField(max_length=100)
     price = models.PositiveIntegerField(null=True)
+    testcategory = models.CharField(max_length=100)
 
     def __str__(self):
         return str(self.tlabid)+" "+self.testname

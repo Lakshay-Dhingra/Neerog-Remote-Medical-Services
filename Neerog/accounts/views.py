@@ -69,7 +69,7 @@ def signup_tlab(request):
             messages.info(request,"You're Details Have Already Been Submitted!")
             return redirect("/")
         else:
-            data={'tests':medical_tests.list_of_medical_tests()}
+            data={'tests':medical_tests.getTests()}
             data['countries']=location.getCountries()
             return render(request,'accounts/signup_tlab.html',data)
     else:

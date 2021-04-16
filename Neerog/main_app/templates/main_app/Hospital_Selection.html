@@ -29,10 +29,7 @@
     </script>
     <script>
         $(document).ready(function(){
-        /*{% if country %}
-        var str1="#"+'{{ country }}'
-            $(str1).attr("selected","selected");
-            {% endif %}*/
+
         $("#countries").on("change",function(){
         var country=$("#countries").val();
         if(country=="Select")

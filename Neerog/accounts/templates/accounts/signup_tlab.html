@@ -37,7 +37,9 @@
              $("#states").append('<option value="">Select State</option>');
              for(var i=0;i<p.length;i++)
              {
-             var optionText=p[i].replace("\"","");
+              var k=p[i].replace("\[","")
+             var n=k.replace("\]","")
+             var optionText=n.slice(1,n.length-1)
                 $("#states").append(`<option value="${optionText}">
                                        ${optionText}
                                   </option>`);

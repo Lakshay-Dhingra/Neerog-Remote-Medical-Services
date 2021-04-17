@@ -217,7 +217,7 @@ class TestPricing(models.Model):
     tlabid = models.ForeignKey(TestingLab, on_delete=models.CASCADE)
     testname = models.CharField(max_length=100)
     price = models.PositiveIntegerField(null=True)
-    testcategory = models.CharField(max_length=100)
+    testcategory = models.CharField(max_length=100,default="blood count")
 
     def __str__(self):
         return str(self.tlabid)+" "+self.testname

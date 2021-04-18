@@ -25,10 +25,6 @@ def profile(request, uid):
                 doctor_data['AvailableSlots']=user_data.getFreeSlots(uid, str(mydate).split()[0])
                 doctor_data['SelectedDate']= mydate
                 doctor_data['Today']= datetime.datetime.now()
-
-                # print(mydate)
-                # print(type(mydate))
-
                 try:
                     mode = request.session['mode']
                 except:
@@ -51,7 +47,7 @@ def profile(request, uid):
 
                 return render(request,'user_app/DoctorProfile.html',doctor_data)
             else:
-                return redirect("/selected/"+str(uid-1))
+                return redirect("/Selected/"+str(uid-1))
         else:
             messages.info(request,"This User Hasn't Completed Registeration yet!")
     else:

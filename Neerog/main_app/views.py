@@ -60,15 +60,13 @@ def appoin(list_of_Appointments):
             dict[i] = "Upload Prescription"
     return dict
 
-
-def profile(request):
+def profile(request,id):
     dt = datetime.datetime.today()
     email=request.session['email']
     no_of_Appointments_completed=0;
     no_of_Appointments=0;
     available=True;
-
-    user=UserDetails.objects.get(email=email)
+    user=UserDetails.objects.get(userid=id)
     if(user.user_type=='Hospital'):
         dt = datetime.datetime.today()
         Appointments1 = []
@@ -1106,7 +1104,8 @@ def availablity(request):
         #date += datetime.timedelta(days=1)
         cancel_appointments(list_of_appointments,user)
     messages.info(request,"All Your Appointment between "+str(start1)+" and "+str(end1)+" are cancelled")
-    return redirect("/dashboard")
+    str1="/dashboard/"+str(user.userid)
+    return redirect(str1)
 
 def cancel_appointments(list_of_appointments,user):
     for i in list_of_appointments:
@@ -1197,3 +1196,18 @@ def submit_news(request):
     a1.hospitalid=Hospital.objects.get(hospitalid=request.POST['id'])
     a1.save()
     return redirect('profile')
+def edit_time(request,id):
+    user=UserDetails.objects.get(userid=id)
+    if(user.user_type=="Doctor"):
+        d1=Doctor.objects.get(doctorid=id)
+        d1.start_time=request.POST['start_time']
+        d1.end_time=request.POST['end_time']
+        d1.save()
+    elif(user.user_type=="Testing Lab"):
+        t1=TestingLab.objects.get(tlabid=id)
+        t1.start_time=request.POST['start_time']
+        t1.end_time=request.POST['end_time']
+        t1.save()
+    str1='/dashboard/'+str(id)
+    return redirect(str1);
+

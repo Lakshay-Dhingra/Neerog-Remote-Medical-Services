@@ -36,7 +36,7 @@
               <div class="card-body">
                 <h5 class="card-title"><span><i class="fas fa-users"></i></span> For General Users</h5>
                 <p class="card-text">Head over to <strong>Book Appointment</strong> in Our Services Menu to select doctor, hospital or testing lab of your choice. You can also search for doctors and other services using <b>Search Bar</b> on the top-right corner.</p>
-                <a href="{% url 'Dashboard' %}" class="card-link">Book Appointment</a>
+                <a href="{% url 'Hospital_Selection' %}" class="card-link">Book Appointment</a>
                 <a href="#" class="card-link">Search Services</a>
               </div>
             </div>
@@ -47,7 +47,9 @@
               <div class="card-body">
                 <h5 class="card-title"><span><i class="fas fa-user-md"></i><i class="fas fa-user-nurse"></i></span> For Doctors</h5>
                 <p class="card-text">Your <strong>Dashboard</strong> will show all the appointments you've recieved yet. You can filter and search through them and send prescriptions to patients. You can see your Public <strong>Profile</strong> and edit it using <b>Edit Profile</b> button.</p>
-                <a href="{% url 'dashboard' %}" class="card-link">Dashboard</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' user.get_username %}" class="card-link">Dashboard</a>
+                {% endif %}
                 <a href="#" class="card-link">Profile</a>
                 <a href="{% url 'edit_profile' %}" class="card-link">Edit Profile</a>
               </div>

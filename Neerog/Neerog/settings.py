@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django_apscheduler',
-    'django.contrib.staticfiles'
-    ,
+    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
@@ -106,7 +105,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -138,3 +136,4 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = secret_settings.email_host_user
 EMAIL_HOST_PASSWORD = secret_settings.email_host_password
+#

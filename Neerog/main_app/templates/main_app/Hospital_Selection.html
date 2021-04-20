@@ -318,10 +318,10 @@
 {% include 'main_app/navbar.html' %}
 <body style="background-image:url('https://apollowebsiteprod.blob.core.windows.net/apollohospitals/assets/images/bg-equipment.png');width:100%;margin-top:100px;"class="container-fluid" >
 <div class="row">
-    <div class="col-lg-1 col-2 col-md-1 col-sm-1">
-        <b style="font-size:18px;float:left;">Filter By:</b>
+    <div class="col-lg-2 col-2 col-md-1 col-sm-1">
+        <b style="font-size:18px;float:right;">Search By:</b>
     </div>
-    <div class="col-lg-5 col-4 col-md-5 col-sm-5">
+    <div class="col-lg-4 col-4 col-md-5 col-sm-5">
         <span style="float:left;">
                 {% if filter %}
                 <input type="text" hidden class="filter_value1" class="form-control" value="{{ filter }}">
@@ -339,8 +339,8 @@
                 </select>
     </span>
         </div>
-    <div class="col-lg-4 col-2 col-md-3 col-sm-3">
-        <b style="font-size:18px;float:right;">Group By:</b>
+    <div class="col-lg-3 col-2 col-md-3 col-sm-3">
+        <b style="font-size:18px;float:right;">Filter By:</b>
     </div>
     <div class="col-lg-2 col-md-3 col-sm-3 col-4">
     <span style="float:left;">
@@ -353,6 +353,7 @@
                  <input type="text" hidden class="filter_value" value="">
                 {% endif %}
                 <select id="sort" class="form-control" name="filter" required >
+                    <option value="All" id="All">All</option>
                     <option value="Hospitals" id="Hospitals">Hospitals</option>
                     <option value="Clinics" id="Clinics">Clinics</option>
                     <option value="Testing_Labs" id="Testing_Labs">Testing Labs</option>
@@ -362,12 +363,12 @@
     </div>
 </div>
 <div class="row" style="margin-top:10px;">
-    <div class="col-lg-3 col-8 ">
+    <div class="col-lg-3 offset-lg-1 col-8 ">
         <i class="fa fa-map-marker" style="color:green;font-size:20px;"aria-hidden="true"></i><b>   {{ location }}</b>
     </span>
     </div>
 </div>
-   <div style="margin-top:50px;">
+   <div style="margin-top:30px;">
         <form action="{% url 'list_of_hospital' %}" id="form1" style="display:block;" method="get">
             {% csrf_token %}
             {% if list_of_countries|length > 0 %}

@@ -5,7 +5,7 @@
   <a href="{% url 'index' %}">Neerog</a></div>
   <div class="nav-items">
   {% if user.is_authenticated %}
-  <li><a href="{% url 'dashboard' %}">Home</a></li>
+  <li><a href="{% url 'dashboard' user.get_username %}">Home</a></li>
   {% else %}
   <li><a href="{% url 'index' %}">Home</a></li>
   {% endif %}

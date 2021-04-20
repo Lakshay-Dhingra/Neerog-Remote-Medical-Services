@@ -16,7 +16,7 @@
     <form action="{% url 'submit_news' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="container jumbotron">
-              <input type="text" class="form-control" value="{{ id }} "name="id" hidden >
+              <input type="text" class="form-control" disabled value="{{ id }} "name="id" hidden >
         <div class="form-group">
             <label for="Title"><b>Title Of Event:</b></label>
             <input type="text" class="form-control" name="title" id="Title" required>

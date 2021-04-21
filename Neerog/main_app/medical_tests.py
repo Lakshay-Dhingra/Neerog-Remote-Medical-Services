@@ -37,4 +37,3 @@ def getTests():
     #This list is from https://www.britannica.com/topic/list-of-medical-tests-and-diagnostic-procedures-2074273#ref335438
 
     return li
-

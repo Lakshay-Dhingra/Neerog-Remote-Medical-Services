@@ -5,7 +5,7 @@
   <a href="{% url 'index' %}">Neerog</a></div>
   <div class="nav-items">
   {% if user.is_authenticated %}
-  <li><a href="{% url 'dashboard' %}">Home</a></li>
+  <li><a href="{% url 'dashboard' user.get_username %}">Home</a></li>
   {% else %}
   <li><a href="{% url 'index' %}">Home</a></li>
   {% endif %}
@@ -18,7 +18,7 @@
       </a>
       <div style="width: 250px; margin-left: -55px;" class="dropdown-menu" aria-labelledby="dropdownMenuLink" id="services_menu">
         <a class="dropdown-item" href="{% url 'index' %}#features_section">Know More</a>
-        <a class="dropdown-item" href="{% url 'Dashboard' %}">Book Appointment</a>
+        <a class="dropdown-item" href="{% url 'Hospital_Selection' %}">Book Appointment</a>
         <a class="dropdown-item" href="#">Search Services...</a>
       </div>
     </div>

@@ -29,7 +29,11 @@
     </script>
     <script>
         $(document).ready(function(){
-
+        {% if country %}
+           $("#countries").val("{{ country }}");
+            $("#states").val("{{ state }}");
+            $("#cities").val("{{ city }}");
+        {% endif %}
         $("#countries").on("change",function(){
         var country=$("#countries").val();
         if(country=="Select")
@@ -386,11 +390,16 @@
                 <div class="col-lg-2 col-md-3 col-6">
                 <select id="states" class="form-control" name="state">
                         <option value="Select">Select State</option>
-
+                        {% for i in list_of_states %}
+                        <option  id={{ i }} value="{{ i }}">{{ i }}</option>
+                {% endfor %}
                 </select></div>
                 <div class="col-lg-2 col-md-3 col-6">
                 <select id="cities" class="form-control" name="city">
                     <option value="Select">Select City</option>
+                    {% for i in list_of_cities %}
+                        <option  id={{ i }} value="{{ i }}">{{ i }}</option>
+                {% endfor %}
                 </select></div>
                 <div class="col-lg-2 col-md-3 col-6">
                 <button type="submit" class="btn btn-success col-12" id="submit_form"> Search</button></div>

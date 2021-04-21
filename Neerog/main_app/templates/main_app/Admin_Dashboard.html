@@ -7,6 +7,7 @@
     <title>Admin Dashboard</title>
     {% include "main_app/header.html" %}
      {% include "main_app/common_css.html" %}
+     {% include 'main_app/chart.html' %}
 
     <style>
     .cha
@@ -18,12 +19,13 @@
     {
        width:300px;
        margin-left:20px;
+       border-radius:20px;
     }
         .card-header
     {
     background-color:#404040;
     color:white;
-    border-radius:20px;
+    border-radius:20px!important;
     text-align:center;
     }
     h1
@@ -37,6 +39,7 @@
       }
       .sticky th
      {
+     color:white;
      background-color:#404040;
      position:sticky;
      top:0;

@@ -6,6 +6,7 @@
     <title>Profile</title>
      <meta name="viewport" content="width=device-width, initial-scale=1">
     {% include "main_app/header.html" %}
+    {% include 'main_app/chart.html' %}
     <!-- Meta Tags -->
     <!-- Link or CSS Tags -->
     {% include 'main_app/common_css.html' %}
@@ -55,11 +56,9 @@
     <script>
     $(document).ready(function(){
          var p=$("#filter_type").val();
-
          var str1="."+p
          $(str1).attr("selected","selected");
          if(p=="Date"){
-
             $("#search_value").empty();
             $("#search_value").append(`<input type="date" id="Date" value="{{ search_value }}" class="form-control" required name="search_values">
                                   </input>`);}
@@ -113,6 +112,19 @@
     border-radius:20px!important;
     margin-top:10px!important;
     }
+    .cha
+    {
+       width:300px!important;
+       margin-left:20px!important;
+       border-radius:20px!important;
+    }
+    .da
+    {
+    width:300px!important;
+       margin-left:20px!important;
+       border-radius:20px!important;
+       height:100px!important;
+    }
     }
     #search
         {
@@ -120,9 +132,23 @@
         }
     .card
     {
-    margin-left:20px!important;
+    margin-left:10px!important;
     border-radius:20px!important;
     margin-top:10px!important;
+
+    }
+    .da
+    {
+       width:400px;
+       margin-left:20px;
+       border-radius:20px;
+       height:300px;
+    }
+    .cha
+    {
+       width:400px;
+       margin-left:20px;
+       border-radius:20px;
     }
     th
     {
@@ -144,8 +170,8 @@
     {
     background-color:#404040;
     color:white;
-    border-radius:20px;
-    text-align:center;
+    border-radius:20px!important;
+    text-align:center!important;
     }
     h1
     {
@@ -202,8 +228,8 @@
      <div>
 {% if User_Details.doctorid %}
 <div class="row">
-
-    <div class="col-lg-3 col-md-3 col-sm-3 card">
+    <div class="col-lg-4 col-md-3 col-sm-3">
+        <div class="card cha">
         <div class="card-header">
             Registered Appointments This Month
         </div>
@@ -211,15 +237,19 @@
             <h1 >{{ no_of_Appointments }}</h1>
         </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-3 card">
+    </div>
+    <div class="col-lg-4 col-md-3 col-sm-3">
+        <div class="card cha">
         <div class="card-header">
     Completed Appointments This Month
   </div>
-        <div class="card-body">
+        <div class="card-body ">
             <h1>{{ no_of_Appointments_completed }}</h1>
         </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-3 card">
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3">
+        <div class="card cha">
         <div class="card-header">
     Online Consultations This Month
   </div>
@@ -227,10 +257,12 @@
             <h1>{{ online_Appointments }}</h1>
         </div>
     </div>
+    </div>
 </div>
 {% elif  User_Details.tlabid %}
 <div class="row">
-    <div class="col-lg-3 col-md-3 col-sm-3 card">
+    <div class="col-lg-4 col-md-3 col-sm-3">
+        <div class="card da">
         <div class="card-header">
             Registered Appointments This Month
         </div>
@@ -238,7 +270,9 @@
             <h1 >{{ no_of_Appointments }}</h1>
         </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-3 card">
+    </div>
+    <div class="col-lg-4 col-md-3 col-sm-3">
+        <div class="card da">
         <div class="card-header">
     Completed Appointments This Month
   </div>
@@ -246,7 +280,9 @@
             <h1>{{ no_of_Appointments_completed }}</h1>
         </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-3 card">
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3">
+        <div class="card">
         <div class="card-body">
 
             <canvas id="myChart" width="400" height="400"></canvas>
@@ -282,6 +318,7 @@ var myChart = new Chart(ctx, {
 });
 </script>
         </div>
+    </div>
     </div>
 </div>
 {% endif %}

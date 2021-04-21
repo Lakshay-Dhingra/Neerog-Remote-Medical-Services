@@ -16,14 +16,14 @@
     <form action="{% url 'submit_news' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="container jumbotron">
-              <input type="text" class="form-control" disabled value="{{ id }} "name="id" hidden >
+              <input type="text" class="form-control" value="{{ id }}" name="id" hidden>
         <div class="form-group">
             <label for="Title"><b>Title Of Event:</b></label>
             <input type="text" class="form-control" name="title" id="Title" required>
         </div>
         <div class="form-group">
             <label for="About"><b>About Event</b></label>
-            <textarea type="email" class="form-control" id="About" name="About" required></textarea>
+            <textarea type="email" class="form-control" id="About"rows="6" cols="50"  name="About" required></textarea>
         </div>
             <b>Add Image Of Event:</b>
         <div class="custom-file">

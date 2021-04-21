@@ -15,6 +15,7 @@
     }
     .da
     {
+       border-radius:20px;
        width:400px;
        margin-left:20px;
     }
@@ -83,12 +84,6 @@ var myChart = new Chart(ctx, {
         datasets: [{
             label: 'Total No Of Appointments ',
             data: {{ list_of_speciality_appointments }},
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-
             ],
             borderWidth: 1
         }]

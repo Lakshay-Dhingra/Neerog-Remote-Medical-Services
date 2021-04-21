@@ -391,12 +391,14 @@ def list_of_hospital(request):
                 p = Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
             #filter="Hospitals"
             if (len(p) == 0):
-                messages.info(request, "No Hospitals Registered in this loaction")
+                messages.info(request, "No Hospitals Registered in this location")
         elif(filter_type=="All"):
             list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
             list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=country).filter(city=city)
             list_of_doctors = Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(
                 clinic_name='')
+            if (len(list_of_hospitals) == 0 and len(list_of_testing_labs) == 0 and len(list_of_doctors) == 0):
+                messages.info(request,"No Medical Facility Registered In this Area")
             return render(request, "main_app/Hospital_Selection.html",
                           context={"location": location, "list_of_testing_labs": list_of_testing_labs,"list_of_doctors":list_of_doctors,"list_of_hospitals":list_of_hospitals, "filter": filter,
                                    'list_of_countries': lis_of_countries, "list_of_tests": list_of_tests,
@@ -461,8 +463,9 @@ def list_of_hospital(request):
             list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=country).filter(city=city)
             list_of_doctors = Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(
                 clinic_name='')
-            if (len(p) == 0):
-                messages.info(request, "No Medical Facility Registered in this area")
+
+            if (len(list_of_hospitals) == 0 and len(list_of_testing_labs) == 0 and len(list_of_doctors) == 0):
+                messages.info(request,"No Medical Facility Registered In this Area")
             return render(request, "main_app/Hospital_Selection.html",
                           context={"location": location, "list_of_testing_labs": list_of_testing_labs,
                                    "list_of_doctors": list_of_doctors, "list_of_hospitals": list_of_hospitals,

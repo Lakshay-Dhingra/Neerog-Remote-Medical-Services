@@ -21,8 +21,15 @@ import random
 from .medical_speciality import get_specialities
 from .medical_tests import list_of_medical_tests
 from .models import TestingLab
+from . import search_data
 
 replace_dictionary={"u0101":"a","u012b":"i","u016b":"u","u0100":"A","u016a":"u"}
+
+def search(request):
+    search = request.GET['search']
+    result_list = search_data.searchResults(search)
+    context = {'search':search, 'result_list':result_list}
+    return render(request,"main_app/display_search.html",context)
 
 # Verification of the user certificate
 def verify_certificate(request,id):
@@ -195,8 +202,7 @@ def profile(request,id):
 
 def index(request):
     return render(request,'main_app/index.html')
-def home(request):
-    return render(request,'main_app/home.html')
+
 
 def Hospitals(request):
     lis_of_countries = geo_plug.all_CountryNames()

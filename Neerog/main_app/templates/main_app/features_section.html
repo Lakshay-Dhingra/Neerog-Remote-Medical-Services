@@ -47,7 +47,11 @@
               <div class="card-body">
                 <h5 class="card-title"><span><i class="fas fa-user-md"></i><i class="fas fa-user-nurse"></i></span> For Doctors</h5>
                 <p class="card-text">Your <strong>Dashboard</strong> will show all the appointments you've recieved yet. You can filter and search through them and send prescriptions to patients. You can see your Public <strong>Profile</strong> and edit it using <b>Edit Profile</b> button.</p>
-                <a href="{% url 'dashboard' %}" class="card-link">Dashboard</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' id=user.get_username %}" class="card-link">Dashboard</a>
+                {% else %}
+                <a href="{% url 'signin' %}" class="card-link">Dashboard</a>
+                {% endif %}
                 <a href="#" class="card-link">Profile</a>
                 <a href="{% url 'edit_profile' %}" class="card-link">Edit Profile</a>
               </div>

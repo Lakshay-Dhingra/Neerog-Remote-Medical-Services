@@ -89,7 +89,7 @@ class Hospital(models.Model):
     phone=models.PositiveBigIntegerField(validators=[MaxValueValidator(9999999999),MinValueValidator(1000000000)], null=True) 
     about=models.TextField(max_length=2000, blank=True)
     country=models.CharField(max_length=100)
-    state=models.CharField(max_length=100,default="delhi")
+    state=models.CharField(max_length=100)
     city=models.CharField(max_length=100)
     area=models.CharField(max_length=200)
     zip = models.PositiveSmallIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
@@ -100,6 +100,8 @@ class Hospital(models.Model):
     pic3=models.ImageField(upload_to="hospital_photo/", null=True, blank=True)
     certificate=models.FileField(upload_to="hospital_certificate/")
     verified = models.CharField(max_length=10, default="No")
+    start_time = models.CharField(max_length=5,default="09:00")
+    end_time = models.CharField(max_length=5,default="18:00")
 
     nullable_strings=[about]
     nullable_non_strings=[hospital_logo, pic2, pic3, year_established, zip]
@@ -146,8 +148,8 @@ class Doctor(models.Model):
     experience=models.PositiveSmallIntegerField(validators=[MaxValueValidator(100),MinValueValidator(0)])
     profile_pic=models.ImageField(upload_to="doctor_profile_photo/", blank=True, null=True)
     certificate=models.FileField(upload_to="doctor_certificate/")
-    start_time = models.CharField(max_length=5,default=0)
-    end_time = models.CharField(max_length=5,default=0)
+    start_time = models.CharField(max_length=5,default="09:00")
+    end_time = models.CharField(max_length=5,default="18:00")
 
     #hospitalid will become null when a hospital is deleted
     hospitalid = models.ForeignKey(Hospital, models.SET_NULL, null=True)
@@ -217,7 +219,7 @@ class TestPricing(models.Model):
     tlabid = models.ForeignKey(TestingLab, on_delete=models.CASCADE)
     testname = models.CharField(max_length=100)
     price = models.PositiveIntegerField(null=True)
-    testcategory = models.CharField(max_length=100,default="blood count")
+    testcategory = models.CharField(max_length=100, blank = True)
 
     def __str__(self):
         return str(self.tlabid)+" "+self.testname

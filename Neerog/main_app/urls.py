@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 urlpatterns = [
     path('', views.index, name='index'),
-    path('home/', views.home, name='home'),
+    # path('home/', views.home, name='home'),
     path('Hospital_Selection/',views.Hospitals,name='Dashboard'),
     path('user_location/',views.user_location,name='user_location'),
     path('Hospital_Selection/states/',views.list_of_states,name='select'),
@@ -33,7 +33,8 @@ urlpatterns = [
     path('cancel_appointment/',views.cancel_appointment,name="cancel_appointment"),
     path("add_news/<str:id>",views.add_news,name='add_news'),
     path("submit_news",views.submit_news,name="submit_news"),
-    path("edit_time/<int:id>",views.edit_time,name="edit_time")
+    path("edit_time/<int:id>",views.edit_time,name="edit_time"),
+    path("search/", views.search, name="search")
 ]
 import main_app.jobs  # NOQA @isort:skip
 import logging

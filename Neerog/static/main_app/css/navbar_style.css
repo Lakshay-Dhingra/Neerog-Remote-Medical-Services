@@ -131,13 +131,13 @@ nav form button{
   margin:-2px -2px;
   color: #fff;
   font-size: 17px;
-  background: red;
+  background: rgb(240, 0, 20);
   border: none;
   border-radius: 1px;
   cursor: pointer;
 }
 nav form button:hover{
-  background: rgb(240, 0, 20);
+  background: rgb(230, 0, 10);
 }
 nav .menu-icon,
 nav .cancel-icon,

@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta Tags -->
+    {% include 'main_app/common_meta.html' %}
+    <!-- Link or CSS Tags -->
+    {% include 'main_app/common_css.html' %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+    <link rel="stylesheet" href="{% static 'main_app/css/display_search_style.css' %}">
+
+    <title>Neerog - Remote Medical Services</title>
+</head>
+<body>
+
+    <!-- Messages -->
+    {% include 'main_app/show_messages.html' %}
+
+    <!-- Navbar -->
+    {% include 'main_app/navbar.html' %}
+
+
+    <section id="search_input_section">
+        <form action="{% url 'search' %}" method="get" id = "search_form">
+        <div class="no-gutters row" id = "search_box">
+        <div class="col col-9 col-md-10 col-lg-11" id = "search_input">
+            <input type="text" name="search" placeholder="Search Here" value="{{search}}" required>
+        </div>
+        <div class="col col-3 col-md-2 col-lg-1" id="search_button">
+            <button type="submit" class="fas fa-search"></button>
+        </div>
+        </div>
+        </form>
+    </section>
+    
+    <section id="search_results_section">
+        <div class="row">
+            {% for result in result_list %}
+            <div class="col col-12 col-md-6 col-lg-4" style="margin: 15px 0;">
+            <div class="card search_result_card" onclick="window.location.href='{% url 'profile' result.uid %}'">
+                <div class="card-body">
+                <h5 class="card-title">{% if result.user_type == "Doctor" %}Dr.{%endif%} {{result.name}}
+                    {% if result.verified == "Yes"%}
+                    <span> </span><i class="fas fa-check-circle" style="font-size:18px; color: #555;"></i>
+                    {% endif %}
+                </h5>
+
+                <p class="card-text">
+                    <i class="fas fa-mobile-alt"></i> {{result.phone}}
+                </p>
+
+                <p class="card-text card_email">
+                    <a href="mailto:{{result.email}}" class="card-link"><i class="fas fa-envelope" style="font-size: 20px;"></i> {{result.email}}</a>
+                </p>
+
+                <p class="card-text card_address">
+                    <i class="fas fa-map-marker-alt"></i> {{result.address}}
+                </p>
+
+                <p class="card-text card_time">
+                    {% if result.user_type == "Doctor" %}
+                    <strong>Appointment Fee:</strong> {{result.fee}}
+                    {% else %}
+                    <strong>Appointment Fee:</strong> Variable.
+                    {% endif %}
+                 </p>
+
+                 <p class="card-text card_time">
+                    <strong>Available:</strong> {{result.timings}}
+                 </p>
+
+                </div>
+            </div>
+            </div>
+        {% endfor %}
+        </div>
+    </section>
+      
+    <!-- JavaScript -->
+    {% include 'main_app/common_js.html' %}
+
+</body>
+</html> 

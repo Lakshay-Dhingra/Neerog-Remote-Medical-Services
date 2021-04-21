@@ -40,7 +40,12 @@
         <section id="profile_card" class="row">
 
             <div id="profile_image" class="col-12 col-md-4 col-lg-3">
+            
+            {% if ProfilePictureUrl == None%}
+            <img src="{% static 'user_app/images/default_profile.png' %}" class="img-fluid" alt="Profile Pic"/>
+            {% else %}
             <img src="{{ProfilePictureUrl}}" class="img-fluid" alt="Profile Pic"/>
+            {% endif %}
             </div>
 
             <div id="profile_head" class="col-12 col-md-8 col-lg-9 row">

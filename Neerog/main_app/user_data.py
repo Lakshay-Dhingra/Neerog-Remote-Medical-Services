@@ -89,7 +89,13 @@ def getDoctorData(uid):
     doctor_data['Gender'] = doctorobj.gender
     doctor_data['About'] = doctorobj.about
     doctor_data['Experience'] = doctorobj.experience
-    doctor_data['ProfilePictureUrl'] = doctorobj.profile_pic.url
+
+    if doctorobj.profile_pic is None:
+        doctor_data['ProfilePictureUrl'] = None
+    elif doctorobj.profile_pic == "":
+        doctor_data['ProfilePictureUrl'] = None
+    else:
+        doctor_data['ProfilePictureUrl'] = doctorobj.profile_pic.url
     doctor_data['Verified'] = doctorobj.verified
 
     doctor_data['independent']=doctorobj.is_independent

@@ -9,7 +9,7 @@
               <h5 class="card-title">About Neerog</h5>
               <p class="card-text">Neerog is an online healthcare service platform which allows users to search, explore and contact with the doctors, hospitals and testing labs around the globe registered with the platform. It is a free-to-use and open-for-all platform and you don't have to spend a single penny for registering yourself or your organization on this platform.</p>
               <p class="card-text"> You can book appointments online with the doctor of your choice, hassel-free from the comfort of your home without waiting in long-queues to get an appointment. We also provide an option for remote consultation during appointment booking, so one can consult a doctor remotely via video-conferencing. Moreover, you can apply for medical tests in any testing lab of your choice in no time, with just a few clicks.</p>
-              <p class="card-text"> Neerog has been developed considering the pandemic situation like COVID-19 where there is a need for such a platform to reduce pressure on hospitals and clinics and providing medical services remotely wherever and whenever possible. This project aims to create a large virtual marketplace for users and healthcare service providers which will benefit both of them and give more power to a customer/patient.</p>
+              <p class="card-text"> Neerog has been developed considering the pandemic situation like COVID-19 where there is a need for such a platform to reduce pressure on hospitals and clinics and providing medical services remotely wherever and whenever possible. In Long Term, this project aims to create a large virtual marketplace for users and healthcare service providers which will benefit both of them and give more power to a customer/patient.</p>
             </div>
           </div>
         </div>
@@ -49,6 +49,8 @@
                 <p class="card-text">Your <strong>Dashboard</strong> will show all the appointments you've recieved yet. You can filter and search through them and send prescriptions to patients. You can see your Public <strong>Profile</strong> and edit it using <b>Edit Profile</b> button.</p>
                 {% if user.is_authenticated %}
                 <a href="{% url 'dashboard' user.get_username %}" class="card-link">Dashboard</a>
+                {% else %}
+                <a href="{% url 'signin' %}" class="card-link">Dashboard</a>
                 {% endif %}
                 <a href="#" class="card-link">Profile</a>
                 <a href="{% url 'edit_profile' %}" class="card-link">Edit Profile</a>

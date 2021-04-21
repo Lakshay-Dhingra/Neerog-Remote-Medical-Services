@@ -37,8 +37,8 @@
   <span class="fas fa-search"></span></div>
   <div class="cancel-icon">
   <span class="fas fa-times"></span></div>
-  <form action="#">
-    <input type="search" class="search-data" placeholder="Search Here..." required>
+  <form action="{% url 'search' %}" method="get">
+    <input type="search" name="search" class="search-data" placeholder="Search Here..." required>
     <button type="submit" class="fas fa-search"></button>
   </form>
 </nav>

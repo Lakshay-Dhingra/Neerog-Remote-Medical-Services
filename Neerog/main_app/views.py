@@ -222,58 +222,73 @@ def Hospitals(request):
         for i in p:
             list_of_doctors[i] = i.clinic_fee
     except:
-        user=UserDetails.objects.get(email=request.session['email'])
-        if(user.user_type=='Patient'):
-            d1=Patient.objects.get(patientid=user.userid)
-            list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
-            list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
-            p = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
-                clinic_name='')
-            for i in p:
-                list_of_doctors[i] = i.clinic_fee
-            location = d1.city + ',' + d1.state + ',' + d1.country
-            request.session['country']=d1.country.strip()
-            request.session['city'] = d1.city.strip()
-            request.session['state'] = d1.state.strip()
+        try:
+            user=UserDetails.objects.get(email=request.session['email'])
+            if(user.user_type=='Patient'):
+                d1=Patient.objects.get(patientid=user.userid)
+                list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
+                list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
+                p = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
+                    clinic_name='')
+                for i in p:
+                    list_of_doctors[i] = i.clinic_fee
+                location = d1.city + ',' + d1.state + ',' + d1.country
+                request.session['country']=d1.country.strip()
+                request.session['city'] = d1.city.strip()
+                request.session['state'] = d1.state.strip()
 
-        elif(user.user_type == 'Doctor'):
-            d1 = Doctor.objects.get(doctorid=user.userid)
-            list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
-            list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
-            p = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
-                clinic_name='')
-            for i in p:
-                list_of_doctors[i] = i.clinic_fee
-            location = d1.city + ',' + d1.state + ',' + d1.country
-            request.session['country'] = d1.country.strip()
-            request.session['city'] = d1.city.strip()
-            request.session['state'] = d1.state.strip()
+            elif(user.user_type == 'Doctor'):
+                d1 = Doctor.objects.get(doctorid=user.userid)
+                list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
+                list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
+                p = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
+                    clinic_name='')
+                for i in p:
+                    list_of_doctors[i] = i.clinic_fee
+                location = d1.city + ',' + d1.state + ',' + d1.country
+                request.session['country'] = d1.country.strip()
+                request.session['city'] = d1.city.strip()
+                request.session['state'] = d1.state.strip()
 
-        elif (user.user_type == 'Testing Lab'):
-            d1 = TestingLab.objects.get(tlabid=user.userid)
-            list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
-            list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
-            p = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
-                clinic_name='')
-            for i in p:
-                list_of_doctors[i] = i.clinic_fee
-            location = d1.city + ',' + d1.state + ',' + d1.country
-            request.session['country'] = d1.country.strip()
-            request.session['city'] = d1.city.strip()
-            request.session['state'] = d1.state.strip()
+            elif (user.user_type == 'Testing Lab'):
+                d1 = TestingLab.objects.get(tlabid=user.userid)
+                list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
+                list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
+                p = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
+                    clinic_name='')
+                for i in p:
+                    list_of_doctors[i] = i.clinic_fee
+                location = d1.city + ',' + d1.state + ',' + d1.country
+                request.session['country'] = d1.country.strip()
+                request.session['city'] = d1.city.strip()
+                request.session['state'] = d1.state.strip()
 
-        elif (user.user_type == 'Hospital'):
-            d1 = Hospital.objects.get(hospitalid=user.userid)
-            list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
-            list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
-            p = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
+            elif (user.user_type == 'Hospital'):
+                d1 = Hospital.objects.get(hospitalid=user.userid)
+                list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
+                list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
+                p = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
+                    clinic_name='')
+                for i in p:
+                    list_of_doctors[i] = i.clinic_fee
+                location = d1.city + ',' + d1.state + ',' + d1.country
+                request.session['country'] = d1.country.strip()
+                request.session['city'] = d1.city.strip()
+                request.session['state'] = d1.state.strip()
+        except:
+            country="India"
+            city="Delhi"
+            list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
+            list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=country).filter(
+                city=city)
+            p = Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(
                 clinic_name='')
             for i in p:
                 list_of_doctors[i] = i.clinic_fee
-            location = d1.city + ',' + d1.state + ',' + d1.country
-            request.session['country'] = d1.country.strip()
-            request.session['city'] = d1.city.strip()
-            request.session['state'] = d1.state.strip()
+            location =city + ',NCT'+ ',' + country
+            request.session['country'] = country
+            request.session['city'] = city
+            request.session['state'] = "NCT"
     country=request.session['country']
     state=request.session['state']
     city=request.session['city']
@@ -404,10 +419,13 @@ def list_of_hospital(request):
             if (len(p) == 0):
                 messages.info(request, "No Hospitals Registered in this location")
         elif(filter_type=="All"):
+            list_of_doctors={}
             list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
             list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=country).filter(city=city)
-            list_of_doctors = Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(
+            p= Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(
                 clinic_name='')
+            for i in p:
+                list_of_doctors[i] = i.clinic_fee
             if (len(list_of_hospitals) == 0 and len(list_of_testing_labs) == 0 and len(list_of_doctors) == 0):
                 messages.info(request,"No Medical Facility Registered In this Area")
             return render(request, "main_app/Hospital_Selection.html",
@@ -466,15 +484,17 @@ def list_of_hospital(request):
             city=request.GET.get("city").strip()
             state=request.GET.get("state").strip()
             #print(City,State,Country)
+            list_of_doctors={}
             request.session['city']=city
             request.session['state']=state
             request.session['country']=country
             location = city + ',' + state + ',' + country
             list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
             list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=country).filter(city=city)
-            list_of_doctors = Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(
+            p = Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(
                 clinic_name='')
-
+            for i in p:
+                list_of_doctors[i] = i.clinic_fee
             if (len(list_of_hospitals) == 0 and len(list_of_testing_labs) == 0 and len(list_of_doctors) == 0):
                 messages.info(request,"No Medical Facility Registered In this Area")
             return render(request, "main_app/Hospital_Selection.html",

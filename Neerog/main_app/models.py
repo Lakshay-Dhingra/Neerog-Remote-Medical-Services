@@ -152,7 +152,7 @@ class Doctor(models.Model):
     end_time = models.CharField(max_length=5,default="18:00")
 
     #hospitalid will become null when a hospital is deleted
-    hospitalid = models.ForeignKey(Hospital, models.SET_NULL, null=True)
+    hospitalid = models.ForeignKey(Hospital, models.SET_NULL, null=True,blank=True)
     
     clinic_name = models.CharField(max_length=100, blank=True)
     clinic_photo = models.ImageField(upload_to="clinic_photo/", blank=True, null=True)

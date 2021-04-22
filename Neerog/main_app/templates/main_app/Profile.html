@@ -437,7 +437,11 @@ var myChart = new Chart(ctx, {
               <td>{{ i.patientemail }}</td>
               <td>{{ i.Speciality }}</td>
               {% else %}
+              {% if i.doctoremail %}
               <td>{{ i.doctoremail }}</td>
+              {% else %}
+              <td>{{ i.TestingLabId.tlabid.email }}</td>
+              {% endif %}
               {% endif %}
               {% endif %}
               {% if User_Details.patientid %}

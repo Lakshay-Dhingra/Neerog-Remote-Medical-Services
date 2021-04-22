@@ -210,6 +210,7 @@ def Hospitals(request):
     for i in tests:
         list_of_tests.extend(i.testlist)
     list_of_speciality=get_specialities()
+    list_of_doctors={}
     try:
         city=request.session['city'].strip()
         state=request.session['state'].strip()
@@ -217,15 +218,19 @@ def Hospitals(request):
         location=city+','+state+','+country
         list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
         list_of_testing_labs=TestingLab.objects.filter(verified="Yes").filter(country=country).filter(city=city)
-        list_of_doctors=Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(clinic_name='')
+        p=Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(clinic_name='')
+        for i in p:
+            list_of_doctors[i] = i.clinic_fee
     except:
         user=UserDetails.objects.get(email=request.session['email'])
         if(user.user_type=='Patient'):
             d1=Patient.objects.get(patientid=user.userid)
             list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
             list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
-            list_of_doctors = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
+            p = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
                 clinic_name='')
+            for i in p:
+                list_of_doctors[i] = i.clinic_fee
             location = d1.city + ',' + d1.state + ',' + d1.country
             request.session['country']=d1.country.strip()
             request.session['city'] = d1.city.strip()
@@ -235,8 +240,10 @@ def Hospitals(request):
             d1 = Doctor.objects.get(doctorid=user.userid)
             list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
             list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
-            list_of_doctors = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
+            p = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
                 clinic_name='')
+            for i in p:
+                list_of_doctors[i] = i.clinic_fee
             location = d1.city + ',' + d1.state + ',' + d1.country
             request.session['country'] = d1.country.strip()
             request.session['city'] = d1.city.strip()
@@ -246,8 +253,10 @@ def Hospitals(request):
             d1 = TestingLab.objects.get(tlabid=user.userid)
             list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
             list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
-            list_of_doctors = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
+            p = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
                 clinic_name='')
+            for i in p:
+                list_of_doctors[i] = i.clinic_fee
             location = d1.city + ',' + d1.state + ',' + d1.country
             request.session['country'] = d1.country.strip()
             request.session['city'] = d1.city.strip()
@@ -257,8 +266,10 @@ def Hospitals(request):
             d1 = Hospital.objects.get(hospitalid=user.userid)
             list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
             list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
-            list_of_doctors = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
+            p = Doctor.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city).exclude(
                 clinic_name='')
+            for i in p:
+                list_of_doctors[i] = i.clinic_fee
             location = d1.city + ',' + d1.state + ',' + d1.country
             request.session['country'] = d1.country.strip()
             request.session['city'] = d1.city.strip()
@@ -532,7 +543,7 @@ def list_of_hospital(request):
             return render(request, "main_app/Hospital_Selection.html",
                                   context={"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),"location":location,"list_of_testing_labs": p, "filter": filter,"search_value":search_value,
                                            'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
-        return render(request,"main_app/Hospital_Selection.html",context={"location":location,"list_of_hospitals":p,"filter":filter,'list_of_countries':lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
+        return render(request,"main_app/Hospital_Selection.html",context={"location":location,"list_of_hospitals":p,"filter":filter,"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),'list_of_countries':lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
      #except:
      #   return redirect("/Hospital_Selection/")
 

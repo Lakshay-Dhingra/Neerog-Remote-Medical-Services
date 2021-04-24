@@ -230,13 +230,13 @@ class TestPricing(models.Model):
 # Even if user or doctor gets deleted, this record shouldn't be deleted...
 class Appointments(models.Model):
    appointmentid = models.AutoField(primary_key=True)
-   doctoremail = models.EmailField(max_length=254, blank=False, null=True)
+   doctoremail = models.EmailField(max_length=254, blank=True, null=True)
    patientname=models.CharField(max_length=254, blank=False, null=False)
    Speciality=models.CharField(max_length=254,blank=True,null=True)
    patientemail = models.EmailField(max_length=254, blank=False, null=False)
    Prescription = models.ImageField(upload_to="Prescriptions/", null=True)
    TestingLabId=models.ForeignKey(TestingLab,models.SET_NULL, blank=True, null=True)
-   hospitalemail = models.EmailField(max_length=254,null=True)
+   hospitalemail = models.EmailField(max_length=254,null=True,blank=True)
    amount_paid = models.PositiveIntegerField()
    appointment_date=models.DateField(blank=False, null=False)
    appointment_time=models.TimeField(blank=False, null=False)
@@ -246,7 +246,9 @@ class Appointments(models.Model):
        ('Offline', 'Offline'),
    ]
    mode_of_meeting = models.CharField(max_length=10, choices=MEETING_CHOICES, default=DEFAULT_MODE_OF_MEETING)
-   meeting_url=models.CharField(max_length=300,unique=True,null=True)
+   meeting_url=models.CharField(max_length=300,unique=True,null=True,blank=True)
+
+   nullable_strings=['doctoremail','hospitalemail','meeting_url']
 #     etc... complete according to requirements
 
 class Appointment_Timings(models.Model):

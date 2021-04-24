@@ -1,0 +1,19 @@
+{% autoescape off %}
+Hi {{name}}!
+
+{% if doctor_name %}
+Your Appointment is due with Dr. {{ doctor_name }} at {{ time }}
+{% else %}
+Your Appointment is due with Testing Lab {{ lab_name }} at {{ time }}
+{% endif %}
+{% if meeting_url %}
+Your Meeting_Url is {{ meeting_url }}
+{% endif %}
+Click Below Url To Access Your Receipt:
+{{ domain }}/Appointment_Details/{{ appointment_id }}
+
+Stay Healthy, feel free to contact us with your feedback or suggestions.
+
+Regards,
+Team Neerog
+{% endautoescape %}

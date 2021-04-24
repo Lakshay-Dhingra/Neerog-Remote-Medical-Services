@@ -69,11 +69,12 @@ def appoin(list_of_Appointments):
 
 def profile(request,id):
     dt = datetime.datetime.today()
-    email=request.session['email']
+    #email=request.session['email']
     no_of_Appointments_completed=0;
     no_of_Appointments=0;
     available=True;
     user=UserDetails.objects.get(userid=id)
+    email=user.email
     if(user.user_type=='Hospital'):
         dt = datetime.datetime.today()
         Appointments1 = []
@@ -197,11 +198,8 @@ def profile(request,id):
         p['Testing_Lab'] = TestingLab.objects.filter(verified="No")
         return render(request, "main_app/Verify_Certificate.html", context={'list_of_certificates': p})
 
-
-
 def index(request):
     return render(request,'main_app/index.html')
-
 
 def Hospitals(request):
     lis_of_countries = geo_plug.all_CountryNames()
@@ -990,8 +988,13 @@ def search_appointments(request):
     #except:
      #   return redirect('/profile')
 def Appointment_Details(request,appointment_id):
+    doctor_details=""
     Appointment_Details1=Appointments.objects.get(appointmentid=appointment_id)
-    return render(request,'main_app/Receipt.html',context={'Appointment_Details':Appointment_Details1})
+    if(Appointment_Details1.doctoremail):
+        user=UserDetails.objects.get(email=Appointment_Details1.doctoremail)
+
+        doctor_details=Doctor.objects.get(doctorid=user.userid)
+    return render(request,'main_app/Receipt.html',context={'doctor_details':doctor_details,'Appointment_Details':Appointment_Details1})
 
 def admin_search_appointments(request):
     email=request.session['email']

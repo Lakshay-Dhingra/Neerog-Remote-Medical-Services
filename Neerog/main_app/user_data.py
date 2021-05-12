@@ -276,9 +276,56 @@ def editDoctor(request, uid, name, phone, gender, experience, is_independent, sp
 
     doctorobj.save()
 
-    # doctor=Doctor(doctorid=userobj, phone=phone, about=about, is_independent=is_independent, gender=gender, experience=experience, specialization=specialization, profile_pic = profilepic, city= city, country= country, area=area, certificate=proof, clinic_name=cname, verified=verified, clinic_photo=cphoto, clinic_fee =fee, hospitalid = hospitalid)
-    # doctor.save()
-
     return success
+
+def getHospitalData(uid):
+    hp_data = dict()
+    userobj=UserDetails.objects.get(userid=uid-1)
+    hpobj=Hospital.objects.get(hospitalid=uid-1)
+
+    hp_data['uid'] = uid
+    hp_data['Name'] = userobj.name
+    # hp_data['Email'] = userobj.email
+    # hp_data['DateJoined'] = userobj.created_at.date()
+    # hp_data['AvgUserRating'] = userobj.avg_rating
+    # hp_data['Followers'] = userobj.followers
+
+    hp_data['Phone'] = hpobj.phone
+    hp_data['About'] = hpobj.about
+    hp_data['YearEstablished'] = hpobj.year_established
+
+    if hpobj.hospital_logo is None:
+        hp_data['Logo'] = None    
+    elif hpobj.hospital_logo == "":
+        hp_data['Logo'] = None
+    else:
+        hp_data['Logo'] = hpobj.hospital_logo.url
+
+
+    if hpobj.pic2 is None:
+        hp_data['Pic2'] = None    
+    elif hpobj.pic2 == "":
+        hp_data['Pic2'] = None
+    else:
+        hp_data['Pic2'] = hpobj.pic2.url
+
+    if hpobj.pic3 is None:
+        hp_data['Pic3'] = None    
+    elif hpobj.pic3 == "":
+        hp_data['Pic3'] = None
+    else:
+        hp_data['Pic3'] = hpobj.pic3.url
+
+    hp_data['Verified'] = hpobj.verified
+
+    hp_data['Pic1'] = hpobj.pic1.url
+    hp_data['Country'] = hpobj.country
+    hp_data['State'] = hpobj.state
+    hp_data['City'] = hpobj.city
+    hp_data['Area'] = hpobj.area
+    hp_data['Zip'] = hpobj.zip
+    
+    return hp_data
+
     
         

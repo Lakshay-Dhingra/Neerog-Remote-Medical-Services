@@ -70,6 +70,10 @@ def edit_profile(request):
                 else:
                     doctor_data['HospitalId']=user_data.getHospitalId(uid)
                 return render(request,'user_app/EditDoctorProfile.html',doctor_data)
+            elif(user_type == "Hospital"):
+                hp_data = user_data.getHospitalData(uid)
+                hp_data['AllSpecialities']=medical_speciality.get_specialities()
+                return render(request,'user_app/EditHospitalProfile.html',hp_data)
             else:
                 messages.info(request,"You Are Not A Doctor!") #Temporary
         else:

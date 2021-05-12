@@ -1,6 +1,7 @@
 secret_settings.py
 venv/
 .idea/
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -12,7 +12,7 @@ import re
 import json
 import pandas as pd
 from django.http import HttpResponse, JsonResponse
-from geosky import geo_plug # library for geolocation
+#from geosky import geo_plug # library for geolocation
 import datetime
 import jwt
 from django.shortcuts import render, redirect
@@ -595,6 +595,10 @@ def Selected_Service_Provider(request,user_id):
         for i in k:
             Tests.append(i)
         return render(request, "main_app/Dashboard.html", context={"Testing_Lab_Details": p, "specialities": Tests})
+    elif(user.user_type=="Patient"):
+        p=Patient.objects.get(patientid=user.userid)
+        return render(request,"main_app/User_Profile.html",context={"User_Details":p})
+
 def Book_Appointment(request):
     return render(request,"main_app/Book_Appointment.html",context={"Doctor":replace_dictionary,"specialities":Specialities,"facilities":Facilities})
 
@@ -1305,4 +1309,3 @@ def edit_time(request,id):
         t1.save()
     str1='/dashboard/'+str(id)
     return redirect(str1);
-

@@ -10,7 +10,7 @@ def profile(request, uid):
         user_type=user_data.getUserType(uid)
         if(user_data.isRegisteredUser(uid)):
             if(user_type == "Patient"):
-                return redirect("/dashboard")
+                return redirect("/Selected/"+str(uid-1))
             elif(user_type == "Doctor"):
                 doctor_data = user_data.getDoctorData(uid)
                 try:

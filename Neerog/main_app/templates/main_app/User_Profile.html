@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <title>Profile</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% include "main_app/header.html" %}
+    <!-- Meta Tags -->
+    <!-- Link or CSS Tags -->
+    {% include 'main_app/common_css.html' %}
+    {% include 'main_app/common_js.html' %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    @media only screen and (max-width: 400px) {
+        *
+        {
+         font-size:10px;
+        }
+
+        #profile_pic
+        {
+            height:150px;
+            width:150px !important;
+        }
+        th
+    {
+     font-size:15px !important;
+     color:grey;
+     }
+    }
+        .dot {
+
+  height: 200px;
+  width: max-width;
+  font-size:35px;
+  background-color:#4B0082;
+  border-radius: 50%;
+  border:2px solid grey;
+  display: inline-block;
+}
+    #search
+        {
+          float:right;
+
+        }
+    th
+    {
+     font-size:20px;
+     color:grey;
+     }
+
+    </style>
+
+</head>
+{% include 'main_app/navbar.html' %}
+<body class="container" style="width:max-width;height:100%;">
+<div style="margin-top:50px;">
+                  <div class="row" style="margin-top:50px;">
+                      <div class="col-sm-4 col-lg-4 col-4">
+                  {% if  User_Details.profile_pic %}
+                  <center><img src="{{ User_Details.profile_pic.url }}" class="dot" id="profile_pic" style="margin-top:30px;float:left;"></center>
+                  {% else %}
+                     <center><image src="{% static 'image6.jpeg' %}" class="dot" id="profile_pic" style="margin-top:30px;float:left;"></image></center>
+                    {% endif %}
+                          </div>
+                      <div class="col-2"></div>
+                      <div class="col-lg-4 col-sm-4 col-4" style="margin-top:75px;">
+                          <h3 style="color:grey;">{{ User_Details.patientid.name }}</h3>
+                          <h5 style="color:Dodger-Blue;"><a href="mailto:{{ User_Details.patientid.email }}">{{ User_Details.patientid.email }}</a></h5>
+                      </div>
+
+                  </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+    <h3 style="color:grey;" style="margin-top:10px;">Information</h3></div>
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+     <button type="button" class="btn btn-success" style="float:right;">Edit Profile</button></div>
+    </div>
+        <table class="table table-borderless" style="margin-top:10px;">
+            <tbody>
+            <tr>
+                <th>Username:</th>
+                  <td>{{ User_Details.patientid.name }} </td></tr>
+                <tr><th>Email Id:</th>
+                    <td>{{ User_Details.patientid.email }}</td></tr>
+                <tr><th>Age:</th>
+                     <td>{{ User_Details.age }}</td></tr>
+                <tr><th>Gender:</th>
+                     <td>{{ User_Details.gender }}</td></tr>
+                 <tr><th>Blood Group:</th>
+                     <td>{{ User_Details.blood_group }}</td></tr>
+            <tr>
+                    <th>Phone:</th>
+                <td>{{ User_Details.phone }}</td></tr>
+                  <tr>  <th>Address:</th>
+                <td>{{ User_Details.area }},{{ User_Details.city }},{{ User_Details.country }}</td>
+              </tr>
+            </tbody>
+  </table>
+    </div>
+</body>
+</html>

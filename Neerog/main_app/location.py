@@ -1,5 +1,5 @@
 import re
-#from geosky import geo_plug
+from geosky import geo_plug
 replace_dictionary={"u00e9":"e","u00e1":"e","u0101":"a","u012b":"i","u016b":"u","u0100":"A","u016a":"u"}
 
 #lis_of_countries = geo_plug.all_CountryNames() To get list of countries

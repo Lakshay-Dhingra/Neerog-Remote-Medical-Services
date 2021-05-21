@@ -275,8 +275,57 @@ def editDoctor(request, uid, name, phone, gender, experience, is_independent, sp
         doctorobj.clinic_photo=request.FILES['cphoto']
 
     doctorobj.save()
-
     return success
+
+def editHospital(request, uid, name, phone, year, about, country, state, city, area, zip):
+    success=True
+    userobj=UserDetails.objects.get(userid=uid-1)
+    userobj.name = name
+    userobj.save()
+
+    hobj=Hospital.objects.get(hospitalid=uid-1)
+
+    if(hobj.phone != phone):
+        if(authenticate.hasRegisteredPhone(phone, "Hospital")):
+            success=False
+        else:
+            hobj.phone=phone
+    
+    hobj.year_established = year
+    hobj.about = about
+    
+    hobj.country = country
+    hobj.state = state
+    hobj.city = city
+    hobj.area = area
+    hobj.zip = zip
+
+    if 'pic1' in request.FILES:
+        hobj.pic1=request.FILES['pic1']
+
+    if 'pic2' in request.FILES:
+        hobj.pic2=request.FILES['pic2']
+
+    if 'pic3' in request.FILES:
+        hobj.pic3=request.FILES['pic3']
+
+    if 'logo' in request.FILES:
+        hobj.hospital_logo=request.FILES['logo']
+
+    hobj.save()
+    return success
+
+def editHospitalSpeciality(uid, speciality_pricing):
+    hsobjs = HospitalSpeciality.objects.filter(hospitalid = uid-1)
+    if hsobjs is not None:
+        hsobjs.delete()
+    try:
+        hobj=Hospital.objects.get(hospitalid=uid-1)
+        for sp in speciality_pricing:
+            hospitalspeciality = HospitalSpeciality(hospitalid=hobj, speciality = sp, price=speciality_pricing[sp])
+            hospitalspeciality.save()
+    except:
+        print(sys.exc_info())
 
 def getHospitalData(uid):
     hp_data = dict()
@@ -324,8 +373,13 @@ def getHospitalData(uid):
     hp_data['City'] = hpobj.city
     hp_data['Area'] = hpobj.area
     hp_data['Zip'] = hpobj.zip
+
+    speciality_fee = dict()
+    hspobjs = HospitalSpeciality.objects.filter(hospitalid = hpobj)
+    for obj in hspobjs:
+        speciality_fee[obj.speciality] = obj.price
+    
+    hp_data['SpecialityFee'] = speciality_fee
     
     return hp_data
-
-    
         

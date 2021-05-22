@@ -49,7 +49,7 @@ class Patient(models.Model):
     gender=models.CharField(max_length=10, choices=GENDER_CHOICES, default=DEFAULT_GENDER)
     age=models.PositiveSmallIntegerField(validators=[MaxValueValidator(150),MinValueValidator(0)], null=True)
 
-    DEFAULT_BLOOD='U'
+    DEFAULT_BLOOD='Unknown'
     BLOOD_CHOICES = [
         ('A+ve', 'A+ve'),
         ('A-ve', 'A-ve'),
@@ -63,7 +63,7 @@ class Patient(models.Model):
         ('HH-ve', 'HH-ve'),
         (DEFAULT_BLOOD, 'Unknown'),
     ]
-    blood_group=models.CharField(max_length=5, choices=BLOOD_CHOICES, default=DEFAULT_BLOOD)
+    blood_group=models.CharField(max_length=8, choices=BLOOD_CHOICES, default=DEFAULT_BLOOD)
     disability=models.CharField(max_length=50, default='NO')
     profile_pic=models.ImageField(upload_to="patient_profile_photo/", blank=True, null=True)
 
@@ -200,7 +200,7 @@ class TestingLab(models.Model):
     end_time = models.CharField(max_length=5,default="18:00")
 
     nullable_strings=[about]
-    nullable_non_strings=[lab_photo, tlab_logo, zip, year_established]
+    nullable_non_strings=[tlab_logo, zip, year_established]
 
     def save(self, *args, **kwargs):
         for i in self.nullable_non_strings:

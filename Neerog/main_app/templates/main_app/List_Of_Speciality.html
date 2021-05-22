@@ -7,17 +7,17 @@
      {% include "main_app/header.html" %}
      {% include 'main_app/common_css.html' %}
     <style>
-    @media only screen and (max-width: 960px) {
-     *
-     {
-     font-size:20px !important;
-     }
-     .card
-     {
+      @media only screen and (max-width: 1024px) {
+        *
+        {
+         font-size:25px!important;
+        }
+        .card
+        {
        margin-top:20px;
        height:80px!important;
-     }
-     }
+        }
+        }
      .card
      {
        margin-top:20px;
@@ -121,10 +121,10 @@
          <h3 style="color:#3291a8;"> Select Speciality </h3>
          <div class="row">
         {% for i in specialities %}
-             <div class="col-lg-4 col-md-4 col-sm-4">
+             <div class="col-lg-4 col-md-6 col-sm-4">
                      <form action='{% url "book_appointment1" speciality=i service_provider_id=Hospital_Details.hospitalid %}' onsubmit="return validate()">
                          <div class="card">
-                     <button type="submit" class="btn" style="margin-top:10px;" >{{ i }}<span style="float:right;"> ></span></a></button>
+                     <button type="submit" class="btn" style="margin-top:10px;font-size:15px;" >{{ i }}<span style="float:right;"> ></span></button>
                         </div>
                      </form>
              </div>

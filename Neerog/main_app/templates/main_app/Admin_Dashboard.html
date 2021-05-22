@@ -166,7 +166,7 @@ function validate()
                 {% csrf_token %}
             <div class="row">
                 <div class="col-lg-2" style="margin-top:20px;">
-                <button class="btn btn-success" type="button" onclick="location.href='{% url 'add_news' id=hospitalid %}'" style="float:left;">Edit Profile</button>
+                <button class="btn btn-success" type="button" style="float:left;" onclick="location.href='{% url 'edit_profile'%}'">Edit Profile</button>
                 </div>
                 <div class="col-lg-2 offset-lg-3 col-12 Non_Available_date form-group">
                     <b>Report From:</b><input type="date" class="form-control"  id="start" name="start">

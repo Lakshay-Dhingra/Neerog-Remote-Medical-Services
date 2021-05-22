@@ -13,10 +13,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
     @media only screen and (max-width: 400px) {
-        *
-        {
-         font-size:10px;
-        }
 
         #profile_pic
         {
@@ -54,14 +50,15 @@
 
 </head>
 {% include 'main_app/navbar.html' %}
-<body class="container" style="width:max-width;height:100%;">
+<body style="width:max-width;height:100%;">
+<div class="container">
 <div style="margin-top:50px;">
                   <div class="row" style="margin-top:50px;">
                       <div class="col-sm-4 col-lg-4 col-4">
                   {% if  User_Details.profile_pic %}
                   <center><img src="{{ User_Details.profile_pic.url }}" class="dot" id="profile_pic" style="margin-top:30px;float:left;"></center>
                   {% else %}
-                     <center><image src="{% static 'image6.jpeg' %}" class="dot" id="profile_pic" style="margin-top:30px;float:left;"></image></center>
+                     <center><image src="{% static 'user_app/images/default_profile.png' %}" class="dot" id="profile_pic" style="margin-top:30px;float:left;"></image></center>
                     {% endif %}
                           </div>
                       <div class="col-2"></div>
@@ -74,7 +71,7 @@
 
     <div class="row">
         <div class="col-lg-4">
-    <h3 style="color:grey;" style="margin-top:10px;">Information</h3></div>
+    </div>
         <div class="col-lg-4"></div>
         <div class="col-lg-4">
      <button type="button" class="btn btn-success" style="float:right;">Edit Profile</button></div>
@@ -100,6 +97,7 @@
               </tr>
             </tbody>
   </table>
+    </div>
     </div>
 </body>
 </html>

@@ -1,0 +1,152 @@
+@media only screen and (max-width:800px) {
+     .col-12 button
+     {
+       margin-top:10px !important;
+     }
+     #cd
+    {
+      margin-top:50px !important;
+    }
+     .card
+    {
+    margin-left:20px!important;
+    //border-radius:20px!important;
+    margin-top:10px!important;
+    }
+    .cha
+    {
+       width:730px!important;
+       margin-left:20px!important;
+       //border-radius:20px!important;
+    }
+    .da
+    {
+    width:730px!important;
+       margin-left:20px!important;
+       //border-radius:20px!important;
+       height:100px!important;
+    }
+    *
+    {
+      font-size:25px !important
+    }
+    }
+    @media only screen and (max-width: 400px) {
+    *
+    {
+      font-size:15px !important
+    }
+     .col-12 button
+     {
+       margin-top:10px !important;
+     }
+     .card
+    {
+    margin-left:20px!important;
+    //border-radius:20px!important;
+    margin-top:10px!important;
+    }
+    .cha
+    {
+       width:300px!important;
+       margin-left:20px!important;
+       //border-radius:20px!important;
+    }
+    .da
+    {
+    width:300px!important;
+       margin-left:20px!important;
+       //border-radius:20px!important;
+       height:100px!important;
+    }
+    th,td
+    {
+      font-size:15px !important
+    }
+    #cd
+    {
+      margin-top:50px !important;
+    }
+    }
+
+    #search
+        {
+          float:right;
+        }
+    .card
+    {
+    margin-left:10px!important;
+    //border-radius:20px!important;
+    margin-top:10px!important;
+
+    }
+    .da
+    {
+       width:400px;
+       margin-left:20px;
+       //border-radius:20px;
+       height:300px;
+    }
+    .cha
+    {
+       width:400px;
+       margin-left:20px;
+       //border-radius:20px;
+    }
+    th
+    {
+     font-size:12px;
+     color:white;
+     }
+    .table-striped th
+    {
+     font-size:15px;
+     color:black;
+     }
+     .sticky th
+     {
+     background-color:#404040;
+     position:sticky;
+     top:0;
+     }
+    .card-header
+    {
+    background-color:#404040;
+    color:white;
+    //border-radius:20px!important;
+    text-align:center!important;
+    }
+    #cd
+    {
+      margin-top:170px;
+    }
+    h1
+    {
+     color:blue;
+     text-align:center;
+     }
+     body::before
+{
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{% static 'image9.jpeg' %}") no-repeat center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    content:"";
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.7;
+}
+/* Center the loader */
+#loader {
+  position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url(https://smallenvelop.com/wp-content/uploads/2014/08/Preloader_11.gif) center no-repeat #fff;
+}

@@ -32,7 +32,8 @@ def search(request):
     return render(request,"main_app/display_search.html",context)
 
 # Verification of the user certificate
-def verify_certificate(request,id):
+def verify_certificate(request):
+    id=int(request.GET['id'])
     user = UserDetails.objects.get(email=request.session['email'])
     if (user.user_type == 'Moderator'):
         user = UserDetails.objects.get(userid=id)
@@ -49,9 +50,12 @@ def verify_certificate(request,id):
             p.verified = "Yes"
             p.save()
         p = dict()
-        p['Hospital'] = Hospital.objects.filter(verified="No")
-        p['Doctor'] = Doctor.objects.filter(verified="No")
-        p['Testing_Lab'] = TestingLab.objects.filter(verified="No")
+        if (len(Hospital.objects.filter(verified="No")) > 0):
+            p['Hospital'] = Hospital.objects.filter(verified="No")
+        if (len(Doctor.objects.filter(verified="No")) > 0):
+            p['Doctor'] = Doctor.objects.filter(verified="No")
+        if (len(TestingLab.objects.filter(verified="No")) > 0):
+            p['Testing_Lab'] = TestingLab.objects.filter(verified="No")
         return render(request, "main_app/Verify_Certificate.html", context={'list_of_certificates': p})
     else:
         messages.info(request, "You Can't Access This Page!")
@@ -124,6 +128,7 @@ def profile(request,id):
                             l1.append("No")
                     else:
                         l1.append("Yes")
+
                     l1.append(k1.price * l2)
             doctors_data[i] = l1
             appointments_this_month += l2
@@ -193,9 +198,13 @@ def profile(request,id):
                                "no_of_Appointments": no_of_Appointments,"filter_type":"Date"})
     elif (user.user_type == 'Moderator'):
         p = dict()
-        p['Hospital'] = Hospital.objects.filter(verified="No")
-        p['Doctor'] = Doctor.objects.filter(verified="No")
-        p['Testing_Lab'] = TestingLab.objects.filter(verified="No")
+        if(len(Hospital.objects.filter(verified="No"))>0):
+            p['Hospital'] =Hospital.objects.filter(verified="No")
+        if (len(Doctor.objects.filter(verified="No")) > 0):
+            p['Doctor'] = Doctor.objects.filter(verified="No")
+        if (len(TestingLab.objects.filter(verified="No")) > 0):
+            p['Testing_Lab'] = TestingLab.objects.filter(verified="No")
+
         return render(request, "main_app/Verify_Certificate.html", context={'list_of_certificates': p})
 
 def index(request):
@@ -507,20 +516,26 @@ def list_of_hospital(request):
         elif (filter_type == 'Doctor_Name'):
             p = {}
             search_value = request.GET.get("search_values")
+
             if(country==""):
                 k=Doctor.objects.filter(verified="Yes")
             else:
                 k=Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city)
+                print(k)
             for i in k:
                 s1=search_value.casefold()
                 s2=i.doctorid.name.casefold()
                 if (s2.find(s1)!=-1):#i.doctorid.name.casefold() == search_value.casefold()):
                     if(i.clinic_name==''):
                         k1=HospitalSpeciality.objects.filter(hospitalid=i.hospitalid).filter(speciality=i.specialization)
-                        p[i]=k1[0].price
+                        #print("doctor",i.hospitalid)
+                        try:
+                            p[i]=k1[0].price
+                            #print(k1[0].price)
+                        except:
+                            messages.info(request, "No Doctor of this name Registered")
                     else:
                        p[i]=i.clinic_fee
-
             #print(p,search_value)
             if(len(p)==0):
                 messages.info(request, "No Doctor of this name Registered")
@@ -577,7 +592,7 @@ def Selected_Service_Provider(request,user_id):
         for i in k:
             Specialities.append(i.speciality)
         dict1={}
-        poke = pd.read_csv("main_app/static/Specialities_Images.csv")
+        poke = pd.read_csv("main_app/Specialities_Images.csv")
         list1 =poke['Speciality'].tolist()
         list2=poke['Speciality_Image'].tolist()
         #print(list1,list2)
@@ -621,7 +636,7 @@ def Payment(request):
                 email = request.session['email']
             except:
                 messages.info(request,"Please Login/Register")
-                return redirect('/')
+                return redirect('/accounts/signin/')
             service_provider_id=request.GET['service_provider_id']
             request.session['user_type_Id']=service_provider_id
             user = UserDetails.objects.get(userid=service_provider_id)
@@ -837,6 +852,7 @@ def book_appointment1(request,speciality,service_provider_id):
                     list_of_doctors.append(i)
                     #list_of_doctors[i] = time_slots.split(",")
         k = Hospital.objects.get(hospitalid=user.userid)
+        print("list",list_of_doctors)
         return render(request, "main_app/Select_Doctor.html", context={"list_of_Doctors": list_of_doctors,"Hospital_Details":k})
 
 def Appointment_Details_Submission1(request):

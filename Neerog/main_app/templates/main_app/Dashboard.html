@@ -7,89 +7,8 @@
 
       {% include 'main_app/header.html' %}
       {% include 'main_app/common_css.html' %}
-
-
+        <link rel="stylesheet" href="{% static 'main_app/css/Dash.css' %}">
     <style>
-     @media only screen and (max-width: 720px) {
-     *
-     {
-       font-size:20px;
-     }
-     span
-     {
-       font-size:15px;
-     }
-     .news
-     {
-        width:200px !important;
-        height:250px !important;
-     }
-     .spec
-     {
-      margin-left:10px !important;
-      }
-      .img1
-    {
-     width:100%;
-     height:300px !important;
-     }
-      }
-    .dot {
-
-  height: 60px;
-  width: 60px;
-  font-size:35px;
-  background-color:#4B0082;
-  border-radius: 50%;
-  display: inline-block;
-}
-    h2 {
-   width: 100%;
-   text-align: center;
-   border-bottom: 1px solid #000;
-   line-height: 0.01em;
-   margin: 10px 0 20px;
-   color:#3291a8;
-}
-
-h2 span {
-    background:#fff;
-    padding:0 10px;
-}
-
-.card #test
-{
-margin-left:20px !important;
-background-color:#404040 !important;
-}
-h6
-{
- color:white;
-}
-    h3
-    {
-      color:#3291a8;
-    }
-        .img1
-    {
-     height:250px;
-     width:100%;
-    }
-    .media-object
-    {
-    height:120px;
-     width:120;
-    }
-    p
-    {
-    font-size:19px;
-    color:#a86532;
-    }
-    .img1
-    {
-     width:100%;
-     height:500px;
-     }
 
     </style>
 </head>
@@ -107,7 +26,7 @@ h6
         <div class="col-lg-6">
         {% endif %}
         <h3>{{ Testing_Lab_Details.tlabid.name }}</h3>
-            <i class="fa fa-map-marker" style="color:green;font-size:20px;" aria-hidden="true"></i><strong style="margin-left:10px;">{{ Testing_Lab_Details.area }}</strong>
+            <i class="fa fa-map-marker" style="color:green;font-size:20px;" aria-hidden="true"></i><strong style="margin-left:10px;" id="cd">{{ Testing_Lab_Details.area }},{{ Testing_Lab_Details.city }},{{ Testing_Lab_Details.country }}</strong>
             </div>
         <div class="col-lg-2"></div>
 
@@ -129,21 +48,22 @@ h6
     </div>
 </div>
     </div>
-    <div style="margin-top:40px;">
+    <div style="margin-top:60px;">
     <h2><span>About Us</span></h2>
-    <p style="margin-top:30px;">{{ Testing_Lab_Details.about }}</p>
+    <p class="detail">{{ Testing_Lab_Details.about }}</p>
         </div>
      <div style="margin-top:40px;">
     <h2><span>Centers Of Excellence</span></h2>
-    <div class="row" style="margin-top:30px;">
+    <div class="row speciality">
         {% for key in specialities %}
-            <div class="col-lg-3 col-sm-6 col-md-4 card" id="test" style="margin-left:10px;background-color:#404040;height:150px;margin-top:10px;">
-                    <div>
-                        <span class="dot" style="border:2px solid white;"><b style="margin-left:16px;color:white;">{{ key.testname|first }}</b></span>
-                    <h6 style="color:white;">{{ key.testname }}</h6>
-                        <h6>Fee:{{ key.price }}</h6>
+            <div class="col-lg-3 col-11 col-md-11 card" id="test" style="margin-left:10px;background-color:#a9a9a9;height:150px;margin-top:15px;">
+                        <span class="dot" style="border:2px solid white;"><b style="margin-left:17px;color:white;" id="test1">{{ key.testname|first|capfirst }}</b></span>
+                            <div style="margin-left:75px;margin-top:-50px;" id="fee">
+                        <h6 style="color:white;">{{ key.testname|capfirst }}</h6>
+                        <h6>Fee: &#8377;{{ key.price }}</h6>
+                        </div>
 
-                </div>
+
             </div>
         {% endfor %}
     </div>
@@ -151,19 +71,19 @@ h6
     {% else %}
     <div class="row">
         {% if Hospital_Details.hospital_logo %}
-        <div class="col-lg-1">
+        <div class="col-lg-1 col-12">
             <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"></image></div>
-    <div class="col-lg-5">
+    <div class="col-lg-5 col-12">
         {% else %}
-        <div class="col-lg-6">
+        <div class="col-lg-6 col-12">
             {% endif %}
         <h3>{{ Hospital_Details.hospitalid.name }}</h3>
-             <i class="fa fa-map-marker" style="color:green;font-size:20px;" aria-hidden="true"></i><strong style="margin-left:10px;">{{ Hospital_Details.area }}</strong>
+             <i class="fa fa-map-marker" style="color:green;font-size:20px;" aria-hidden="true"></i><strong style="margin-left:10px;" id="loc">{{ Hospital_Details.area }},{{ Hospital_Details.city }},{{ Hospital_Details.country }}</strong>
             </div>
         <div class="col-lg-3">
 
         </div>
-        <div class="col-lg-3">
+        <div class="col-lg-3 col-12">
            <span style="float:right;"> <i style="color:red;">{{ Hospital_Details.hospitalid.name }} Lifeline:</i> <i class="fa fa-telephone" style="font-size:24px;color:#3291a8;"></i>{{ Hospital_Details.phone }}</span>
             <button type="button" class="btn btn-success"style="float:right;" onclick="location.href='{% url 'select_speciality' service_provider_id=Hospital_Details.hospitalid  %}'">Book Appointment</button>
        </div>
@@ -197,19 +117,19 @@ h6
 </div>
     <div style="margin-top:40px;">
     <h2><span>About Us</span></h2>
-    <p style="margin-top:30px;">{{ Hospital_Details.about }}</p>
+    <p  class="detail">{{ Hospital_Details.about }}</p>
     <!--<p style="color:blue;">Address:{{ Hospital_Details.area }}</p>-->
         </div>
      <div style="margin-top:40px;">
     <h2><span>Centers Of Excellence</span></h2>
-         <div class="row" style="margin-top:30px;background-image:url('https://apollowebsiteprod.blob.core.windows.net/apollohospitals/assets/images/bg-equipment.png');">
+         <div class="row speciality" style="background-image:url('https://apollowebsiteprod.blob.core.windows.net/apollohospitals/assets/images/bg-equipment.png');">
         {% for key,item in specialities.items %}
            {% for i,j in item.items %}
             <div  class="col-lg-3 col-sm-4 col-md-4 col-6">
                     <img alt="{{ key }}"  class="media-object" src="https://www.narayanahealth.org/sites/default/files/{{ i }}">
                      <span>
                     <h6 style="color:black;">{{ key }}</h6>
-                    <h6 style="color:black;">Fee:{{ j }}</h6>
+                    <h6 style="color:black;">Fee: &#8377;{{ j }}</h6>
 
                 </span>
             </div>
@@ -227,12 +147,16 @@ h6
                 {% else %}
                           <div class="carousel-item ">
                  {% endifequal %}
-
                           <center><h3 style="color:white">{{ key.Title }}</h3></center>
-                        <span style="float:left;width:50%;margin-top:10%;color:white;">{{ key.Information }}</span>
+                        <div class="row">
+                            <div class="col-lg-6 col-12" style="margin-top:20px;"><center><img src="{{ key.photos.url }}" class="news" width="600px" height="400px"></center></div>
+                            <div class="col-lg-6 col-12"><p style="color:white;padding:30px;">{{ key.Information }}</p></div>
+                        <!--<span style="float:left;width:50%;margin-top:10%;color:white;">{{ key.Information }}</span>
                         <span style="float:right;width:50%;">
                         <img src="{{ key.photos.url }}" class="news" width="700px" height="400px"></span>
+                      </div>-->
                       </div>
+                          </div>
 
 
         {% endfor %}
@@ -245,6 +169,7 @@ h6
 </div>
     <hr>
     </div>
-
+    </div>
+</div>
 </body>
 </html>

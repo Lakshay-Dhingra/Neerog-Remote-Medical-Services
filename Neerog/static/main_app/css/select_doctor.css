@@ -1,0 +1,59 @@
+     @media only screen and (max-width: 960px) {
+     *
+     {
+     font-size:30px !important;
+     }
+     .t
+     {
+      padding-left:10px !important;
+      padding-top:5px !important;
+     }
+     button
+     {
+     font-size:20px !important;
+     }
+     .img1
+     {
+        height:400px !important;
+        width:550px !important;
+     }
+     }
+     @media only screen and (max-width: 420px) {
+     *
+     {
+     font-size:15px !important;
+     }
+     .t
+     {
+      padding-left:10px !important;
+      padding-top:5px !important;
+     }
+     button
+     {
+     font-size:10px !important;
+     }
+     .img1
+     {
+        height:200px !important;
+        width:250px !important;
+     }
+     }
+     }
+     .card
+     {
+       margin-top:10px;
+     }
+     card:hover
+     {
+        color:green;
+     }
+     .img1
+     {
+        height:300px;
+        width:300px;
+     }
+    .t
+     {
+      padding-left:10px;
+      padding-top:5px;
+     }

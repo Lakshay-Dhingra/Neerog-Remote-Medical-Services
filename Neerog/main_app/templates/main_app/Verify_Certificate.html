@@ -6,22 +6,58 @@
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <title>Verify Certificate</title>
     {% include "main_app/header.html" %}
-    <link rel="stylesheet" href="{% static 'Hospital_Selection.css' %}">
+    {% include 'main_app/header.html' %}
+   {% include 'main_app/common_css.html' %}
+
     <style>
+    .card-header
+    {
+      background-color:#404040;;
+      color:white;
+    }
         th
         {
          color:white;
         }
+
+        body::before
+{
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{% static 'main_app/images/image9.jpeg' %}") no-repeat center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    content:"";
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.7;
+}
     </style>
+    <script>
+        $(document).ready(function()
+        {
+         $(".verify").on("click",function()
+         {
+           var p=$(this).attr('id');
+           $("#verify1").val(p);
+        });
+        });
+    </script>
 </head>
+{% include 'main_app/navbar_light.html' %}
 <body>
 <div class="container-fluid">
- <image src="{% static 'image6.jpeg' %}" height="300px" width="100%"></image>
- <h1 style="position:absolute;margin-top:-200px;color:white;">Verify Certificate</h1>
+ <h1 style="color:white;margin-top:150px;">Verify Certificates</h1>
+    <div class="card">
+        <div class="card-header"><center><b>Service Provider Certificates</b></center></div>
 <div class="card-body">
         <div class="table-responsive">
         <table class="table table-stripped" style="margin-top:30px;" width="100%" >
-            {% if list_of_certificates %}
+            {% if list_of_certificates|length > 0 %}
+            {{ list_of_certificates|length }}
             <thead style="background-color:#404040;">
               <tr>
                 <th> Id</th>
@@ -45,7 +81,8 @@
 
               <td><a href="{{ k.certificate.url }}">{{ k.certificate }}</a></td>
               {% ifequal k.verified "No" %}
-            <td><button class="btn btn-success" onclick="location.href='{% url 'verify_certificate' id=k.hospitalid %}'">Verify Certificate</button></td>
+            <td><button type="button" class="btn btn-primary verify" id="{{ k.hospitalid }}" data-toggle="modal" data-target="#exampleModal">
+                Verify Certificate</button></td>
               {% else %}
               <td>Certificate Verified</td>
               {% endifequal %}
@@ -58,7 +95,9 @@
               <td>{{  k.phone }}</td>
               <td><a href="{{ k.certificate.url }}">{{ k.certificate }}</a></td>
               {% ifequal k.verified "No" %}
-            <td><button class="btn btn-success" onclick="location.href='{% url 'verify_certificate' id=k.doctorid %}'">Verify Certificate</button></td>
+            <td><button type="button" class="btn btn-primary verify"  id="{{ k.doctorid }}"data-toggle="modal" data-target="#exampleModal">
+  Verify Certificate</button></td>
+
               {% else %}
               <td>Certificate Verified</td>
               {% endifequal %}
@@ -72,7 +111,8 @@
 
               <td><a href="{{ k.certificate.url }}">{{ k.certificate }}</a></td>
               {% ifequal k.verified "No" %}
-            <td><button class="btn btn-success" onclick="location.href='{% url 'verify_certificate'  id=k.tlabid %}'">Verify Certificate</button></td>
+            <td><button type="button" class="btn btn-primary verify" id="{{ k.tlabid }}" data-toggle="modal" data-target="#exampleModal">
+                    Verify Certificate</button></td>
               {% else %}
               <td>Certificate Verified</td>
               {% endifequal %}
@@ -83,11 +123,32 @@
         </tbody>
             {% endfor %}
             {% else %}
-            <center>No Certificate to Verify Availaible</center>
+            <center><b>No Certificate Left For Verification</b></center>
             {% endif %}
   </table>
     </div>
 </div>
 </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Are You Sure You Want To Verify ?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <form action="{% url 'verify_certificate' %}">
+                        {% csrf_token %}
+                        <input type="text" id="verify1" name="id" value="" hidden>
+                       <button type="submit" class="btn btn-primary">Verify</button>
+                        </form>
+                  </div>
+                </div>
+              </div>
+            </div>
 </body>
 </html>

@@ -11,6 +11,7 @@
     <!-- Link or CSS Tags -->
     {% include 'main_app/common_css.html' %}
     {% include 'main_app/common_js.html' %}
+    <link rel="stylesheet" href="{% static 'main_app/css/dashboard_styles.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script>
@@ -96,116 +97,7 @@
 });
        })
     </script>
-    <style>
-    @media only screen and (max-width: 400px) {
-        *
-        {
-         font-size:10px;
-        }
-     .col-12 button
-     {
-       margin-top:10px !important;
-     }
-     .card
-    {
-    margin-left:20px!important;
-    border-radius:20px!important;
-    margin-top:10px!important;
-    }
-    .cha
-    {
-       width:300px!important;
-       margin-left:20px!important;
-       border-radius:20px!important;
-    }
-    .da
-    {
-    width:300px!important;
-       margin-left:20px!important;
-       border-radius:20px!important;
-       height:100px!important;
-    }
-    }
-    #search
-        {
-          float:right;
-        }
-    .card
-    {
-    margin-left:10px!important;
-    border-radius:20px!important;
-    margin-top:10px!important;
 
-    }
-    .da
-    {
-       width:400px;
-       margin-left:20px;
-       border-radius:20px;
-       height:300px;
-    }
-    .cha
-    {
-       width:400px;
-       margin-left:20px;
-       border-radius:20px;
-    }
-    th
-    {
-     font-size:12px;
-     color:white;
-     }
-    .table-striped th
-    {
-     font-size:15px;
-     color:black;
-     }
-     .sticky th
-     {
-     background-color:#404040;
-     position:sticky;
-     top:0;
-     }
-    .card-header
-    {
-    background-color:#404040;
-    color:white;
-    border-radius:20px!important;
-    text-align:center!important;
-    }
-    h1
-    {
-     color:blue;
-     text-align:center;
-     }
-    </style>
-    <style>
-    body::before
-{
-    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{% static 'image9.jpeg' %}") no-repeat center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    content:"";
-    position: absolute;
-    top:0;
-    left:0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    opacity: 0.7;
-}
-/* Center the loader */
-#loader {
-  position: absolute;
-	left: 0px;
-	top: 0px;
-	width: 100%;
-	height: 100%;
-	z-index: 9999;
-	background: url(https://smallenvelop.com/wp-content/uploads/2014/08/Preloader_11.gif) center no-repeat #fff;
-}
-</style>
     <script>
         document.onreadystatechange = function() {
     if (document.readyState !== "complete") {
@@ -218,17 +110,18 @@
 };
     </script>
 </head>
-{% include 'main_app/navbar.html' %}
+{% include 'main_app/navbar_light.html' %}
 <!--{% include 'main_app/navbar.html' %}-->
 {% include 'main_app/show_messages.html' %}
-<body  style="overflow-x:hidden;" class="container-fluid">
+<body  style="overflow-x:hidden;">
+<div class="container-fluid" id="cd">
 <div id="loader"></div>
 
  <div style="margin-top:100px;" id="myDiv">
      <div>
 {% if User_Details.doctorid %}
 <div class="row">
-    <div class="col-lg-4 col-md-3 col-sm-3">
+    <div class="col-lg-4 col-12">
         <div class="card cha">
         <div class="card-header">
             Registered Appointments This Month
@@ -238,7 +131,7 @@
         </div>
     </div>
     </div>
-    <div class="col-lg-4 col-md-3 col-sm-3">
+    <div class="col-lg-4  col-12">
         <div class="card cha">
         <div class="card-header">
     Completed Appointments This Month
@@ -248,7 +141,7 @@
         </div>
     </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-3">
+    <div class="col-lg-3  col-12">
         <div class="card cha">
         <div class="card-header">
     Online Consultations This Month
@@ -319,7 +212,7 @@ var myChart = new Chart(ctx, {
     </div>
 </div>
 {% endif %}
-<div id="appointment" style="margin-top:20px;">
+<div id="appointment" style="margin-top:20p">
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -369,10 +262,10 @@ var myChart = new Chart(ctx, {
             <form action="{% url 'search_appointments' %}" method="get">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-lg-2 col-sm-1 col-6 offset-lg-4">
+                    <div class="col-lg-2 col-1 offset-lg-4 offset-1">
                         <label for="filters" style="float:right;"><b>Filter By:</b></label></div>
                        <input type="text" hidden value="{{ filter_type }}" id="filter_type">
-                    <div class="col-lg-2 col-sm-2 col-6 form-group">
+                    <div class="col-lg-2 col-11 form-group">
 
                 <select id="filters" name="filter" class="form-control" style="float:right;" required>
                     <option value="Date" class="Date" selected>Date</option>
@@ -385,11 +278,11 @@ var myChart = new Chart(ctx, {
                 </select>
                 </div>
 
-                <div class="col-lg-2 col-sm-2 col-12" id="search_value">
+                <div class="col-lg-2  col-12" id="search_value">
                 <input type="date" id="Date" class="form-control" value="{{ search_value }}" required name="search_values">
                                   </div>
 
-                <div class="col-lg-2 col-sm-2 col-12">
+                <div class="col-lg-2  col-12">
                     <button type="submit"  class="form-control btn btn-success">Apply</button>
 
                 </div>
@@ -510,5 +403,6 @@ var myChart = new Chart(ctx, {
 </div>
      </div>
  </div>
+</div>
 </body>
 </html>

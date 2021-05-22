@@ -1,0 +1,187 @@
+@media only screen and (max-width: 800px) {
+     *
+     {
+       font-size:25px !important;
+     }
+     h2 span
+     {
+     font-size:35px!important;
+     }
+     span
+     {
+       font-size:25px;
+     }
+     .news
+     {
+        width:650px !important;
+        height:350px !important;
+     }
+     .spec
+     {
+      margin-left:10px !important;
+      }
+      .img1
+    {
+     width:100%;
+     height:400px !important;
+     }
+     #test1
+     {
+       font-size:45px!important;
+       margin-left:23px !important;
+     }
+  .dot {
+  height: 80px!important;
+  width: 80px!important;
+  font-size:35px!important;
+  background-color:#006699;
+  border-radius: 50%;
+  margin-top:30px!important;
+  display: inline-block;
+}
+.detail
+     {
+       margin-top:30px!important;
+     }
+     #test
+        {
+        margin-left:20px !important;
+        height:180px!important;
+
+        }
+     .speciality
+     {
+       margin-top:30px!important;
+     }
+     #fee
+     {
+     margin-left:90px!important;
+     margin-top:-80px!important;
+     }
+      }
+     @media only screen and (max-width: 520px) {
+     *
+     {
+       font-size:20px !important;
+     }
+     #fee
+     {
+     margin-left:75px!important;
+     margin-top:-55px!important;
+     }
+     #test
+        {
+        margin-left:20px!important;
+        height:120px!important;
+        }
+     span
+     {
+       font-size:15px;
+     }
+     .news
+     {
+        width:300px !important;
+        height:250px !important;
+     }
+     .spec
+     {
+      margin-left:10px !important;
+      }
+      .img1
+    {
+     width:100%;
+     height:300px !important;
+     }
+     #test1
+     {
+
+       font-size:35px!important;
+       margin-left:16px !important;
+     }
+     .dot {
+  height: 60px!important;
+  width: 60px!important;
+  font-size:35px!important;
+  background-color:#006699;
+  margin-top:15px!important;
+  border-radius: 50%;
+  display: inline-block;
+}
+.detail
+     {
+       margin-top:30px!important;
+     }
+     .speciality
+     {
+       margin-top:30px!important;
+     }
+     h2 span
+     {
+     font-size:25px!important;
+     }
+      }
+    .dot {
+
+  height: 60px;
+  width: 60px;
+  font-size:35px;
+  background-color:#006699;
+  border-radius: 50%;
+  margin-top:15px;
+  display: inline-block;
+}
+    h2 {
+   width: 100%;
+   text-align: center;
+   border-bottom: 1px solid #000;
+   line-height: 0.01em;
+   margin: 10px 0 20px;
+   color:#3291a8;
+}
+
+h2 span {
+    background:#fff;
+    padding:0 10px;
+}
+
+#test
+{
+margin-left:20px !important;
+height:150px;
+}
+h6
+{
+ color:white;
+}
+    h3
+    {
+      color:#3291a8;
+    }
+        .img1
+    {
+     height:250px;
+     width:100%;
+    }
+    .media-object
+    {
+    height:120px;
+     width:120;
+    }
+    p
+    {
+    font-size:19px;
+    color:#a86532;
+    }
+    .img1
+    {
+     width:100%;
+     height:500px;
+     }
+     .detail
+     {
+       margin-top:50px;
+     }
+     .speciality
+     {
+       margin-top:50px;
+     }

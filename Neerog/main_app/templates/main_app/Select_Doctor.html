@@ -6,33 +6,7 @@
     <title>Book Appointment</title>
      {% include "main_app/header.html" %}
     {% include 'main_app/common_css.html' %}
-    <link rel="stylesheet" href="{% static 'Hospital_Selection.css' %}">
-    <style>
-     @media only screen and (max-width: 720px) {
-     button
-     {
-     font-size:10px !important;
-     }
-
-     //.btn-primary
-     //{
-      //  font-size:9px !important;
-      // width:40vw; !important;
-     //}
-     }
-     .card
-     {
-       margin-top:10px;
-     }
-     card:hover
-     {
-        color:green;
-     }
-     .img1
-     {
-        height:20vw;
-     }
-    </style>
+    <link rel="stylesheet" href="{% static 'main_app/css/select_doctor.css' %}">
     <script>
         $(document).ready(function(){
         $(".btn").on("click",function(){
@@ -43,12 +17,12 @@
     </script>
 </head>
 {% include 'main_app/navbar.html' %}
-<body class="container-fluid" style="margin-top:80px;width:95%;">
-
+<body style="margin-top:80px;">
+<div class="container-fluid">
 <div style="margin-top:10px;">
-    <div class="row">
-        <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"></image>
-        <h3>{{ Hospital_Details.hospitalid.name }}</h3>
+    <div>
+        <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"><h3>{{ Hospital_Details.hospitalid.name }}</h3></image>
+
     </div>
     <div style="margin-top:10px;">
   <ol class="breadcrumb">
@@ -57,12 +31,12 @@
       <li class="breadcrumb-item active" aria-current="page">List Of Doctors</li>
   </ol>
 </div>
-        <div class="jumbotron container-fluid">
+        <div class="jumbotron">
         {% if list_of_Doctors|length > 0 %}
     <h3 style="color:#3291a8;">Select Doctor </h3>
         <div class="row">
         {% for i in list_of_Doctors %}
-             <div class="col-lg-4 col-md-6" style="margin-top:10px;">
+             <div class="col-lg-4 col-12" style="margin-top:10px;">
                  <div class="card">
                      <center>
              {% if i.profile_pic %}
@@ -73,21 +47,21 @@
                      </center>
             <table class="table-stripped">
                 <tr>
-                    <th>Name:</th>
-                    <td>{{ i.doctorid.name }}</td>
+                    <th class="t">Name:</th>
+                    <td class="t">{{ i.doctorid.name }}</td>
                 </tr>
                 <tr>
-                    <th>Speciality:</th>
-                    <td>{{ i.specialization }}</td>
+                    <th class="t" >Speciality:</th>
+                    <td class="t">{{ i.specialization }}</td>
 
                 </tr>
                 <tr>
-                    <th>Hospital Name:</th>
-                    <td>{{ i.hospitalid.hospitalid.name }}</td>
+                    <th class="t">Hospital Name:</th>
+                    <td class="t">{{ i.hospitalid.hospitalid.name }}</td>
                 </tr>
                 <tr>
-                    <th>Experience:</th>
-                    <td>{{ i.experience }} Years</td>
+                    <th class="t">Experience:</th>
+                    <td class="t">{{ i.experience }} Years</td>
                 </tr>
                 <tr>
                     <form action="{% url 'Appointment_Details_Submission1' %}"  id="form1" method="get">
@@ -111,5 +85,6 @@
 </div>
 </div>
 {% include 'main_app/show_messages.html' %}
+</div>
 </body>
 </html>

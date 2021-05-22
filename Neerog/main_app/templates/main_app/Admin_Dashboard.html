@@ -19,13 +19,13 @@
     {
        width:300px;
        margin-left:20px;
-       border-radius:20px;
+
     }
         .card-header
     {
     background-color:#404040;
     color:white;
-    border-radius:20px!important;
+
     text-align:center;
     }
     h1
@@ -158,9 +158,8 @@ function validate()
  </script>
 </head>
 {% include 'main_app/navbar.html' %}
-<body class="container-fluid" style="margin-top:80px;">
-<!--button class="btn btn-success " onclick="location.href='{% url 'add_news' id=hospitalid %}'" style="float:left;">Edit Profile</button-->
-<!--button class="btn btn-success " onclick="location.href='{% url 'add_news' id=hospitalid %}'">Add News/Events</button-->
+<body style="margin-top:80px;">
+<div class="container-fluid">
 <div style="margin-top:50px;">
     <form action="{% url 'report' %}" method="post" onsubmit="return validate()">
                 {% csrf_token %}
@@ -400,5 +399,6 @@ var myChart = new Chart(ctx, {
     </div>
     </div>
 </div>
+    </div>
 </body>
 </html>

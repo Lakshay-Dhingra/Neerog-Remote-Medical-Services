@@ -749,6 +749,12 @@ def available_slots(service_provider,date1):
             x += datetime.timedelta(minutes=30)
     return slots
 def Appointment_Details_Submission(request):
+            try:
+                data=request.POST['data']
+            except:
+                k=Appointments.objects.all().order_by('-appointmentid')
+                p="/Appointment_Details/"+str(k[0].appointmentid)
+                return redirect(p);
             user = UserDetails.objects.get(userid=int(request.session['user_type_Id']))
             doctor_details=""
             if(user.user_type=="Hospital" or user.user_type=="Doctor"):

@@ -83,9 +83,14 @@
               </tr>
   </table>
     <center>
-        <button type="button" onclick="location.href='{% url 'Appointment_Details_Submission' %}'"class="btn btn-success"onclick="window.print()">Checkout</button>
-        <button type="button" onclick="location.href='{% url 'cancel_appointment' %}'"class="btn btn-danger"onclick="window.print()">Cancel</button>
-    </center>
+        <form action="{% url 'Appointment_Details_Submission' %}" method="POST">
+            {% csrf_token %}
+        <input type="text" name="data" value="checkout" hidden>
+        <button type="submit"class="btn btn-success">Checkout</button>
+        <button type="button" onclick="location.href='{% url 'cancel_appointment' %}'"class="btn btn-danger">Cancel</button>
+
+        </form>
+            </center>
     </div>
 
 </div>

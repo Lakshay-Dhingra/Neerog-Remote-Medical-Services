@@ -97,24 +97,20 @@
 
     <div id="edit_main_profile">
         <h2>Edit Profile Details</h2>
-        <form method="POST" action="{% url 'edit_hospital' %}" enctype="multipart/form-data">
+        <form method="POST" action="{% url 'edit_testinglab' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                 <label for="myname">Name</label>
-                <input type="text" class="form-control" name="name" id="myname" placeholder="Hospital Name" value="{{Name}}" required>
+                <input type="text" class="form-control" name="name" id="myname" placeholder="Testing Lab Name" value="{{Name}}" required>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                 <label for="Phone">Phone</label>
                 <input type="number" class="form-control" name="phone" id="Phone" placeholder="Phone or Mobile Number" value="{{Phone}}" required>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label for="YearEstablished">Year Established</label>
                     <input type="number" class="form-control" id="YearEstablished" placeholder="Year Of Establishment" name="year" value="{{YearEstablished}}">
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="ZIP">ZIP Code</label>
-                    <input type="text" class="form-control" name="zip" id="ZIP" placeholder="ZIP or PIN Code" value="{{Zip}}" required>
                 </div>
             </div>
 
@@ -125,7 +121,7 @@
                             <img src="{{Logo}}" height="140px" width="140px" style="border: none;">
                         </div>
                         <div>
-                            <label for="logo" style="border: solid; margin-top: 10px;">Edit Hospital Logo</label>
+                            <label for="logo" style="border: solid; margin-top: 10px;">Edit Testing Lab Logo</label>
                             <input type="file" class="form-control-file" id="logo" name="logo" style="display: none;">
                             <p>No File Selected</p>
                         </div>
@@ -142,7 +138,7 @@
             </div>
 
             <div class="form-row">
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label for="countries">Country</label>
                     <select name="country" id="countries" class="form-control">
                         <option value="{{Country}}" selected>{{Country}}</option>
@@ -153,7 +149,7 @@
                         {% endfor%}
                     </select>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label for="states">State</label>
                     <select name="state" id="states" class="form-control">
                         <option value="{{State}}" selected>{{State}}</option>
@@ -164,7 +160,7 @@
                         {% endfor%}
                     </select>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4">
                     <label for="cities">City</label>
                     <select name="city" id="cities" class="form-control">
                         <option value="{{City}}" selected>{{City}}</option>
@@ -175,31 +171,23 @@
                         {% endfor%}
                     </select>
                 </div>
-
-                <div class="form-group col-md-3">
-                    <label for="Area">Area</label>
-                    <input name="area" type="text" class="form-control" id="Area" placeholder="Area" value="{{Area}}">
-                </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-4">
-                    <label for="Pic1">Hospital Image 1</label>
+                    <label for="Area">Area</label>
+                    <input name="area" type="text" class="form-control" id="Area" placeholder="Area" value="{{Area}}">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="ZIP">ZIP Code</label>
+                    <input type="text" class="form-control" name="zip" id="ZIP" placeholder="ZIP or PIN Code" value="{{Zip}}" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="Pic1">Testing Lab Image</label>
                     <input name="pic1" type="file" class="form-control-file" id="Pic1" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                     <a href="{{Pic1}}">View Saved Photo</a>
                 </div>
-                <div class="form-group col-md-4">
-                    <label for="Pic2">Hospital Image 2</label>
-                    <input name="pic2" type="file" class="form-control-file" id="Pic2" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                    <a href="{{Pic2}}">View Saved Photo</a>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="Pic3">Hospital Image 3</label>
-                    <input name="pic3" type="file" class="form-control-file" id="Pic3" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                    <a href="{{Pic3}}">View Saved Photo</a>
-                </div>
             </div>
-
             <div class="form-group col-md-12 editbuttons">
                 <button type="submit" class="btn btn-primary save_button">Save</button>
                 <button class="btn btn-danger" type="button" onclick="location.reload()">Reset</button>
@@ -207,63 +195,150 @@
             </div>
         </form>
 
-        <h2>Select Hospital Specializations</h2>
-        <form method="POST" action="{% url 'edit_hospital_speciality' %}">
+        <h2>Select Available Tests</h2>
+
+        <form method="POST" action="{% url 'edit_testpricing' %}">
         {% csrf_token %}
-            <div class="row specialization">
-            {% for sp in AllSpecialities%}         
-            <div class="checkbox col-12 col-md-3" style="height:50px; margin-bottom: 20px;">
-                <input type="checkbox" name="specialization" value="{{sp}}">
-                <div class="fas fa-check"></div>
-                {{sp}}
+            <div class="form-row" style="margin-bottom: 50px;">
+                <div class="col-12 col-md-3" style="text-align: center; padding-top: 8px;">
+                    <h5>Test Category:</h5>
+                </div>
+                <div class="col-12 col-md-9">
+                    <select class="testcategory" id="testcategory" required style="height:50px; width:90%; margin-left: 5%;">
+                        {% for tc in tests %}
+                        <option value="{{tc.category}}">{{tc.category}}</option>
+                        {% endfor%}
+                    </select>
+                </div>
             </div>
-            <div class="price col-12 col-md-3">
-                <input type="text" name="{{sp}}" id="{{sp}}" disabled placeholder="Pricing In Rupees" style="height:50px; padding-left: 10px; width:94%;">
-            </div>
-            {% endfor %}
+
+            <div class="specialization">
+                {% for tc in tests%}
+                <div class = "testgroup row" id="{{tc.category}}">
+                    {% for sp in tc.testlist %}
+                    <div class="col-md-6 col-12 row">
+                        <div class="checkbox col-12 col-md-6" style="height:50px;">
+                            <input type="checkbox" name="specialization" value="{{sp}}">
+                            <div class="fas fa-check"></div>
+                            {{sp|title}}
+                        </div>
+                        <div class="price col-12 col-md-6" style="margin-bottom: 20px;">
+                            <input type="text" name="{{sp}}" id="{{sp}}" disabled placeholder="Pricing In Rupees" style="height:50px; padding-left: 10px; width:94%;">
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>  
+                {% endfor %}
             </div>
         
             <div class="form-group col-md-12 editbuttons">
                 <button type="submit" class="btn btn-primary save_button">Save</button>
                 <button class="btn btn-danger" type="button" onclick="location.reload()">Reset</button>
-                <span class="form_feedback2"></span>
             </div>
         </form>
     </div>
     
     <script>
 
-        var specialization=document.querySelectorAll(".specialization input[type='checkbox']");
-        for(sp of specialization)
-        {
-            sp.addEventListener("click",enableInput);
-            // sp.addEventListener("click",check);
-        }
-        allprice = document.querySelectorAll('.price input');
+    // function validatePhone(myphone)
+    // {
+    //     if(myphone.length == 10)
+    //     {
+    //         return (true)
+    //     }
+    //     return (false)
+    // }
 
-        function enableInput()
-        {
-            for(p of allprice)
-            {
-                p.disabled = true;
-            }
-            let checked = document.querySelectorAll(".specialization input[type='checkbox']:checked");
-            for(ch of checked)
-            {
-                let pricebox=document.getElementById(ch.value);
-                pricebox.disabled = false;
-                // pricebox.addEventListener("keyup",check);
-            }
-        }
+    // function validateImage(filePath)
+    // {
+    //     let allowedExtensions =  /(\.jpeg|\.jpg|\.gif\.png)$/i;     
+    //     if (!allowedExtensions.exec(filePath)) 
+    //     { 
+    //         filePath = '';
+    //         return false;
+    //     }
+    //     else
+    //     {
+    //         return true;
+    //     }
+    // }
 
-        let initchecked = null;
-        {% for sp, price in SpecialityFee.items %}
-            initchecked = document.querySelector(".specialization input[value='{{sp}}']");
-            initchecked.checked= true;
-            pricebox=document.getElementById('{{sp}}');
+    // var area=document.getElementById('Area');
+    // area.addEventListener("keyup",check);
+
+    // var phone=document.getElementById('Phone');
+    // phone.addEventListener("keyup",check);
+
+    var specialization=document.querySelectorAll(".specialization input[type='checkbox']");
+    for(sp of specialization)
+    {
+        sp.addEventListener("click",enableInput);
+        // sp.addEventListener("click",check);
+    }
+
+    // var country=document.getElementById('countries');
+    // country.addEventListener("change",check);
+
+    // var state=document.getElementById('states');
+    // state.addEventListener("change",check);
+
+    // var city=document.getElementById('cities');
+    // city.addEventListener("change",check);
+
+    // var zip=document.getElementById('ZIP');
+    // zip.addEventListener("keyup",check);
+
+    // var pic1 =  document.getElementById('Pic1');
+    // pic1.addEventListener("change",check);
+
+    // var feedback = document.querySelector(".form_feedback")
+    
+    allprice = document.querySelectorAll('.price input');
+
+    function enableInput()
+    {
+        for(p of allprice)
+        {
+            p.disabled = true;
+        }
+        let checked = document.querySelectorAll(".specialization input[type='checkbox']:checked");
+        for(ch of checked)
+        {
+            let pricebox=document.getElementById(ch.value);
             pricebox.disabled = false;
-            pricebox.value = {{price}}
-        {% endfor %}
+            // pricebox.addEventListener("keyup",check);
+        }
+    }
+
+    var testcategory = document.getElementById('testcategory');
+    testcategory.addEventListener("change",hideTests);
+    var alltests = document.querySelectorAll(".testgroup");
+
+    function hideTests()
+    {
+        for(testgroup of alltests)
+        {
+            if(testgroup.id == testcategory.value)
+            {
+                testgroup.style.display = "flex";
+            }
+            else
+            {
+                testgroup.style.display = "none";
+            }
+        }
+    }
+
+    hideTests();
+
+    let initchecked = null;
+    {% for test, price in TestPrice.items %}
+        initchecked = document.querySelector(".specialization input[value='{{test}}']");
+        initchecked.checked= true;
+        pricebox=document.getElementById('{{test}}');
+        pricebox.disabled = false;
+        pricebox.value = {{price}}
+    {% endfor %}
 
 
     </script>

@@ -124,6 +124,9 @@ def hasRegisteredPhone(phone, user_type):
         elif user_type=="Patient":
             Patient.objects.get(phone=phone)
             return True
+        elif user_type=="Testing Lab":
+            TestingLab.objects.get(phone=phone)
+            return True
         else:
             return False
     except:

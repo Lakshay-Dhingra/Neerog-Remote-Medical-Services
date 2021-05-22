@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from main_app import user_data, medical_speciality, location
+from main_app import user_data, medical_speciality, location, medical_tests
 import datetime
 
 
@@ -76,8 +76,14 @@ def edit_profile(request):
                 hp_data['Countries'] = location.getCountries()
                 hp_data['States'] = location.get_states(hp_data['Country'])
                 hp_data['Cities'] = location.list_of_cities1(hp_data['State'])
-                # print(hp_data['Countries'])
                 return render(request,'user_app/EditHospitalProfile.html',hp_data)
+            elif(user_type == "Testing Lab"):
+                tl_data = user_data.getTestingLabData(uid)
+                tl_data['tests']=medical_tests.getTests()
+                tl_data['Countries'] = location.getCountries()
+                tl_data['States'] = location.get_states(tl_data['Country'])
+                tl_data['Cities'] = location.list_of_cities1(tl_data['State'])
+                return render(request,'user_app/EditTLabProfile.html',tl_data)
             else:
                 messages.info(request,"You Are Not A Doctor!") #Temporary
         else:
@@ -222,6 +228,57 @@ def edit_hospital_speciality(request):
     if(request.user.is_authenticated):
         uid=request.user.id
         user_data.editHospitalSpeciality(uid, speciality_pricing)
+        messages.info(request,'Profile Updated Successfully!')
+        return redirect("/user/profile/edit/")
+    else:
+        messages.info(request,"Please Login Before Submitting Details!")
+    return redirect("/user/profile/edit/")
+
+def edit_testinglab(request):
+    name = request.POST['name']
+    year = None
+    phone=request.POST['phone']
+    country=request.POST['country']
+    state=request.POST['state']
+    city=request.POST['city']
+    area=request.POST['area']
+    zip=int(request.POST['zip'])
+    about= request.POST['about']
+
+    if request.POST['year'] is None:
+        pass
+    elif request.POST['year'] == '':
+        pass
+    else:
+        year=int(request.POST['year'])
+
+    # Validation checks
+    if(len(phone)==0):
+        messages.info(request,"Invalid Phone Number! Phone Number can't be empty.")
+    elif(len(phone)>10):
+        messages.info(request,"Invalid Phone Number! Phone Number can't have more than 10 characters.")
+    else:
+        if(request.user.is_authenticated):
+            uid=request.user.id
+            if(user_data.editTLab(request, uid, name, int(phone), year, about, country, state, city, area, zip)):
+                messages.info(request,'Profile Updated Successfully!')
+                return redirect("/user/profile/edit/")
+            else:
+                messages.info(request,"This Phone Number is already registered so Phone can't be updated!")
+        else:
+            messages.info(request,"Please Login Before Submitting Details!")
+    return redirect("/user/profile/edit/")
+
+def edit_testpricing(request):
+    specialization=request.POST.getlist('specialization')
+    speciality_pricing=dict()
+    
+    for sp in specialization:
+        speciality_pricing[sp]=request.POST[sp]
+
+    if(request.user.is_authenticated):
+        uid=request.user.id
+        user_data.editTestPricing(uid, speciality_pricing)
         messages.info(request,'Profile Updated Successfully!')
         return redirect("/user/profile/edit/")
     else:

@@ -200,7 +200,7 @@ class TestingLab(models.Model):
     end_time = models.CharField(max_length=5,default="18:00")
 
     nullable_strings=[about]
-    nullable_non_strings=[lab_photo, tlab_logo, zip, year_established]
+    nullable_non_strings=[tlab_logo, zip, year_established]
 
     def save(self, *args, **kwargs):
         for i in self.nullable_non_strings:

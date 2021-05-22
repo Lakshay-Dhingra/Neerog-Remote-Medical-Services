@@ -1,4 +1,4 @@
-from main_app.models import UserDetails, Doctor, Hospital, Patient, TestingLab, Follow, Ratings, Appointment_Timings, HospitalSpeciality
+from main_app.models import UserDetails, Doctor, Hospital, Patient, TestingLab, Follow, Ratings, Appointment_Timings, HospitalSpeciality, TestPricing
 import sys, datetime
 from accounts import authenticate
 from django.core.files.storage import FileSystemStorage
@@ -327,6 +327,51 @@ def editHospitalSpeciality(uid, speciality_pricing):
     except:
         print(sys.exc_info())
 
+
+def editTLab(request, uid, name, phone, year, about, country, state, city, area, zip):
+    success=True
+    userobj=UserDetails.objects.get(userid=uid-1)
+    userobj.name = name
+    userobj.save()
+
+    tobj=TestingLab.objects.get(tlabid=uid-1)
+
+    if(tobj.phone != phone):
+        if(authenticate.hasRegisteredPhone(phone, "Testing Lab")):
+            success=False
+        else:
+            tobj.phone=phone
+    
+    tobj.year_established = year
+    tobj.about = about
+    
+    tobj.country = country
+    tobj.state = state
+    tobj.city = city
+    tobj.area = area
+    tobj.zip = zip
+
+    if 'pic1' in request.FILES:
+        tobj.lab_photo=request.FILES['pic1']
+
+    if 'logo' in request.FILES:
+        tobj.tlab_logo=request.FILES['logo']
+
+    tobj.save()
+    return success
+
+def editTestPricing(uid, speciality_pricing):
+    tpobjs = TestPricing.objects.filter(tlabid = uid-1)
+    if tpobjs is not None:
+        tpobjs.delete()
+    try:
+        tobj=TestingLab.objects.get(tlabid=uid-1)
+        for sp in speciality_pricing:
+            testpricing = TestPricing(tlabid=tobj, testname = sp, price=speciality_pricing[sp])
+            testpricing.save()
+    except:
+        print(sys.exc_info())
+
 def getHospitalData(uid):
     hp_data = dict()
     userobj=UserDetails.objects.get(userid=uid-1)
@@ -382,4 +427,41 @@ def getHospitalData(uid):
     hp_data['SpecialityFee'] = speciality_fee
     
     return hp_data
+
+def getTestingLabData(uid):
+    tl_data = dict()
+    userobj=UserDetails.objects.get(userid=uid-1)
+    tobj=TestingLab.objects.get(tlabid=uid-1)
+
+    tl_data['uid'] = uid
+    tl_data['Name'] = userobj.name
+
+    tl_data['Phone'] = tobj.phone
+    tl_data['About'] = tobj.about
+    tl_data['YearEstablished'] = tobj.year_established
+
+    if tobj.tlab_logo is None:
+        tl_data['Logo'] = None    
+    elif tobj.tlab_logo == "":
+        tl_data['Logo'] = None
+    else:
+        tl_data['Logo'] = tobj.tlab_logo.url
+
+    tl_data['Verified'] = tobj.verified
+
+    tl_data['Pic1'] = tobj.lab_photo.url
+    tl_data['Country'] = tobj.country
+    tl_data['State'] = tobj.state
+    tl_data['City'] = tobj.city
+    tl_data['Area'] = tobj.area
+    tl_data['Zip'] = tobj.zip
+
+    speciality_fee = dict()
+    tpobjs = TestPricing.objects.filter(tlabid = tobj)
+    for obj in tpobjs:
+        speciality_fee[obj.testname] = obj.price
+    
+    tl_data['TestPrice'] = speciality_fee
+    
+    return tl_data
         

@@ -111,6 +111,7 @@
     </script>
 
 </head>
+{% include 'main_app/redirect_user.html' %}
 {% include 'main_app/navbar_light.html' %}
 <!--{% include 'main_app/navbar.html' %}-->
 {% include 'main_app/show_messages.html' %}
@@ -206,17 +207,30 @@ var myChart = new Chart(ctx, {
         labels:{{ Test_Names|safe }},
         datasets: [{
             label: 'No Of Tests This Month',
+            backgroundColor:'rgba(255, 99, 71, 0.5)',
             data: {{ dict_test }},
+            fontSize:20,
             borderWidth: 2
         }]
     },
-
     options: {
+            legend: {
+                labels: {
+                     fontSize: 15
+
+                }
+            },
     maintainAspectRatio: true,
     responsive: true,
         scales: {
+            xAxes: [{
+                   ticks: {
+                    fontSize: 20
+                   }
+                  }],
             yAxes: [{
                 ticks: {
+                    fontSize: 20,
                     suggestedMin: {{ min }},
                     suggestedMax: {{ max }},
                     beginAtZero: true

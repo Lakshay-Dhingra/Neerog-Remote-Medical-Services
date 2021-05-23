@@ -134,7 +134,7 @@
      }
      body::before
 {
-    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{% static 'main_app/images/image9.jpeg' %}") no-repeat center;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("../images/image9.jpg") no-repeat center;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

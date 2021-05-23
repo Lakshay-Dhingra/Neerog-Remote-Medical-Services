@@ -8,6 +8,7 @@
     {% include "main_app/header.html" %}
      {% include "main_app/common_css.html" %}
      {% include 'main_app/chart.html' %}
+     {% include 'main_app/redirect_user.html' %}
 
     <style>
     .cha
@@ -232,7 +233,7 @@ function validate()
 <div class="col-lg-6" style="margin-top:10px;">
     <div class="card cha">
         <div class="table-responsive">
-            <canvas id="myChart" width="100px" height="100px"></canvas></div></div>
+            <canvas id="myChart" width="100px" height="100px" class="table"></canvas></div></div>
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
@@ -242,13 +243,24 @@ var myChart = new Chart(ctx, {
         datasets: [{
             label: 'No Of Appointments This Month',
             data: {{ list_of_speciality_appointments }},
+            backgroundColor:'rgba(255, 99, 71, 0.5)',
             borderWidth: 1
         }]
     },
     options: {
     maintainAspectRatio: true,
     responsive: true,
+    legend: {
+                labels: {
+                     fontSize: 18
+                }
+            },
         scales: {
+        xAxes: [{
+                   ticks: {
+                    fontSize: 18
+                   }
+                  }],
             yAxes: [{
                 ticks: {
                     suggestedMin: {{ min }},
@@ -309,10 +321,10 @@ var myChart = new Chart(ctx, {
                 {% csrf_token %}
                 <div class="row">
 
-                    <div class="col-lg-1 col-sm-1 offset-lg-5 col-12 offset-4">
+                    <div class="col-lg-1 offset-lg-5 col-12 offset-4">
                         <label for="filters" style="float:left;"><b>Filter By:</b></label></div>
 
-                    <div class="col-lg-2 col-sm-1 form-group col-12">
+                    <div class="col-lg-2 col-12 col-md-12 form-group">
 
                 <select id="filters" name="filter" class="form-control" style="float:right;"required>
 
@@ -323,7 +335,7 @@ var myChart = new Chart(ctx, {
 
                 </select>
                 </div>
-                <div class="col-lg-2 col-sm-2 col-12" id="search_value">
+                <div class="col-lg-2  col-12" id="search_value">
                 <input type="date" id="Date" class="form-control" required name="search_values">
                                   </div>
                   <div  style="display:none" class="col-lg-2 col-sm-2 col-12" id="search_values1">
@@ -334,8 +346,8 @@ var myChart = new Chart(ctx, {
                 </select>
                  </div>
 
-                <div class="col-lg-2 col-sm-2 col-12">
-                    <button type="submit"  value="submit" class="form-control btn btn-success">Apply</button>
+                <div class="col-lg-2 col-12">
+                    <button type="submit" value="submit" style="margin-top:10px;"class="form-control btn btn-success">Apply</button>
 
                 </div>
                     </div>

@@ -181,11 +181,11 @@ def profile(request,id):
                                   context={"filter_type":"Date","list_of_Appointments": appoin(list_of_Appointments), "User_Details": User_Profile})
 
     elif (user.user_type == 'Doctor'):
-        if(user.user_type=="Hospital"):
+        if(user23.user_type=="Hospital"):
             doctor=Doctor.objects.get(doctorid=id)
-            if(doctor.hospitalid!=user23.id):
+            if(doctor.hospitalid!=user23.userid):
                 messages.info(request, "You are not authorised to access this page")
-                k7="/dashboard/"+str(user23.id)
+                k7="/dashboard/"+str(user23.userid)
                 return redirect(k7);
             else:
                 User_Profile = Doctor.objects.get(doctorid=user.userid)

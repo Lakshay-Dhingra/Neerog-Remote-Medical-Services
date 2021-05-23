@@ -109,17 +109,17 @@
     }
 };
     </script>
+
 </head>
 {% include 'main_app/navbar_light.html' %}
 <!--{% include 'main_app/navbar.html' %}-->
 {% include 'main_app/show_messages.html' %}
 <body  style="overflow-x:hidden;">
-<div class="container-fluid" id="cd">
+<div class="container-fluid">
 <div id="loader"></div>
 
- <div style="margin-top:100px;" id="myDiv">
-     <div>
 {% if User_Details.doctorid %}
+ <div style="margin-top:160px;" id="myDiv">
 <div class="row">
     <div class="col-lg-4 col-12">
         <div class="card cha">
@@ -153,14 +153,16 @@
     </div>
 </div>
 {% elif  User_Details.tlabid %}
+      <div style="margin-top:130px;" id="myDiv">
+
                  <div class="row">
                      <div class="col-lg-4 offset-lg-8 col-12">
                      <button style="float:right;width:200px;" class="btn btn-primary" onclick="location.href='{% url 'edit_profile'%}'">Edit Profile</button>
                  </div>
                      </div>
 <div class="row">
-    <div class="col-lg-4 col-md-3 col-sm-3">
-        <div class="card da">
+    <div class="col-lg-4 col-md-12 col-12">
+        <div class="card">
         <div class="card-header">
             Registered Appointments This Month
         </div>
@@ -169,8 +171,8 @@
         </div>
     </div>
     </div>
-    <div class="col-lg-4 col-md-3 col-sm-3">
-        <div class="card da">
+    <div class="col-lg-4 col-md-12 col-12">
+        <div class="card">
         <div class="card-header">
     Completed Appointments This Month
   </div>
@@ -179,12 +181,24 @@
         </div>
     </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-3">
+    <div class="col-lg-4 col-md-12 col-12">
         <div class="card">
+        <div class="card-header">
+    Earnings This Month
+  </div>
         <div class="card-body">
-
-            <canvas id="myChart" width="400" height="400"></canvas>
-<script>
+            <h1>&#8377;{{ earning_this_month }}</h1>
+        </div>
+    </div>
+    </div>
+</div>
+<div class="row" style="margin-top:30px;">
+        <div class="col-lg-12">
+        <div class="card">
+        <div class="card-body" id="my">
+            <div class="table-responsive">
+                <canvas id="myChart" style="height:400px;" class="table"></canvas></div>
+    <script>
 var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'bar',
@@ -193,13 +207,18 @@ var myChart = new Chart(ctx, {
         datasets: [{
             label: 'No Of Tests This Month',
             data: {{ dict_test }},
-            borderWidth: 1
+            borderWidth: 2
         }]
     },
+
     options: {
+    maintainAspectRatio: true,
+    responsive: true,
         scales: {
             yAxes: [{
                 ticks: {
+                    suggestedMin: {{ min }},
+                    suggestedMax: {{ max }},
                     beginAtZero: true
                 }
             }]
@@ -209,10 +228,10 @@ var myChart = new Chart(ctx, {
 </script>
         </div>
     </div>
-    </div>
+</div>
 </div>
 {% endif %}
-<div id="appointment" style="margin-top:20p">
+<div id="appointment" style="margin-top:30px;">
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -226,16 +245,16 @@ var myChart = new Chart(ctx, {
                 {% endif %}
                  {% csrf_token %}
                  <div class="row">
-             <div class="col-lg-2 offset-lg-4" style="margin-top:30px;"><b>Edit Available Time:</b></div>
-                <div class="col-lg-2">
+             <div class="col-lg-2 offset-lg-2 offset-4" style="margin-top:30px;"><b>Edit Available Time:</b></div>
+                <div class="col-lg-2" style="margin-top:15px;">
                          <label for="start_time"><b>Start Time:</b></label>
                         <input type="time" class="form-control" required value="{{ User_Details.start_time }}" name="start_time" id="start_time"></div>
-                    <div class="col-lg-2">
+                    <div class="col-lg-2" style="margin-top:15px;">
                         <label for="end_time"><b>End Time:</b></label>
                        <input type="time"  class="form-control" required value="{{ User_Details.end_time }}" name="end_time" id="end_time">
                     </div>
                  <div class="col-lg-2">
-                    <button type="submit" class="btn btn-success form-control" style="margin-top:30px;">Edit</button>
+                    <button type="submit" class="btn btn-success form-control" style="margin-top:45px;">Edit</button>
                 </div>
                  </div>
              </form>
@@ -245,7 +264,7 @@ var myChart = new Chart(ctx, {
             <div style="margin-top:10px;" class="row">
                 {% if User_Details.patientid %}
                 {% else %}
-                <div class="col-lg-3 offset-lg-4  Non_Available_date form-group" style="display:block;">
+                <div class="col-lg-3 offset-lg-2  Non_Available_date form-group" style="display:block;">
                     <b>Unavailable From:</b><input type="datetime-local" class="form-control"  id="start" name="start">
                 </div>
                 <div class="col-lg-3 Non_Available_date" style="display:block;">
@@ -262,10 +281,10 @@ var myChart = new Chart(ctx, {
             <form action="{% url 'search_appointments' %}" method="get">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-lg-2 col-1 offset-lg-4 offset-1">
+                    <div class="col-lg-2 col-3 offset-lg-1 offset-4">
                         <label for="filters" style="float:right;"><b>Filter By:</b></label></div>
                        <input type="text" hidden value="{{ filter_type }}" id="filter_type">
-                    <div class="col-lg-2 col-11 form-group">
+                    <div class="col-lg-3 col-11 form-group">
 
                 <select id="filters" name="filter" class="form-control" style="float:right;" required>
                     <option value="Date" class="Date" selected>Date</option>
@@ -397,12 +416,12 @@ var myChart = new Chart(ctx, {
   </table>
     </div>
 </div>
+             </div>
         </div>
     </div>
         </div>
 </div>
      </div>
- </div>
-</div>
+
 </body>
 </html>

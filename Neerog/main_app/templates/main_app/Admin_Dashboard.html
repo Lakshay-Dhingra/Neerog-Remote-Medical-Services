@@ -184,7 +184,7 @@ function validate()
                 </form>
     </div>
     <div class="row" style="margin-top:30px;">
-    <div class="col-lg-3 col-md-3 col-sm-3">
+    <div class="col-lg-3 col-md-6">
         <div class="card da">
         <div class="card-header">
             Appointments This Month
@@ -196,7 +196,7 @@ function validate()
         </div>
     </div>
 </div>
-    <div class="col-lg-3 col-md-3 col-sm-3 ">
+    <div class="col-lg-3 col-md-6">
         <div class="card da">
         <div class="card-header">
     Appointments Today
@@ -206,7 +206,7 @@ function validate()
         </div>
     </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-3">
+    <div class="col-lg-3 col-md-6">
         <div class="card da">
         <div class="card-header">
     Online Consultations
@@ -216,7 +216,7 @@ function validate()
         </div>
     </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-3">
+    <div class="col-lg-3 col-md-6">
         <div class="card da">
         <div class="card-header">
             Earning this Month
@@ -231,7 +231,8 @@ function validate()
 <div class="row" style="margin-top:50px;">
 <div class="col-lg-6" style="margin-top:10px;">
     <div class="card cha">
-        <canvas id="myChart" width="100px" height="100px"></canvas></div>
+        <div class="table-responsive">
+            <canvas id="myChart" width="100px" height="100px"></canvas></div></div>
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
@@ -250,8 +251,8 @@ var myChart = new Chart(ctx, {
         scales: {
             yAxes: [{
                 ticks: {
-                    suggestedMin: 10,
-                    suggestedMax: 50,
+                    suggestedMin: {{ min }},
+                    suggestedMax: {{ max }},
                     beginAtZero: true
                 }
             }]
@@ -308,10 +309,10 @@ var myChart = new Chart(ctx, {
                 {% csrf_token %}
                 <div class="row">
 
-                    <div class="col-lg-1 col-sm-1 offset-lg-5 col-4">
+                    <div class="col-lg-1 col-sm-1 offset-lg-5 col-12 offset-4">
                         <label for="filters" style="float:left;"><b>Filter By:</b></label></div>
 
-                    <div class="col-lg-2 col-sm-1 form-group col-8">
+                    <div class="col-lg-2 col-sm-1 form-group col-12">
 
                 <select id="filters" name="filter" class="form-control" style="float:right;"required>
 

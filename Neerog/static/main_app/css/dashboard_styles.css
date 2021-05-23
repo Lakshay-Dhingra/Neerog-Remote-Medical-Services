@@ -1,29 +1,35 @@
-@media only screen and (max-width:800px) {
+ @media only screen and (max-width:960px) {
+     /*canvas
+    {
+      height:600px!important;
+    }*/
      .col-12 button
      {
        margin-top:10px !important;
      }
-     #cd
-    {
-      margin-top:50px !important;
-    }
+
+     #myDiv
+     {
+       margin-top:100px!important;
+     }
+
      .card
     {
     margin-left:20px!important;
-    //border-radius:20px!important;
+
     margin-top:10px!important;
     }
     .cha
     {
        width:730px!important;
        margin-left:20px!important;
-       //border-radius:20px!important;
+
     }
     .da
     {
     width:730px!important;
        margin-left:20px!important;
-       //border-radius:20px!important;
+
        height:100px!important;
     }
     *
@@ -31,11 +37,15 @@
       font-size:25px !important
     }
     }
-    @media only screen and (max-width: 400px) {
+    @media only screen and (max-width: 500px) {
     *
     {
       font-size:15px !important
     }
+    #myDiv
+     {
+       margin-top:100px!important;
+     }
      .col-12 button
      {
        margin-top:10px !important;
@@ -43,7 +53,7 @@
      .card
     {
     margin-left:20px!important;
-    //border-radius:20px!important;
+
     margin-top:10px!important;
     }
     .cha
@@ -56,17 +66,17 @@
     {
     width:300px!important;
        margin-left:20px!important;
-       //border-radius:20px!important;
+
        height:100px!important;
     }
     th,td
     {
       font-size:15px !important
     }
-    #cd
+    /*canvas
     {
-      margin-top:50px !important;
-    }
+      height:500px!important;
+    }*/
     }
 
     #search
@@ -76,7 +86,7 @@
     .card
     {
     margin-left:10px!important;
-    //border-radius:20px!important;
+
     margin-top:10px!important;
 
     }
@@ -116,10 +126,7 @@
     //border-radius:20px!important;
     text-align:center!important;
     }
-    #cd
-    {
-      margin-top:170px;
-    }
+
     h1
     {
      color:blue;
@@ -127,7 +134,7 @@
      }
      body::before
 {
-    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{% static 'image9.jpeg' %}") no-repeat center;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{% static 'main_app/images/image9.jpeg' %}") no-repeat center;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

@@ -1303,7 +1303,7 @@ def report(request):
     "Online_consultations_today": Online_consultations_today,
     "appointments_this_month": appointments_this_month, "earning_this_month": earning_this_month,
     "appointments_today": appointments_today}
-    return render(request, "main_app/Admin_Dashboard1.html", context=data)
+    return render(request, "main_app/Admin_DashBoard1.html", context=data)
 
 def add_news(request,id):
     return render(request,"main_app/News.html",context={"id":id})

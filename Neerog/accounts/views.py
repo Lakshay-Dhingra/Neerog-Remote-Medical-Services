@@ -105,6 +105,7 @@ def login(request):
         if(authenticate.login(request, email, password)):
             messages.info(request,'Login Successful!')
             request.session['email']=email
+            request.session['isRegistered'] = user_data.isRegisteredUser(request.user.id)
             return redirect("/")
         else:
             messages.info(request,"Wrong Email or password!")
@@ -202,6 +203,7 @@ def register_doctor(request):
             uid=request.user.id
             if(authenticate.registerDoctor(uid, start_time, end_time, phone, is_independent, gender, experience, specialization, proof, hospitalid, cname, cphoto, fee, country, state, city, area, zip)):
                 messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
+                request.session['isRegistered'] = user_data.isRegisteredUser(request.user.id)
                 return redirect("/")
             else:
                 messages.info(request,"Registeration Failed!")
@@ -245,6 +247,7 @@ def register_hospital(request):
         if(request.user.is_authenticated):
             uid=request.user.id
             if(authenticate.registerHospital(uid, phone, country, state, city, zip, area, speciality_pricing, pic1, certificate)):
+                request.session['isRegistered'] = user_data.isRegisteredUser(request.user.id)
                 messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
                 return redirect("/")
             else:
@@ -289,6 +292,7 @@ def register_tlab(request):
         if(request.user.is_authenticated):
             uid=request.user.id
             if(authenticate.registerTLab(uid, phone, country, state, city, zip, area, test_pricing, pic1, certificate)):
+                request.session['isRegistered'] = user_data.isRegisteredUser(request.user.id)
                 messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
                 return redirect("/")
             else:
@@ -326,6 +330,7 @@ def register_patient(request):
         if(request.user.is_authenticated):
             uid=request.user.id
             if(authenticate.registerPatient(uid, phone, country, state, city, area, zip, gender, age, disability, profilepic)):
+                request.session['isRegistered'] = user_data.isRegisteredUser(request.user.id)
                 messages.info(request,'Registeration Successful! Your account is fully activated.')
                 return redirect("/")
             else:

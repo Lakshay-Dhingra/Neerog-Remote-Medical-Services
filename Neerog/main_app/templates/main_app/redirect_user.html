@@ -1,0 +1,7 @@
+
+{% if user.is_authenticated == False %}
+<script>location.href = "{% url 'signin' %}";</script>
+{% elif request.session.isRegistered == False %}
+<script>location.href = "{% url 'signup_redirect' %}";</script>
+{% endif %}
+

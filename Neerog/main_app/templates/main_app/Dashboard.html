@@ -8,9 +8,14 @@
       {% include 'main_app/header.html' %}
       {% include 'main_app/common_css.html' %}
         <link rel="stylesheet" href="{% static 'main_app/css/Dash.css' %}">
-    <style>
-
-    </style>
+        <style>
+            @media only screen and (max-width: 520px) {
+             #test2
+                {
+                  margin-top:10px!important;
+                }
+                }
+        </style>
 </head>
 {% include 'main_app/navbar.html' %}
 <body>
@@ -56,12 +61,14 @@
     <h2><span>Centers Of Excellence</span></h2>
     <div class="row speciality">
         {% for key in specialities %}
-            <div class="col-lg-3 col-11 col-md-11 card" id="test" style="margin-left:10px;background-color:#a9a9a9;height:150px;margin-top:15px;">
-                        <span class="dot" style="border:2px solid white;"><b style="margin-left:17px;color:white;" id="test1">{{ key.testname|first|capfirst }}</b></span>
+            <div class="col-lg-3 col-11 col-md-11 card" id="test" style="margin-left:10px;background-color:#a9a9a9;height:150px;margin-top:10px;">
+                <div id="test2" style="margin-top:25px;">
+                <span class="dot" style="border:2px solid white;"><b style="margin-left:17px;color:white;" id="test1">{{ key.testname|first|capfirst }}</b></span>
                             <div style="margin-left:75px;margin-top:-50px;" id="fee">
                         <h6 style="color:white;">{{ key.testname|capfirst }}</h6>
                         <h6>Fee: &#8377;{{ key.price }}</h6>
                         </div>
+                    </div>
 
 
             </div>

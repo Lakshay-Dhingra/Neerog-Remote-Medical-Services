@@ -33,33 +33,38 @@ def search(request):
 
 # Verification of the user certificate
 def verify_certificate(request):
-    id=int(request.GET['id'])
-    user = UserDetails.objects.get(email=request.session['email'])
-    if (user.user_type == 'Moderator'):
-        user = UserDetails.objects.get(userid=id)
-        if (user.user_type == 'Hospital'):
-            p = Hospital.objects.get(hospitalid=user)
-            p.verified = "Yes"
-            p.save()
-        elif (user.user_type == 'Doctor'):
-            p = Doctor.objects.get(doctorid=user)
-            p.verified = "Yes"
-            p.save()
+    try:
+        id=int(request.GET['id'])
+        user = UserDetails.objects.get(email=request.session['email'])
+        if (user.user_type == 'Moderator'):
+            user = UserDetails.objects.get(userid=id)
+            if (user.user_type == 'Hospital'):
+                p = Hospital.objects.get(hospitalid=user)
+                p.verified = "Yes"
+                p.save()
+            elif (user.user_type == 'Doctor'):
+                p = Doctor.objects.get(doctorid=user)
+                p.verified = "Yes"
+                p.save()
+            else:
+                p = TestingLab.objects.get(tlabid=user)
+                p.verified = "Yes"
+                p.save()
+            p = dict()
+            if (len(Hospital.objects.filter(verified="No")) > 0):
+                p['Hospital'] = Hospital.objects.filter(verified="No")
+            if (len(Doctor.objects.filter(verified="No")) > 0):
+                p['Doctor'] = Doctor.objects.filter(verified="No")
+            if (len(TestingLab.objects.filter(verified="No")) > 0):
+                p['Testing_Lab'] = TestingLab.objects.filter(verified="No")
+            return render(request, "main_app/Verify_Certificate.html", context={'list_of_certificates': p})
         else:
-            p = TestingLab.objects.get(tlabid=user)
-            p.verified = "Yes"
-            p.save()
-        p = dict()
-        if (len(Hospital.objects.filter(verified="No")) > 0):
-            p['Hospital'] = Hospital.objects.filter(verified="No")
-        if (len(Doctor.objects.filter(verified="No")) > 0):
-            p['Doctor'] = Doctor.objects.filter(verified="No")
-        if (len(TestingLab.objects.filter(verified="No")) > 0):
-            p['Testing_Lab'] = TestingLab.objects.filter(verified="No")
-        return render(request, "main_app/Verify_Certificate.html", context={'list_of_certificates': p})
-    else:
+            messages.info(request, "You Can't Access This Page!")
+            return redirect("/")
+    except:
         messages.info(request, "You Can't Access This Page!")
         return redirect("/")
+
 
 def appoin(list_of_Appointments):
     dict={}
@@ -87,8 +92,9 @@ def profile(request,id):
         email=user.email
         if(user.user_type=='Hospital'):
             if(id!=user23.userid):
-               messages.info(request,"You are not authorised to access this page")
-               return redirect("/");
+               #messages.info(request,"You are not authorised to access this page")
+               k7="/dashboard/"+str(user23.userid)
+               return redirect(k7);
             else:
                 dt = datetime.datetime.today()
                 Appointments1 = []
@@ -172,8 +178,9 @@ def profile(request,id):
                                        "earning_this_month": earning_this_month,"filter_type":"Date","appointments_today": appointments_today})
         if(user.user_type=='Patient'):
             if (id != user23.userid):
-                messages.info(request, "You are not authorised to access this page")
-                return redirect("/");
+                # messages.info(request,"You are not authorised to access this page")
+                k7 = "/dashboard/" + str(user23.userid)
+                return redirect(k7);
             else:
                 i=Patient.objects.get(patientid=user)
                 User_Profile=i;
@@ -212,8 +219,9 @@ def profile(request,id):
                                            "online_Appointments": online_Appointments, "filter_type": "Date"})
             else:
                 if (id != user23.userid):
-                    messages.info(request, "You are not authorised to access this page")
-                    return redirect("/");
+                    # messages.info(request,"You are not authorised to access this page")
+                    k7 = "/dashboard/" + str(user23.userid)
+                    return redirect(k7);
                 else:
                     User_Profile=Doctor.objects.get(doctorid=user.userid)
                     l1=Appointment_Timings.objects.filter(service_provider_id=user.userid).filter(date=datetime.date.today())
@@ -232,8 +240,9 @@ def profile(request,id):
 
         elif(user.user_type=="Testing Lab"):
             if (id != user23.userid):
-                messages.info(request, "You are not authorised to access this page")
-                return redirect("/");
+                # messages.info(request,"You are not authorised to access this page")
+                k7 = "/dashboard/" + str(user23.userid)
+                return redirect(k7);
             else:
                 earning_this_month=0
                 User_Profile=TestingLab.objects.get(tlabid=user.userid)
@@ -269,8 +278,9 @@ def profile(request,id):
                                        "no_of_Appointments": no_of_Appointments,"filter_type":"Date"})
         elif (user.user_type == 'Moderator'):
             if (id != user23.userid):
-                messages.info(request, "You are not authorised to access this page")
-                return redirect("/");
+                # messages.info(request,"You are not authorised to access this page")
+                k7 = "/dashboard/" + str(user23.userid)
+                return redirect(k7);
             else:
                 p = dict()
                 if(len(Hospital.objects.filter(verified="No"))>0):
@@ -306,6 +316,7 @@ def Hospitals(request):
         p=Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(clinic_name='')
         for i in p:
             list_of_doctors[i] = i.clinic_fee
+
     except:
         try:
             user=UserDetails.objects.get(email=request.session['email'])
@@ -428,17 +439,26 @@ def create_zoom_meeting(date,time):
 
 
 def list_of_states(request):
-    country=request.GET.get("country")
-    lis_of_states=get_states(country)
-    return JsonResponse(data=lis_of_states,safe=False)
+    try:
+        country=request.GET.get("country")
+        lis_of_states=get_states(country)
+        return JsonResponse(data=lis_of_states,safe=False)
+    except:
+        messages.info(request,"You Can not Access this Page")
+        return redirect("/")
 
 def list_of_city(request):
-    state=request.GET.get("city")
-    list_of_cities=list_of_cities1(state)
-    return JsonResponse(data=list_of_cities, safe=False)
+    try:
+        state=request.GET.get("city")
+        list_of_cities=list_of_cities1(state)
+        return JsonResponse(data=list_of_cities, safe=False)
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
 def list_of_hospital(request):
-     #try:
+     try:
         filter_type=request.GET.get("filter")
+
         filter=filter_type
         #print(filter)
         lis_of_countries = geo_plug.all_CountryNames()
@@ -654,9 +674,13 @@ def list_of_hospital(request):
             return render(request, "main_app/Hospital_Selection.html",
                                   context={"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),"location":location,"list_of_testing_labs": p, "filter": filter,"search_value":search_value,
                                            'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
-        return render(request,"main_app/Hospital_Selection.html",context={"location":location,"list_of_hospitals":p,"filter":filter,"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),'list_of_countries':lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
-     #except:
-     #   return redirect("/Hospital_Selection/")
+        if(filter!=None):
+            return render(request,"main_app/Hospital_Selection.html",context={"location":location,"list_of_hospitals":p,"filter":filter,"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),'list_of_countries':lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
+        else:
+            return redirect("/Hospital_Selection/")
+     except:
+
+        return redirect("/Hospital_Selection/")
 
 def Selected_Service_Provider(request,user_id):
     try:
@@ -694,25 +718,38 @@ def Selected_Service_Provider(request,user_id):
             return render(request,"main_app/User_Profile.html",context={"User_Details":p})
     except:
         return redirect("/accounts/signup/redirect/")
-
-def Book_Appointment(request):
-    return render(request,"main_app/Book_Appointment.html",context={"Doctor":replace_dictionary,"specialities":Specialities,"facilities":Facilities})
-
 def Add_Prescription(request):
-    Patient_Email=request.POST['Email']
-    Appointment_Id=request.POST['id']
-    return render(request,"main_app/Prescription.html",context={"Patient_Email":Patient_Email,'Appointment_Id':Appointment_Id})
-
+    Patient_Email=""
+    Appointment_Id=""
+    try:
+        user=UserDetails.objects.get(email=request.session['email'])
+        if(user.user_type=="Doctor"):
+            try:
+                Patient_Email=request.POST['Email']
+                Appointment_Id=request.POST['id']
+            except:
+                pass
+            return render(request,"main_app/Prescription.html",context={"Patient_Email":Patient_Email,'Appointment_Id':Appointment_Id})
+        else:
+            messages.info(request, "You Can not Access this Page")
+            return redirect("/")
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
 def submit_Prescription(request):
-    Appointment_Id=request.POST['Appointment_Id']
-    prescription = request.FILES['prescription']
-    b1=Appointments.objects.get(appointmentid=int(Appointment_Id))
-    b1.Prescription=prescription
-    b1.save()
-    return redirect("/profile")
+    try:
+        Appointment_Id=request.POST['Appointment_Id']
+        prescription = request.FILES['prescription']
+        b1=Appointments.objects.get(appointmentid=int(Appointment_Id))
+        b1.Prescription=prescription
+        b1.save()
+        return redirect("/profile")
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
     #return render(request,"main_app/Profile.html",context={"list_of_Appointments":dict})
 def Payment(request):
-            #print(request.GET['time_slot'])
+        try:    #print(request.GET['time_slot'])
             try:
                 email = request.session['email']
             except:
@@ -770,21 +807,27 @@ def Payment(request):
                               context={"mode": mode, "patientname": patientname, "patientemail": patientemail,
                                        "speciality": speciality, "amount_paid": amount_paid, "date": appointment_date,
                                        "time": appointment_time, "userdetails": TestingLabId})
+        except:
+            messages.info(request, "You Can not Access this Page")
+            return redirect("/")
 def cancel_appointment(request):
     messages.info(request,"Appointment Canceled Sucessfully")
     return redirect('/Hospital_Selection')
 
 def change_date(request):
-    request.session['date']=request.POST['date']
-    service_provider = UserDetails.objects.get(userid=request.POST['service_provider_id'])
-    if(service_provider.user_type=="Testing Lab"):
-        User_Profile = TestingLab.objects.get(tlabid=request.POST['service_provider_id'])
-    else:
-        User_Profile=Doctor.objects.get(doctorid=request.POST['service_provider_id'])
-    slots=available_slots(service_provider,request.session['date'])
-    return render(request, "main_app/Profile1.html",
-                      context={"date": request.session['date'], "User_Profile": User_Profile, 'slots': slots})
-
+    try:
+        request.session['date']=request.POST['date']
+        service_provider = UserDetails.objects.get(userid=request.POST['service_provider_id'])
+        if(service_provider.user_type=="Testing Lab"):
+            User_Profile = TestingLab.objects.get(tlabid=request.POST['service_provider_id'])
+        else:
+            User_Profile=Doctor.objects.get(doctorid=request.POST['service_provider_id'])
+        slots=available_slots(service_provider,request.session['date'])
+        return render(request, "main_app/Profile1.html",
+                          context={"date": request.session['date'], "User_Profile": User_Profile, 'slots': slots})
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
 def available_slots(service_provider,date1):
     slots = []
     t = Appointment_Timings.objects.filter(service_provider_id=service_provider).filter(date=date1)
@@ -830,6 +873,7 @@ def available_slots(service_provider,date1):
             x += datetime.timedelta(minutes=30)
     return slots
 def Appointment_Details_Submission(request):
+       try:
             try:
                 data=request.POST['data']
             except:
@@ -897,52 +941,66 @@ def Appointment_Details_Submission(request):
                 a1.save()
 
             return render(request,"main_app/Receipt.html",context={"Appointment_Details":a1,"service_provider":user,"doctor_details":doctor_details})
-    #except:
-    #    return redirect("/Doctor/")
+       except:
+            messages.info(request, "You Can not Access this Page")
+            return redirect("/")
 
 def select_speciality(request,service_provider_id):
-    user = UserDetails.objects.get(userid=service_provider_id)
     try:
-        date=request.session['date']
+        user = UserDetails.objects.get(userid=service_provider_id)
+        try:
+            date=request.session['date']
+        except:
+            date=''
+        if(user.user_type=="Hospital"):
+            p = Hospital.objects.get(hospitalid=service_provider_id)
+            k = HospitalSpeciality.objects.filter(hospitalid=p)
+            Specialities = []
+            for i in k:
+                Specialities.append(i.speciality)
+            return render(request,"main_app/List_Of_Speciality.html",context={"date":date,"specialities":Specialities,"Hospital_Details":p})
+        elif(user.user_type=="Testing Lab"):
+            p = TestingLab.objects.get(tlabid=service_provider_id)
+            k = TestPricing.objects.filter(tlabid=service_provider_id)
+            Tests = []
+            for i in k:
+                Tests.append(i.testname)
+            return render(request, "main_app/List_Of_Speciality.html", context={"date":date,"Testing_Lab_Details": p, "specialities": Tests})
+        else:
+            messages.info(request, "Invalid Service Provider Id")
+            return redirect("/")
+
     except:
-        date=''
-    if(user.user_type=="Hospital"):
-        p = Hospital.objects.get(hospitalid=service_provider_id)
-        k = HospitalSpeciality.objects.filter(hospitalid=p)
-        Specialities = []
-        for i in k:
-            Specialities.append(i.speciality)
-        return render(request,"main_app/List_Of_Speciality.html",context={"date":date,"specialities":Specialities,"Hospital_Details":p})
-    elif(user.user_type=="Testing Lab"):
-        p = TestingLab.objects.get(tlabid=service_provider_id)
-        k = TestPricing.objects.filter(tlabid=service_provider_id)
-        Tests = []
-        for i in k:
-            Tests.append(i.testname)
-        return render(request, "main_app/List_Of_Speciality.html", context={"date":date,"Testing_Lab_Details": p, "specialities": Tests})
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
 def book_appointment1(request,speciality,service_provider_id):
-    user=UserDetails.objects.get(userid=service_provider_id)
-    request.session['speciality'] = speciality
-    if(user.user_type=="Hospital"):
-        p=Doctor.objects.filter(specialization=speciality).filter(hospitalid=service_provider_id).filter(verified="Yes")
-        list_of_doctors=[]
-        for i in p:
-            #user1=User.objects.get()
-            t=Appointment_Timings.objects.filter(service_provider_id=i.doctorid).filter(date=request.session['date'])
-            #print(len(t))
-            if len(t)==0:
-                list_of_doctors.append(i)
-            else:
-                #print(t[0].Slots_Booked)
-                #print("availabel",t[0].available)
-                if(t[0].available==True):
+    try:
+        user=UserDetails.objects.get(userid=service_provider_id)
+        request.session['speciality'] = speciality
+        if(user.user_type=="Hospital"):
+            p=Doctor.objects.filter(specialization=speciality).filter(hospitalid=service_provider_id).filter(verified="Yes")
+            list_of_doctors=[]
+            for i in p:
+                #user1=User.objects.get()
+                t=Appointment_Timings.objects.filter(service_provider_id=i.doctorid).filter(date=request.session['date'])
+                #print(len(t))
+                if len(t)==0:
                     list_of_doctors.append(i)
-                    #list_of_doctors[i] = time_slots.split(",")
-        k = Hospital.objects.get(hospitalid=user.userid)
-        print("list",list_of_doctors)
-        return render(request, "main_app/Select_Doctor.html", context={"list_of_Doctors": list_of_doctors,"Hospital_Details":k})
+                else:
+                    #print(t[0].Slots_Booked)
+                    #print("availabel",t[0].available)
+                    if(t[0].available==True):
+                        list_of_doctors.append(i)
+                        #list_of_doctors[i] = time_slots.split(",")
+            k = Hospital.objects.get(hospitalid=user.userid)
+            print("list",list_of_doctors)
+            return render(request, "main_app/Select_Doctor.html", context={"list_of_Doctors": list_of_doctors,"Hospital_Details":k})
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
 
 def Appointment_Details_Submission1(request):
+    try:
         try:
             request.session["date"] = request.GET['date']
             #request.session['user_type_Id']=int(request.GET['doctorid'])
@@ -982,31 +1040,47 @@ def Appointment_Details_Submission1(request):
 
         return render(request, "main_app/Profile1.html", context={"date":request.session['date'],"User_Profile": User_Profile, 'slots': slots})
 
-
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
 def chosen_date(request):
-    request.session['date']=request.GET.get("date")
-    #print(request.GET.get("date"))
-    return JsonResponse(request.session['date'],safe=False)
+    try:
+        if (request.GET.get("date") != null):
+            request.session['date']=request.GET.get("date")
+            #print(request.GET.get("date"))
+            return JsonResponse(request.session['date'],safe=False)
+        else:
+            messages.info(request, "You Can not Access this Page")
+            return redirect("/")
+
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
 
 def user_location(request):
-    geolocator = Nominatim(user_agent="geoapiExercises")
-    longitude=request.GET["longitude"]
-    latitude=request.GET["latitude"]
-    location=geolocator.reverse(str(latitude)+","+str(longitude))
-    address=location.raw['address']
-    request.session['country']=address['country'].strip()
-    request.session['state']=address['state'].strip()
-    lis=list_of_cities1(request.session['state'])
-    if address['county'] in lis:
-            request.session['city']=address['county'].strip()
-    else:
-        request.session['city'] = address['state_district'].strip()
-
+    try:
+        geolocator = Nominatim(user_agent="geoapiExercises")
+        longitude=request.GET["longitude"]
+        latitude=request.GET["latitude"]
+        location=geolocator.reverse(str(latitude)+","+str(longitude))
+        address=location.raw['address']
+        request.session['country']=address['country'].strip()
+        request.session['state']=address['state'].strip()
+        lis=list_of_cities1(request.session['state'])
+        if address['county'] in lis:
+                request.session['city']=address['county'].strip()
+        else:
+            request.session['city'] = address['state_district'].strip()
+        return JsonResponse(request.GET['longitude'], safe=False)
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
     #print(request.session['city'])
     #print(address)
-    return JsonResponse(request.GET['longitude'], safe=False)
+
 
 def search_appointments(request):
+    try:
         no_of_Appointments_completed = 0;
         no_of_Appointments = 0;
         dt=datetime.datetime.now();
@@ -1092,221 +1166,234 @@ def search_appointments(request):
                                    "no_of_Appointments": no_of_Appointments,"filter_type":filter_type,"search_value":search_values})
             # print(p)
 
-    #except:
-     #   return redirect('/profile')
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
+
 def Appointment_Details(request,appointment_id):
-    doctor_details=""
-    Appointment_Details1=Appointments.objects.get(appointmentid=appointment_id)
-    if(Appointment_Details1.doctoremail):
-        user=UserDetails.objects.get(email=Appointment_Details1.doctoremail)
+    try:
+        doctor_details=""
+        Appointment_Details1=Appointments.objects.get(appointmentid=appointment_id)
+        if(Appointment_Details1.doctoremail):
+            user=UserDetails.objects.get(email=Appointment_Details1.doctoremail)
 
-        doctor_details=Doctor.objects.get(doctorid=user.userid)
-    return render(request,'main_app/Receipt.html',context={'doctor_details':doctor_details,'Appointment_Details':Appointment_Details1})
-
+            doctor_details=Doctor.objects.get(doctorid=user.userid)
+        return render(request,'main_app/Receipt.html',context={'doctor_details':doctor_details,'Appointment_Details':Appointment_Details1})
+    except:
+        messages.info(request,"No Appointment Available");
+        return redirect("/")
 def admin_search_appointments(request):
-    email=request.session['email']
-    user = UserDetails.objects.get(email=email)
-    dt = datetime.datetime.today()
-    Appointments1 = []
-    appointments_this_month = 0;
-    earning_this_month = 0;
-    appointments_today = 0;
-    Online_consultations_today = 0;
-    list_of_speciality = {}
-    speciality = []
-    l = HospitalSpeciality.objects.filter(hospitalid=user.userid)
-    for i in l:
-        speciality.append(i.speciality)
-        list_of_speciality[i.speciality] = 0
-    list_of_doctors = Doctor.objects.filter(hospitalid=user.userid)
-    P = 0;
-    doctors_data = {}
-    for i in list_of_doctors:
-        l1 = []
-        l2 = 0;
-        # print(Appointments.objects.filter(appointment_date__month=dt.month).filter(doctoremail=i.doctorid.email).count())
-        l2 = Appointments.objects.filter(appointment_date__month=dt.month).filter(doctoremail=i.doctorid.email).count()
-        list_of_speciality[i.specialization] += l2
-        p1 = HospitalSpeciality.objects.filter(speciality=i.specialization).filter(hospitalid=user.userid)
-        if (len(p1) == 0):
-            l1.append(0)
-            l12 = Appointment_Timings.objects.filter(service_provider_id=i.doctorid.userid).filter(date=dt)
-            if (len(l12) > 0):
-                #print(len(l12))
-                if (l12[0].available == True):
-                    l1.append("Yes")
-                else:
-                    l1.append("No")
-            else:
-                l1.append("Yes")
-            l1.append(0)
-
-        else:
-            for k1 in p1:
-                l1.append(l2)
+    try:
+        email=request.session['email']
+        user = UserDetails.objects.get(email=email)
+        dt = datetime.datetime.today()
+        Appointments1 = []
+        appointments_this_month = 0;
+        earning_this_month = 0;
+        appointments_today = 0;
+        Online_consultations_today = 0;
+        list_of_speciality = {}
+        speciality = []
+        l = HospitalSpeciality.objects.filter(hospitalid=user.userid)
+        for i in l:
+            speciality.append(i.speciality)
+            list_of_speciality[i.speciality] = 0
+        list_of_doctors = Doctor.objects.filter(hospitalid=user.userid)
+        P = 0;
+        doctors_data = {}
+        for i in list_of_doctors:
+            l1 = []
+            l2 = 0;
+            # print(Appointments.objects.filter(appointment_date__month=dt.month).filter(doctoremail=i.doctorid.email).count())
+            l2 = Appointments.objects.filter(appointment_date__month=dt.month).filter(doctoremail=i.doctorid.email).count()
+            list_of_speciality[i.specialization] += l2
+            p1 = HospitalSpeciality.objects.filter(speciality=i.specialization).filter(hospitalid=user.userid)
+            if (len(p1) == 0):
+                l1.append(0)
                 l12 = Appointment_Timings.objects.filter(service_provider_id=i.doctorid.userid).filter(date=dt)
                 if (len(l12) > 0):
+                    #print(len(l12))
                     if (l12[0].available == True):
                         l1.append("Yes")
                     else:
                         l1.append("No")
                 else:
                     l1.append("Yes")
-                l1.append(k1.price * l2)
-        doctors_data[i] = l1
-        appointments_this_month += l2
-        appointments_today += Appointments.objects.filter(appointment_date=dt).filter(
-            doctoremail=i.doctorid.email).count()
-        Online_consultations_today += Appointments.objects.filter(appointment_date=dt).filter(
-            mode_of_meeting="Online").filter(doctoremail=i.doctorid.email).count()
-        k = Appointments.objects.filter(appointment_date__month=dt.month).filter(
-            doctoremail=i.doctorid.email).aggregate(Sum('amount_paid'))
-        if (k['amount_paid__sum'] != None):
-            earning_this_month += k['amount_paid__sum']
-        l23 = Appointments.objects.filter(appointment_date=dt).filter(doctoremail=i.doctorid.email)
-        for i in l23:
-            Appointments1.append(i)
+                l1.append(0)
 
-    #print(list_of_speciality)
-    filter_type = request.GET['filter']
-    Appointments1 = []
-    if (filter_type == "speciality"):
+            else:
+                for k1 in p1:
+                    l1.append(l2)
+                    l12 = Appointment_Timings.objects.filter(service_provider_id=i.doctorid.userid).filter(date=dt)
+                    if (len(l12) > 0):
+                        if (l12[0].available == True):
+                            l1.append("Yes")
+                        else:
+                            l1.append("No")
+                    else:
+                        l1.append("Yes")
+                    l1.append(k1.price * l2)
+            doctors_data[i] = l1
+            appointments_this_month += l2
+            appointments_today += Appointments.objects.filter(appointment_date=dt).filter(
+                doctoremail=i.doctorid.email).count()
+            Online_consultations_today += Appointments.objects.filter(appointment_date=dt).filter(
+                mode_of_meeting="Online").filter(doctoremail=i.doctorid.email).count()
+            k = Appointments.objects.filter(appointment_date__month=dt.month).filter(
+                doctoremail=i.doctorid.email).aggregate(Sum('amount_paid'))
+            if (k['amount_paid__sum'] != None):
+                earning_this_month += k['amount_paid__sum']
+            l23 = Appointments.objects.filter(appointment_date=dt).filter(doctoremail=i.doctorid.email)
+            for i in l23:
+                Appointments1.append(i)
 
-        search_values = request.GET['search_values1']
-    else:
-        search_values = request.GET['search_values']
+        #print(list_of_speciality)
+        filter_type = request.GET['filter']
+        Appointments1 = []
+        if (filter_type == "speciality"):
 
-    #print(search_values)
-    for i in list_of_doctors:
-            #print(i.doctorid.email)
-            if (filter_type == "Date"):
-                    p1=Appointments.objects.filter(appointment_date=search_values).filter(doctoremail=i.doctorid.email)
-                    for j in p1:
-                        Appointments1.append(j)
-            elif (filter_type == "Doctor_Name"):
-                doctor = UserDetails.objects.filter(name__contains=search_values).filter(user_type="Doctor")
-                for j in doctor:
-                    Appointments1 = Appointments.objects.filter(appointment_date=dt).filter(doctoremail=j.email)
-                break;
-            elif(filter_type=="Patient_Name"):
-                Appointments1 = Appointments.objects.filter(appointment_date=dt).filter(patientname__contains=search_values)
-                break;
-            elif(filter_type=="speciality"):
-                Appointments1 = Appointments.objects.filter(appointment_date=dt).filter(
-                    Speciality=search_values)
-                break;
-    #print(Appointments1)
-    return render(request, "main_app/Admin_Dashboard.html",
-                  context={"filter_type":filter_type,"search_value":search_values,"speciality":speciality,"list_of_Appointments": Appointments1, "doctors_data": doctors_data,
-                           "list_of_speciality": json.dumps(list(list_of_speciality.keys())),"hospitalid":user.userid,
-                           "list_of_speciality_appointments": list(list_of_speciality.values()),
-                           "Online_consultations_today": Online_consultations_today,
-                           "appointments_this_month": appointments_this_month, "earning_this_month": earning_this_month,
-                           "appointments_today": appointments_today,"filter_type":filter_type,"search_value":search_values})
+            search_values = request.GET['search_values1']
+        else:
+            search_values = request.GET['search_values']
+
+        #print(search_values)
+        for i in list_of_doctors:
+                #print(i.doctorid.email)
+                if (filter_type == "Date"):
+                        p1=Appointments.objects.filter(appointment_date=search_values).filter(doctoremail=i.doctorid.email)
+                        for j in p1:
+                            Appointments1.append(j)
+                elif (filter_type == "Doctor_Name"):
+                    doctor = UserDetails.objects.filter(name__contains=search_values).filter(user_type="Doctor")
+                    for j in doctor:
+                        Appointments1 = Appointments.objects.filter(appointment_date=dt).filter(doctoremail=j.email)
+                    break;
+                elif(filter_type=="Patient_Name"):
+                    Appointments1 = Appointments.objects.filter(appointment_date=dt).filter(patientname__contains=search_values)
+                    break;
+                elif(filter_type=="speciality"):
+                    Appointments1 = Appointments.objects.filter(appointment_date=dt).filter(
+                        Speciality=search_values)
+                    break;
+        #print(Appointments1)
+        return render(request, "main_app/Admin_Dashboard.html",
+                      context={"filter_type":filter_type,"search_value":search_values,"speciality":speciality,"list_of_Appointments": Appointments1, "doctors_data": doctors_data,
+                               "list_of_speciality": json.dumps(list(list_of_speciality.keys())),"hospitalid":user.userid,
+                               "list_of_speciality_appointments": list(list_of_speciality.values()),
+                               "Online_consultations_today": Online_consultations_today,
+                               "appointments_this_month": appointments_this_month, "earning_this_month": earning_this_month,
+                               "appointments_today": appointments_today,"filter_type":filter_type,"search_value":search_values})
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
 
 
 def availablity(request):
-    user = UserDetails.objects.get(email=request.session['email'])
-    s=request.POST['start'].split('T')
-    e=request.POST['end'].split('T')
-    start=s[0].split('-')
-    end=e[0].split('-')
-    starttime=s[1].split(':')
-    endtime=e[1].split(':')
-    start1=datetime.datetime(int(start[0]),int(start[1]),int(start[2]),int(starttime[0]),int(starttime[1]),0)
-    end1=datetime.datetime(int(end[0]),int(end[1]),int(end[2]),int(endtime[0]),int(endtime[1]),0)
-    date=start1
-    list_of_appointments = []
-    #print(start,end)
-    if (user.user_type == "Doctor"):
-        d1 = Doctor.objects.get(doctorid=user.userid)
-        start_time = d1.start_time.split(":")
-        end_time = d1.end_time.split(":")
-        #print(start_time, end_time)
-    else:
-        t1 = TestingLab.objects.get(tlabid=user.userid)
-        start_time = t1.start_time.split(":")
-        end_time = t1.end_time.split(":")
-        #print(start_time, end_time)
-    user_start_time = datetime.datetime(int(start[0]), int(start[1]), int(start[2]), int(start_time[0]), int(start_time[1]), 0)
-    user_end_time=datetime.datetime(int(start[0]), int(start[1]), int(start[2]), int(end_time[0]), int(end_time[1]), 0)
-    while(user_start_time<=end1):
-        if(user.user_type=="Testing Lab"):
-            tester=TestingLab.objects.get(tlabid=user.userid)
-            service_provider=UserDetails.objects.get(userid=user.userid)
-            #print(Appointment_Timings.objects.filter(service_provider_id=service_provider).filter(
-                #date=user_start_time.date()).delete())
-            if(user_start_time >= start1 and user_end_time <= end1):
-                b12 = Appointment_Timings()
-                b12.service_provider_id = service_provider
-                b12.date = user_start_time.date()
-                l2 = Appointments.objects.filter(appointment_date=user_start_time.date()).filter(
-                    TestingLabId=tester)
-                for i in l2:
-                    list_of_appointments.append(i)
-                b12.available=False
-                b12.save()
-                user_end_time += datetime.timedelta(days=1)
-                user_start_time += datetime.timedelta(days=1)
-            else:
-                while (user_start_time < user_end_time):
+    try:
+        user = UserDetails.objects.get(email=request.session['email'])
+        s=request.POST['start'].split('T')
+        e=request.POST['end'].split('T')
+        start=s[0].split('-')
+        end=e[0].split('-')
+        starttime=s[1].split(':')
+        endtime=e[1].split(':')
+        start1=datetime.datetime(int(start[0]),int(start[1]),int(start[2]),int(starttime[0]),int(starttime[1]),0)
+        end1=datetime.datetime(int(end[0]),int(end[1]),int(end[2]),int(endtime[0]),int(endtime[1]),0)
+        date=start1
+        list_of_appointments = []
+        #print(start,end)
+        if (user.user_type == "Doctor"):
+            d1 = Doctor.objects.get(doctorid=user.userid)
+            start_time = d1.start_time.split(":")
+            end_time = d1.end_time.split(":")
+            #print(start_time, end_time)
+        else:
+            t1 = TestingLab.objects.get(tlabid=user.userid)
+            start_time = t1.start_time.split(":")
+            end_time = t1.end_time.split(":")
+            #print(start_time, end_time)
+        user_start_time = datetime.datetime(int(start[0]), int(start[1]), int(start[2]), int(start_time[0]), int(start_time[1]), 0)
+        user_end_time=datetime.datetime(int(start[0]), int(start[1]), int(start[2]), int(end_time[0]), int(end_time[1]), 0)
+        while(user_start_time<=end1):
+            if(user.user_type=="Testing Lab"):
+                tester=TestingLab.objects.get(tlabid=user.userid)
+                service_provider=UserDetails.objects.get(userid=user.userid)
+                #print(Appointment_Timings.objects.filter(service_provider_id=service_provider).filter(
+                    #date=user_start_time.date()).delete())
+                if(user_start_time >= start1 and user_end_time <= end1):
                     b12 = Appointment_Timings()
                     b12.service_provider_id = service_provider
                     b12.date = user_start_time.date()
-                    b12.time = user_start_time.strftime("%X")
-                    if(user_start_time > start1 and user_start_time < end1):
-                        l2 = Appointments.objects.filter(appointment_date=user_start_time.date()).filter(
-                            TestingLabId=tester).filter(appointment_time=b12.time)
-                        if(len(l2)>0):
-                            list_of_appointments.append(l2[0])
-                        b12.Booked=True
+                    l2 = Appointments.objects.filter(appointment_date=user_start_time.date()).filter(
+                        TestingLabId=tester)
+                    for i in l2:
+                        list_of_appointments.append(i)
+                    b12.available=False
                     b12.save()
-                    user_start_time += datetime.timedelta(minutes=30)
                     user_end_time += datetime.timedelta(days=1)
-                    user_start_time += datetime.timedelta(hours=17)
-        elif(user.user_type == "Doctor"):
-            doctor = Doctor.objects.get(doctorid=user.userid)
-            service_provider = UserDetails.objects.get(userid=user.userid)
-            #print(Appointment_Timings.objects.filter(service_provider_id=service_provider).filter(date=user_start_time.date()).delete())
-            #print()
-            if (user_start_time >= start1 and user_end_time <= end1):
-                b12 = Appointment_Timings()
-                b12.service_provider_id = service_provider
-                b12.date = user_start_time.date()
-                b12.available = False
-                l2 = Appointments.objects.filter(appointment_date=user_start_time.date()).filter(
-                    doctoremail=doctor.doctorid.email)
-                for i in l2:
-                    list_of_appointments.append(i)
-                b12.save()
-                user_end_time += datetime.timedelta(days=1)
-                user_start_time += datetime.timedelta(days=1)
-            else:
-                while (user_start_time < user_end_time):
+                    user_start_time += datetime.timedelta(days=1)
+                else:
+                    while (user_start_time < user_end_time):
                         b12 = Appointment_Timings()
                         b12.service_provider_id = service_provider
                         b12.date = user_start_time.date()
                         b12.time = user_start_time.strftime("%X")
-                        if (user_start_time > start1  and user_start_time < end1):
-
+                        if(user_start_time > start1 and user_start_time < end1):
                             l2 = Appointments.objects.filter(appointment_date=user_start_time.date()).filter(
-                                doctoremail=doctor.doctorid.email).filter(appointment_time=b12.time)
-
-                            try:
+                                TestingLabId=tester).filter(appointment_time=b12.time)
+                            if(len(l2)>0):
                                 list_of_appointments.append(l2[0])
-                            except:
-                                pass
-                            b12.Booked = True
+                            b12.Booked=True
                         b12.save()
                         user_start_time += datetime.timedelta(minutes=30)
+                        user_end_time += datetime.timedelta(days=1)
+                        user_start_time += datetime.timedelta(hours=17)
+            elif(user.user_type == "Doctor"):
+                doctor = Doctor.objects.get(doctorid=user.userid)
+                service_provider = UserDetails.objects.get(userid=user.userid)
+                #print(Appointment_Timings.objects.filter(service_provider_id=service_provider).filter(date=user_start_time.date()).delete())
+                #print()
+                if (user_start_time >= start1 and user_end_time <= end1):
+                    b12 = Appointment_Timings()
+                    b12.service_provider_id = service_provider
+                    b12.date = user_start_time.date()
+                    b12.available = False
+                    l2 = Appointments.objects.filter(appointment_date=user_start_time.date()).filter(
+                        doctoremail=doctor.doctorid.email)
+                    for i in l2:
+                        list_of_appointments.append(i)
+                    b12.save()
+                    user_end_time += datetime.timedelta(days=1)
+                    user_start_time += datetime.timedelta(days=1)
+                else:
+                    while (user_start_time < user_end_time):
+                            b12 = Appointment_Timings()
+                            b12.service_provider_id = service_provider
+                            b12.date = user_start_time.date()
+                            b12.time = user_start_time.strftime("%X")
+                            if (user_start_time > start1  and user_start_time < end1):
 
-                user_end_time += datetime.timedelta(days=1)
-                user_start_time += datetime.timedelta(hours=17)
-        #date += datetime.timedelta(days=1)
-        cancel_appointments(list_of_appointments,user)
-    messages.info(request,"All Your Appointment between "+str(start1)+" and "+str(end1)+" are cancelled")
-    str1="/dashboard/"+str(user.userid)
-    return redirect(str1)
+                                l2 = Appointments.objects.filter(appointment_date=user_start_time.date()).filter(
+                                    doctoremail=doctor.doctorid.email).filter(appointment_time=b12.time)
+
+                                try:
+                                    list_of_appointments.append(l2[0])
+                                except:
+                                    pass
+                                b12.Booked = True
+                            b12.save()
+                            user_start_time += datetime.timedelta(minutes=30)
+
+                    user_end_time += datetime.timedelta(days=1)
+                    user_start_time += datetime.timedelta(hours=17)
+            #date += datetime.timedelta(days=1)
+            cancel_appointments(list_of_appointments,user)
+        messages.info(request,"All Your Appointment between "+str(start1)+" and "+str(end1)+" are cancelled")
+        str1="/dashboard/"+str(user.userid)
+        return redirect(str1)
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
 
 def cancel_appointments(list_of_appointments,user):
     for i in list_of_appointments:
@@ -1329,86 +1416,103 @@ def cancel_appointments(list_of_appointments,user):
             email.send()
 
 def report(request):
-    start=request.POST['start']
-    end=request.POST['end']
-    user = UserDetails.objects.get(email=request.session['email'])
-    dt = datetime.datetime.today()
-    Appointments1 = []
-    appointments_this_month = 0;
-    earning_this_month = 0;
-    appointments_today = 0;
-    Online_consultations_today = 0;
-    list_of_speciality = {}
-    speciality = []
-    l = HospitalSpeciality.objects.filter(hospitalid=user.userid)
-    for i in l:
-        speciality.append(i.speciality)
-        list_of_speciality[i.speciality] = 0
-    list_of_doctors = Doctor.objects.filter(hospitalid=user.userid)
-    P = 0;
-    doctors_data = {}
-    for i in list_of_doctors:
-        l1 = []
-        l2 = 0;
-        user = UserDetails.objects.get(userid=i.doctorid.userid)
-        # print(Appointments.objects.filter(appointment_date__month=dt.month).filter(doctoremail=i.doctorid.email).count())
-        l2 = Appointments.objects.filter(appointment_date__range=[start,end]).filter(doctoremail=i.doctorid.email).count()
-        list_of_speciality[i.specialization] += l2
-        p1 = HospitalSpeciality.objects.filter(speciality=i.specialization).filter(hospitalid=user.userid)
-        if (len(p1) == 0):
-            l1.append(0)
-            l1.append(0)
-        else:
-            for k1 in p1:
-                l1.append(l2)
-                l1.append(k1.price * l2)
-        doctors_data[i] = l1
-        appointments_this_month += l2
-        appointments_today += Appointments.objects.filter(appointment_date__range=[start,end]).filter(
-            doctoremail=i.doctorid.email).count()
-        Online_consultations_today += Appointments.objects.filter(appointment_date__range=[start,end]).filter(
-            mode_of_meeting="Online").filter(doctoremail=i.doctorid.email).count()
-        k = Appointments.objects.filter(appointment_date__range=[start,end]).filter(
-            doctoremail=i.doctorid.email).aggregate(Sum('amount_paid'))
-        if (k['amount_paid__sum'] != None):
-            earning_this_month += k['amount_paid__sum']
-        l23 = Appointments.objects.filter(appointment_date__range=[start,end]).filter(doctoremail=i.doctorid.email)
-        for i in l23:
-            Appointments1.append(i)
-    #print(list_of_speciality)
-    data={"speciality": speciality, "list_of_Appointments": Appointments1,
-    "doctors_data": doctors_data,
-    "start":start,"end":end,
-    "list_of_speciality": json.dumps(list(list_of_speciality.keys())),
-    "list_of_speciality_appointments": list(list_of_speciality.values()),
-    "Online_consultations_today": Online_consultations_today,
-    "appointments_this_month": appointments_this_month, "earning_this_month": earning_this_month,
-    "appointments_today": appointments_today}
-    return render(request, "main_app/Admin_DashBoard1.html", context=data)
+    try:
+        start=request.POST['start']
+        end=request.POST['end']
+        user = UserDetails.objects.get(email=request.session['email'])
+        dt = datetime.datetime.today()
+        Appointments1 = []
+        appointments_this_month = 0;
+        earning_this_month = 0;
+        appointments_today = 0;
+        Online_consultations_today = 0;
+        list_of_speciality = {}
+        speciality = []
+        l = HospitalSpeciality.objects.filter(hospitalid=user.userid)
+        for i in l:
+            speciality.append(i.speciality)
+            list_of_speciality[i.speciality] = 0
+        list_of_doctors = Doctor.objects.filter(hospitalid=user.userid)
+        P = 0;
+        doctors_data = {}
+        for i in list_of_doctors:
+            l1 = []
+            l2 = 0;
+            user = UserDetails.objects.get(userid=i.doctorid.userid)
+            # print(Appointments.objects.filter(appointment_date__month=dt.month).filter(doctoremail=i.doctorid.email).count())
+            l2 = Appointments.objects.filter(appointment_date__range=[start,end]).filter(doctoremail=i.doctorid.email).count()
+            list_of_speciality[i.specialization] += l2
+            p1 = HospitalSpeciality.objects.filter(speciality=i.specialization).filter(hospitalid=user.userid)
+            if (len(p1) == 0):
+                l1.append(0)
+                l1.append(0)
+            else:
+                for k1 in p1:
+                    l1.append(l2)
+                    l1.append(k1.price * l2)
+            doctors_data[i] = l1
+            appointments_this_month += l2
+            appointments_today += Appointments.objects.filter(appointment_date__range=[start,end]).filter(
+                doctoremail=i.doctorid.email).count()
+            Online_consultations_today += Appointments.objects.filter(appointment_date__range=[start,end]).filter(
+                mode_of_meeting="Online").filter(doctoremail=i.doctorid.email).count()
+            k = Appointments.objects.filter(appointment_date__range=[start,end]).filter(
+                doctoremail=i.doctorid.email).aggregate(Sum('amount_paid'))
+            if (k['amount_paid__sum'] != None):
+                earning_this_month += k['amount_paid__sum']
+            l23 = Appointments.objects.filter(appointment_date__range=[start,end]).filter(doctoremail=i.doctorid.email)
+            for i in l23:
+                Appointments1.append(i)
+        #print(list_of_speciality)
+        data={"speciality": speciality, "list_of_Appointments": Appointments1,
+        "doctors_data": doctors_data,
+        "start":start,"end":end,
+        "list_of_speciality": json.dumps(list(list_of_speciality.keys())),
+        "list_of_speciality_appointments": list(list_of_speciality.values()),
+        "Online_consultations_today": Online_consultations_today,
+        "appointments_this_month": appointments_this_month, "earning_this_month": earning_this_month,
+        "appointments_today": appointments_today}
+        return render(request, "main_app/Admin_DashBoard1.html", context=data)
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
 
 def add_news(request,id):
-    return render(request,"main_app/News.html",context={"id":id})
+    user=UserDetails.objects.get(userid=id)
+    if(user.user_type=="Hospital"):
+        return render(request,"main_app/News.html",context={"id":id})
+    else:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
 
 def submit_news(request):
-    a1=Hospital_News()
-    a1.Title=request.POST['title']
-    a1.photos=request.FILES['file1']
-    a1.Information=request.POST['About']
-    a1.hospitalid=Hospital.objects.get(hospitalid=request.POST['id'])
-    a1.save()
-    str="dashboard/"+request.POST['id']
-    return redirect(str)
+    try:
+        a1=Hospital_News()
+        a1.Title=request.POST['title']
+        a1.photos=request.FILES['file1']
+        a1.Information=request.POST['About']
+        a1.hospitalid=Hospital.objects.get(hospitalid=request.POST['id'])
+        a1.save()
+        str="dashboard/"+request.POST['id']
+        return redirect(str)
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")
 def edit_time(request,id):
-    user=UserDetails.objects.get(userid=id)
-    if(user.user_type=="Doctor"):
-        d1=Doctor.objects.get(doctorid=id)
-        d1.start_time=request.POST['start_time']
-        d1.end_time=request.POST['end_time']
-        d1.save()
-    elif(user.user_type=="Testing Lab"):
-        t1=TestingLab.objects.get(tlabid=id)
-        t1.start_time=request.POST['start_time']
-        t1.end_time=request.POST['end_time']
-        t1.save()
-    str1='/dashboard/'+str(id)
-    return redirect(str1);
+    try:
+        user=UserDetails.objects.get(userid=id)
+        if(user.user_type=="Doctor"):
+            d1=Doctor.objects.get(doctorid=id)
+            d1.start_time=request.POST['start_time']
+            d1.end_time=request.POST['end_time']
+            d1.save()
+        elif(user.user_type=="Testing Lab"):
+            t1=TestingLab.objects.get(tlabid=id)
+            t1.start_time=request.POST['start_time']
+            t1.end_time=request.POST['end_time']
+            t1.save()
+        str1='/dashboard/'+str(id)
+        return redirect(str1);
+    except:
+        messages.info(request, "You Can not Access this Page")
+        return redirect("/")

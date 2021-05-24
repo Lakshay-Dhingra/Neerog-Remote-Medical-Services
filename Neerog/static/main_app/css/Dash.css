@@ -1,4 +1,4 @@
-@media only screen and (max-width: 800px) {
+   @media only screen and (max-width: 800px) {
      *
      {
        font-size:25px !important;
@@ -60,6 +60,10 @@
      }
       }
      @media only screen and (max-width: 520px) {
+     #test2
+        {
+          margin-top:10px!important;
+        }
      *
      {
        font-size:20px !important;

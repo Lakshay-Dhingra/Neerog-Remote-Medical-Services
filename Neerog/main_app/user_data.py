@@ -113,14 +113,22 @@ def getDoctorData(uid):
         hospitaluserobj = hospitalobj.hospitalid
         # print(type(hospitaluserobj))
         hospitalid = hospitaluserobj.userid
-        hospitalspeciality=HospitalSpeciality.objects.get(hospitalid=hospitalid, speciality = doctor_data['SpecializedIn'])
+
+        hospitalspeciality=None
+        try:
+            hospitalspeciality=HospitalSpeciality.objects.get(hospitalid=hospitalid, speciality = doctor_data['SpecializedIn'])
+        except:
+            pass
 
         doctor_data['WorksAt'] = hospitaluserobj.name
         doctor_data['InstitutePhotoUrl'] = hospitalobj.pic1.url
         doctor_data['Country'] = hospitalobj.country
         doctor_data['City'] = hospitalobj.city
         doctor_data['Area'] = hospitalobj.area
-        doctor_data['Fee'] = hospitalspeciality.price
+        if hospitalspeciality is None:
+            doctor_data['Fee']=None
+        else:
+            doctor_data['Fee'] = hospitalspeciality.price
     return doctor_data
 
 # def getNumberOfFollowers(uid):

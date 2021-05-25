@@ -14,80 +14,104 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 # return render(request,'page.html',context_var_dictionary)
 
 def logout(request):
-    auth.logout(request)
-    for key in request.session.keys():
-        del request.session[key]
-    messages.info(request,"Logged Out Successfully!")
+    if(request.user.is_authenticated):
+        auth.logout(request)
+        for key in request.session.keys():
+            del request.session[key]
+        messages.info(request,"You've Been Logged Out.")
+    else:
+        pass
     return redirect("/")
 
 def signin(request):
+    if(request.user.is_authenticated):
+        messages.info(request,"You're Already Logged In.")
+        return redirect("/dashboard/"+str(request.user.id-1))
     return render(request,'accounts/signin.html')
 
 def signup(request):
+    if(request.user.is_authenticated):
+        messages.info(request,"You're Already Logged In.")
+        return redirect("/dashboard/"+str(request.user.id-1))
     return render(request,'accounts/signup.html')
 
 def signup_redirect(request):
-    print(request.user.id)
-    if(user_data.getUserType(request.user.id) == "Doctor"):
-        return redirect("/accounts/signup/doctor")
-    elif(user_data.getUserType(request.user.id) == "Patient"):
-        return redirect("/accounts/signup/patient")
-    elif(user_data.getUserType(request.user.id) == "Hospital"):
-        return redirect("/accounts/signup/hospital")
-    elif(user_data.getUserType(request.user.id) == "Testing Lab"):
-        return redirect("/accounts/signup/testinglab")
+    if(request.user.is_authenticated):
+        if(user_data.getUserType(request.user.id) == "Doctor"):
+            return redirect("/accounts/signup/doctor")
+        elif(user_data.getUserType(request.user.id) == "Patient"):
+            return redirect("/accounts/signup/patient")
+        elif(user_data.getUserType(request.user.id) == "Hospital"):
+            return redirect("/accounts/signup/hospital")
+        elif(user_data.getUserType(request.user.id) == "Testing Lab"):
+            return redirect("/accounts/signup/testinglab")
+    messages.info(request,"Please Log In To Access This Page.")
+    return redirect("/accounts/signin/")
 
 def signup_doctor(request):
-    if(user_data.getUserType(request.user.id) == "Doctor"):
-        if(user_data.isVerifiedUser(request.user.id)):
-            messages.info(request,"You're Details Have Already Been Submitted!")
-            return redirect("/")
+    if(request.user.is_authenticated):
+        if(user_data.getUserType(request.user.id) == "Doctor"):
+            if(user_data.isVerifiedUser(request.user.id)):
+                messages.info(request,"Your Details Have Already Been Submitted and Verified!")
+                return redirect("/")
+            else:
+                data={'specialities':medical_speciality.get_specialities()}
+                data['countries']=location.getCountries()
+                return render(request,'accounts/signup_doctor.html',data)
         else:
-            data={'specialities':medical_speciality.get_specialities()}
-            data['countries']=location.getCountries()
-            return render(request,'accounts/signup_doctor.html',data)
-    else:
-        messages.info(request,"You Can't Access This Page!")
-        return redirect("/")
+            messages.info(request,"You Can't Access This Page!")
+            return redirect("/")
+    messages.info(request,"Please Log In To Access This Page.")
+    return redirect("/accounts/signin/")
 
 def signup_hospital(request):
-    if(user_data.getUserType(request.user.id) == "Hospital"):
-        if(user_data.isVerifiedUser(request.user.id)):
-            messages.info(request,"You're Details Have Already Been Submitted!")
-            return redirect("/")
+    if(request.user.is_authenticated):
+        if(user_data.getUserType(request.user.id) == "Hospital"):
+            if(user_data.isVerifiedUser(request.user.id)):
+                messages.info(request,"You're Details Have Already Been Submitted!")
+                return redirect("/")
+            else:
+                data={'specialities':medical_speciality.get_specialities()}
+                data['countries']=location.getCountries()
+                return render(request,'accounts/signup_hospital.html',data)
         else:
-            data={'specialities':medical_speciality.get_specialities()}
-            data['countries']=location.getCountries()
-            return render(request,'accounts/signup_hospital.html',data)
-    else:
-        messages.info(request,"You Can't Access This Page!")
-        return redirect("/")
+            messages.info(request,"You Can't Access This Page!")
+            return redirect("/")
+    messages.info(request,"Please Log In To Access This Page.")
+    return redirect("/accounts/signin/")
+    
 
 def signup_tlab(request):
-    if(user_data.getUserType(request.user.id) == "Testing Lab"):
-        if(user_data.isVerifiedUser(request.user.id)):
-            messages.info(request,"You're Details Have Already Been Submitted!")
-            return redirect("/")
+    if(request.user.is_authenticated):
+        if(user_data.getUserType(request.user.id) == "Testing Lab"):
+            if(user_data.isVerifiedUser(request.user.id)):
+                messages.info(request,"You're Details Have Already Been Submitted!")
+                return redirect("/")
+            else:
+                data={'tests':medical_tests.getTests()}
+                data['countries']=location.getCountries()
+                return render(request,'accounts/signup_tlab.html',data)
         else:
-            data={'tests':medical_tests.getTests()}
-            data['countries']=location.getCountries()
-            return render(request,'accounts/signup_tlab.html',data)
-    else:
-        messages.info(request,"You Can't Access This Page!")
-        return redirect("/")
+            messages.info(request,"You Can't Access This Page!")
+            return redirect("/")
+    messages.info(request,"Please Log In To Access This Page.")
+    return redirect("/accounts/signin/")
 
 def signup_patient(request):
-    if(user_data.getUserType(request.user.id) == "Patient"):
-        if(user_data.isVerifiedUser(request.user.id)):
-            messages.info(request,"You're Details Have Already Been Submitted!")
-            return redirect("/")
+    if(request.user.is_authenticated):
+        if(user_data.getUserType(request.user.id) == "Patient"):
+            if(user_data.isVerifiedUser(request.user.id)):
+                messages.info(request,"You're Details Have Already Been Submitted!")
+                return redirect("/")
+            else:
+                data=dict()
+                data['countries']=location.getCountries()
+                return render(request,'accounts/signup_patient.html', data)
         else:
-            data=dict()
-            data['countries']=location.getCountries()
-            return render(request,'accounts/signup_patient.html', data)
-    else:
-        messages.info(request,"You Can't Access This Page!")
-        return redirect("/")
+            messages.info(request,"You Can't Access This Page!")
+            return redirect("/")
+    messages.info(request,"Please Log In To Access This Page.")
+    return redirect("/accounts/signin/")
 
 def login(request):
     email=request.POST['email']

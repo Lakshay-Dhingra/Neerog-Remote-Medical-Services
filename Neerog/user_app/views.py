@@ -13,15 +13,15 @@ def profile(request, uid):
                 return redirect("/Selected/"+str(uid-1))
             elif(user_type == "Doctor"):
                 doctor_data = user_data.getDoctorData(uid)
+                if doctor_data['Fee'] is None:
+                    messages.info(request,"Sorry, The Doctor's Department Has Been Removed By The Hospital!")
+                    return redirect("/")
                 try:
                     mydate=request.session['date']
-                    # print(mydate)
                     mydate=datetime.datetime.strptime(mydate, '%Y-%m-%d')
-                    # print(str(mydate).split()[0])
                 except:
                     mydate = datetime.datetime.now() + datetime.timedelta(days=1)
                     request.session['date']=str(mydate.date())
-                    print("fvv",request.session['date'])
                 doctor_data['AvailableSlots']=user_data.getFreeSlots(uid, str(mydate).split()[0])
                 doctor_data['SelectedDate']= mydate
                 doctor_data['Today']= datetime.datetime.now()
@@ -93,7 +93,8 @@ def edit_profile(request):
                 pt_data['Cities'] = location.list_of_cities1(pt_data['State'])
                 return render(request,'user_app/EditPatientProfile.html',pt_data)
         else:
-            messages.info(request,"You Haven't Completed Registeration yet!")
+            messages.info(request,"Please Complete Your Account Registeration.")
+            return redirect("/accounts/signup/redirect")
     else:
         #User not logged in
         messages.info(request,"You are not Logged In!")

@@ -168,7 +168,7 @@ def profile(request,id):
                     if(min>2):
                         min-1;
                 #print(list_of_speciality)
-                return render(request, "main_app/Admin_Dashboard.html",
+                return render(request, "main_app/Hospital_Dashboard.html",
                               context={"speciality": speciality, "list_of_Appointments": Appointments1,"min":min,"max":max+20,
                                        "doctors_data": doctors_data,"hospitalid":id,
                                        "list_of_speciality": json.dumps(list(list_of_speciality.keys())),
@@ -185,7 +185,7 @@ def profile(request,id):
                 i=Patient.objects.get(patientid=user)
                 User_Profile=i;
                 list_of_Appointments = Appointments.objects.filter(patientemail=email).order_by('-appointment_date')
-                return render(request, 'main_app/Profile.html',
+                return render(request, 'main_app/Doctor_Testing_Lab_Dashboard.html',
                                       context={"filter_type":"Date","list_of_Appointments": appoin(list_of_Appointments), "User_Details": User_Profile})
 
         elif (user.user_type == 'Doctor'):
@@ -211,7 +211,7 @@ def profile(request,id):
                     no_of_Appointments_completed = Appointments.objects.filter(
                         doctoremail=User_Profile.doctorid.email).filter(appointment_date__month=dt.month).exclude(
                         Prescription='').count();
-                    return render(request, 'main_app/Profile.html',
+                    return render(request, 'main_app/Doctor_Testing_Lab_Dashboard.html',
                                   context={"available": available, "list_of_Appointments": appoin(list_of_Appointments),
                                            "User_Details": User_Profile,
                                            "no_of_Appointments_completed": no_of_Appointments_completed,
@@ -232,7 +232,7 @@ def profile(request,id):
                     online_Appointments=Appointments.objects.filter(doctoremail=User_Profile.doctorid.email).filter(appointment_date__month=dt.month).filter(mode_of_meeting="Online").count()
                     no_of_Appointments=Appointments.objects.filter(doctoremail=User_Profile.doctorid.email).filter(appointment_date__month=dt.month).count();
                     no_of_Appointments_completed=Appointments.objects.filter(doctoremail=User_Profile.doctorid.email).filter(appointment_date__month=dt.month).exclude(Prescription='').count();
-                    return render(request, 'main_app/Profile.html',
+                    return render(request, 'main_app/Doctor_Testing_Lab_Dashboard.html',
                                   context={"available":available,"list_of_Appointments":appoin(list_of_Appointments) , "User_Details": User_Profile,
                                            "no_of_Appointments_completed":no_of_Appointments_completed,
                                            "no_of_Appointments": no_of_Appointments,
@@ -271,7 +271,7 @@ def profile(request,id):
                     tests.append(i.testname)
                 if (min1 > 2):
                     min1 - 1;
-                return render(request, 'main_app/Profile.html',
+                return render(request, 'main_app/Doctor_Testing_Lab_Dashboard.html',
                               context={"min":min1,"max":max1+20,"earning_this_month": earning_this_month,"available":available,"dict_test": no_of_test_appointments, "Test_Names": json.dumps(tests),
                                        "list_of_Appointments": appoin(list_of_Appointments), "User_Details": User_Profile,
                                        "no_of_Appointments_completed": no_of_Appointments_completed,
@@ -705,14 +705,14 @@ def Selected_Service_Provider(request,user_id):
                     l0=HospitalSpeciality.objects.filter(speciality=i).filter(hospitalid=user_id)
                     dict2[list2[list1.index(i)]]=l0[0].price
                     dict1[i]=dict2
-            return render(request,"main_app/Dashboard.html",context={"Hospital_News":k1,"Hospital_Details":p,"specialities":dict1})
+            return render(request,"main_app/Hospital_Testing_Lab_Profile.html",context={"Hospital_News":k1,"Hospital_Details":p,"specialities":dict1})
         elif(user.user_type=="Testing Lab"):
             p = TestingLab.objects.get(tlabid=user_id)
             k = TestPricing.objects.filter(tlabid=user_id)
             Tests = []
             for i in k:
                 Tests.append(i)
-            return render(request, "main_app/Dashboard.html", context={"Testing_Lab_Details": p, "specialities": Tests})
+            return render(request, "main_app/Hospital_Testing_Lab_Profile.html", context={"Testing_Lab_Details": p, "specialities": Tests})
         elif(user.user_type=="Patient"):
             p=Patient.objects.get(patientid=user.userid)
             return render(request,"main_app/User_Profile.html",context={"User_Details":p})
@@ -747,7 +747,7 @@ def submit_Prescription(request):
     except:
         messages.info(request, "You Can not Access this Page")
         return redirect("/")
-    #return render(request,"main_app/Profile.html",context={"list_of_Appointments":dict})
+    #return render(request,"main_app/Doctor_Testing_Lab_Dashboard.html",context={"list_of_Appointments":dict})
 def Payment(request):
         try:    #print(request.GET['time_slot'])
             try:
@@ -823,7 +823,7 @@ def change_date(request):
         else:
             User_Profile=Doctor.objects.get(doctorid=request.POST['service_provider_id'])
         slots=available_slots(service_provider,request.session['date'])
-        return render(request, "main_app/Profile1.html",
+        return render(request, "main_app/Book_Time_Slot.html",
                           context={"date": request.session['date'], "User_Profile": User_Profile, 'slots': slots})
     except:
         messages.info(request, "You Can not Access this Page")
@@ -958,14 +958,14 @@ def select_speciality(request,service_provider_id):
             Specialities = []
             for i in k:
                 Specialities.append(i.speciality)
-            return render(request,"main_app/List_Of_Speciality.html",context={"date":date,"specialities":Specialities,"Hospital_Details":p})
+            return render(request,"main_app/Select_Speciality.html",context={"date":date,"specialities":Specialities,"Hospital_Details":p})
         elif(user.user_type=="Testing Lab"):
             p = TestingLab.objects.get(tlabid=service_provider_id)
             k = TestPricing.objects.filter(tlabid=service_provider_id)
             Tests = []
             for i in k:
                 Tests.append(i.testname)
-            return render(request, "main_app/List_Of_Speciality.html", context={"date":date,"Testing_Lab_Details": p, "specialities": Tests})
+            return render(request, "main_app/Select_Speciality.html", context={"date":date,"Testing_Lab_Details": p, "specialities": Tests})
         else:
             messages.info(request, "Invalid Service Provider Id")
             return redirect("/")
@@ -1038,7 +1038,7 @@ def Appointment_Details_Submission1(request):
                 else:
                     return redirect('/Hospital_Selection')
 
-        return render(request, "main_app/Profile1.html", context={"date":request.session['date'],"User_Profile": User_Profile, 'slots': slots})
+        return render(request, "main_app/Book_Time_Slot.html", context={"date":request.session['date'],"User_Profile": User_Profile, 'slots': slots})
 
     except:
         messages.info(request, "You Can not Access this Page")
@@ -1105,7 +1105,7 @@ def search_appointments(request):
                         else:
                             dict[j] = "Upload Prescription"
 
-            return render(request, 'main_app/Profile.html',
+            return render(request, 'main_app/Doctor_Testing_Lab_Dashboard.html',
                           context={"list_of_Appointments": dict, "User_Details": User_Profile,"filter_type":filter_type,"search_value":search_values})
 
         elif (user.user_type == 'Doctor'):
@@ -1126,7 +1126,7 @@ def search_appointments(request):
                 else:
                         list_of_Appointments = Appointments.objects.filter(doctoremail=i.doctorid.email).filter(
                             patientname__contains=search_values)
-                return render(request, 'main_app/Profile.html',
+                return render(request, 'main_app/Doctor_Testing_Lab_Dashboard.html',
                               context={"available": available, "list_of_Appointments": appoin(list_of_Appointments),
                                        "User_Details": User_Profile,
                                        "no_of_Appointments_completed": no_of_Appointments_completed,
@@ -1158,7 +1158,7 @@ def search_appointments(request):
                     appointment_date__month=dt.month).filter(Speciality=i.testname).count();
                 no_of_test_appointments.append(t1)
                 tests.append(i.testname)
-            return render(request, 'main_app/Profile.html',
+            return render(request, 'main_app/Doctor_Testing_Lab_Dashboard.html',
                           context={"available": available, "dict_test": no_of_test_appointments,
                                    "Test_Names": json.dumps(tests),
                                    "list_of_Appointments": appoin(list_of_Appointments), "User_Details": User_Profile,
@@ -1276,7 +1276,7 @@ def admin_search_appointments(request):
                         Speciality=search_values)
                     break;
         #print(Appointments1)
-        return render(request, "main_app/Admin_Dashboard.html",
+        return render(request, "main_app/Hospital_Dashboard.html",
                       context={"filter_type":filter_type,"search_value":search_values,"speciality":speciality,"list_of_Appointments": Appointments1, "doctors_data": doctors_data,
                                "list_of_speciality": json.dumps(list(list_of_speciality.keys())),"hospitalid":user.userid,
                                "list_of_speciality_appointments": list(list_of_speciality.values()),
@@ -1472,7 +1472,7 @@ def report(request):
         "Online_consultations_today": Online_consultations_today,
         "appointments_this_month": appointments_this_month, "earning_this_month": earning_this_month,
         "appointments_today": appointments_today}
-        return render(request, "main_app/Admin_DashBoard1.html", context=data)
+        return render(request, "main_app/Report_Hospital.html", context=data)
     except:
         messages.info(request, "You Can not Access this Page")
         return redirect("/")

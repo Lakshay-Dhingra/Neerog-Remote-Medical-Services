@@ -23,18 +23,24 @@ def get_states(country):
             lis_of_states = item
     list_of_states=[]
     lis_of_states=lis_of_states.strip()
-    #print(lis_of_states.encode('utf-8-sig',"replace").decode("utf-8"))
-    for i in lis_of_states.split(','):
+    l=lis_of_states.encode('utf-8-sig',"replace").decode("unicode-escape")
+    k12=0;
+    for i in l.split(','):
         #str=i
         #str.encode(encoding="utf-8")
         #print(str)
-        str1 = i.replace("\\", "")
+        #str1 = i.replace("\\", "")
         # print(str1)
-        for key, value in replace_dictionary.items():
+        """for key, value in replace_dictionary.items():
             if (str1.find(key) != -1):
-                str1 = str1.replace(key, value)
-        list_of_states.append(str1.strip())
+                str1 = str1.replace(key, value)"""
+        if(k12==0):
+            str2=i.strip()[3:]
+            list_of_states.append(str2)
+        else:
+            list_of_states.append(i.strip())
         #print(list_of_states,lis)
+        k12+=1;
     return list_of_states
 
 def list_of_cities1(state):
@@ -44,15 +50,18 @@ def list_of_cities1(state):
     k = city.split(":")
     trailing = re.sub("\"", "", k[1])
     trailing = re.sub("}", "", re.sub("\]", "", re.sub("\[", "", trailing))).strip()
-    lis_of_cities = trailing[0:len(trailing)].split(",")
-    # lis_of_cities=list(re.sub("\]","",re.sub("\'","",re.sub("\[","",str(lis_of_cities)))))
-
-    for i in lis_of_cities:
-        print(i.encode(encoding="utf-8-sig"))
-        str1 = i.replace("\\", "")
+    l = trailing[0:len(trailing)].encode('utf-8-sig',"replace").decode("unicode-escape")
+    lis_of_cities=l.split(",")
+    for i in range(0,len(lis_of_cities)):
+        #str1 = i.replace("\\", "")
         # print(str1)
-        for key, value in replace_dictionary.items():
+        """for key, value in replace_dictionary.items():
             if (str1.find(key) != -1):
-                str1 = str1.replace(key, value)
-        list_of_cities.append(str1.strip())
+                str1 = str1.replace(key, value)"""
+        if(i==0):
+            p=lis_of_cities[i][3:]
+            list_of_cities.append(p.strip())
+        else:
+            list_of_cities.append(lis_of_cities[i].strip())
+
     return list_of_cities

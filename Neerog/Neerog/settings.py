@@ -136,4 +136,3 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = secret_settings.email_host_user
 EMAIL_HOST_PASSWORD = secret_settings.email_host_password
-#

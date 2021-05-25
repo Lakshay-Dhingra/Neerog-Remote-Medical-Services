@@ -1045,9 +1045,8 @@ def Appointment_Details_Submission1(request):
         return redirect("/")
 def chosen_date(request):
     try:
-        if (request.GET.get("date") != null):
+        if (request.GET.get("date") != None):
             request.session['date']=request.GET.get("date")
-            #print(request.GET.get("date"))
             return JsonResponse(request.session['date'],safe=False)
         else:
             messages.info(request, "You Can not Access this Page")

@@ -3,6 +3,10 @@
     {
       height:600px!important;
     }*/
+    .container-fluid
+    {
+      font-size:25px !important;
+    }
      .col-12 button
      {
        margin-top:10px !important;
@@ -32,15 +36,13 @@
 
        height:100px!important;
     }
-    *
-    {
-      font-size:25px !important
-    }
+
+
     }
     @media only screen and (max-width: 500px) {
-    *
+    .container-fluid
     {
-      font-size:15px !important
+      font-size:15px !important;
     }
     #myDiv
      {
@@ -69,10 +71,7 @@
 
        height:100px!important;
     }
-    th,td
-    {
-      font-size:15px !important
-    }
+
     /*canvas
     {
       height:500px!important;

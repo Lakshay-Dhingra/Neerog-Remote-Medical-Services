@@ -10,11 +10,17 @@
   display: block;
 }
 
+.dropdown a:visited
+{
+  color: whitesmoke !important;
+}
+
 .dropdown-menu
 {
   background-color: transparent;
   border:none;
   text-align: center;
+  background: rgba(72, 78, 104, 0.8);
 }
 
 .dropdown-menu a:hover

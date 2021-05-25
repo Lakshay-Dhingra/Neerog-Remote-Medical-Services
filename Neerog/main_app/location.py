@@ -10,25 +10,31 @@ def getCountries():
 def get_states(country):
     list1 = geo_plug.all_Country_StateNames()[1:].split("},")
     states = {}
+    print(type(list1))
     #country = request.GET.get("country")
     for i in list1:
         k = i.split(":")
         header = re.sub("{", "", re.sub("\"", "", k[0])).strip()
         trailing = re.sub("{", "", re.sub("\"", "", k[1])).strip()
         trailing = re.sub("\'", "", trailing)
-
         states[header] = trailing[1:len(trailing) - 1]
     for key, item in states.items():
         if (key == country):
             lis_of_states = item
     list_of_states=[]
+    lis_of_states=lis_of_states.strip()
+    #print(lis_of_states.encode('utf-8-sig',"replace").decode("utf-8"))
     for i in lis_of_states.split(','):
+        #str=i
+        #str.encode(encoding="utf-8")
+        #print(str)
         str1 = i.replace("\\", "")
         # print(str1)
         for key, value in replace_dictionary.items():
             if (str1.find(key) != -1):
                 str1 = str1.replace(key, value)
         list_of_states.append(str1.strip())
+        #print(list_of_states,lis)
     return list_of_states
 
 def list_of_cities1(state):
@@ -42,6 +48,7 @@ def list_of_cities1(state):
     # lis_of_cities=list(re.sub("\]","",re.sub("\'","",re.sub("\[","",str(lis_of_cities)))))
 
     for i in lis_of_cities:
+        print(i.encode(encoding="utf-8-sig"))
         str1 = i.replace("\\", "")
         # print(str1)
         for key, value in replace_dictionary.items():

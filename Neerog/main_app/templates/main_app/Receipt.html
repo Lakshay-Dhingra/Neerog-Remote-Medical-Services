@@ -1,3 +1,4 @@
+<!-- Here User can Print receipt of appointment -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +6,8 @@
     {% load static %}
      {% include "main_app/header.html" %}
     {% include "main_app/common_css.html" %}
-    {% if Details %}
-    <title>Appointment Details</title>
-    {% else %}
     <title>Receipt</title>
-    {% endif %}
+
     <style>
         @media only screen and (max-width: 1024px) {
         *

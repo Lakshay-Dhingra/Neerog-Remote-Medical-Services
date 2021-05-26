@@ -62,8 +62,10 @@ def edit_profile(request):
         if(user_data.isRegisteredUser(uid)):
             if(user_type == "Doctor"):
                 doctor_data = user_data.getDoctorData(uid)
-                
                 doctor_data['AllSpecialities']=medical_speciality.get_specialities()
+                doctor_data['Countries'] = location.getCountries()
+                doctor_data['States'] = location.get_states(doctor_data['Country'])
+                doctor_data['Cities'] = location.list_of_cities1(doctor_data['State'])
                 doctor_data['AllGenders']=['Male', 'Female', 'Trans', 'Unknown']
                 if(doctor_data["independent"]):
                     doctor_data['HospitalId']=""

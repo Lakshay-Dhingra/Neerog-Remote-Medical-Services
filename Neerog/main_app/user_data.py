@@ -107,6 +107,7 @@ def getDoctorData(uid):
         doctor_data['State'] = doctorobj.state
         doctor_data['City'] = doctorobj.city
         doctor_data['Area'] = doctorobj.area
+        doctor_data['Zip'] = doctorobj.zip
         doctor_data['Fee'] = doctorobj.clinic_fee
     else:
         hospitalobj = doctorobj.hospitalid
@@ -125,7 +126,9 @@ def getDoctorData(uid):
         doctor_data['InstitutePhotoUrl'] = hospitalobj.pic1.url
         doctor_data['Country'] = hospitalobj.country
         doctor_data['City'] = hospitalobj.city
+        doctor_data['State'] = hospitalobj.state
         doctor_data['Area'] = hospitalobj.area
+        doctor_data['Zip'] = hospitalobj.zip
         if hospitalspeciality is None:
             doctor_data['Fee']=None
         else:

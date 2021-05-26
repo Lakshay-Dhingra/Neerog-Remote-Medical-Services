@@ -13,7 +13,77 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
 
-    <title>Neerog - Remote Medical Services</title>
+    <title>Neerog - Edit Profile</title>
+
+    <script>
+        $(document).ready(function(){
+        $("#countries").on("change",function(){
+        var country=$("#countries").val();
+        $.ajax(
+        {
+             type:"get",
+             url:"/Hospital_Selection/states/",
+             data:
+             {
+              country:$("#countries").val()
+             },
+             success:function(data)
+             {
+             var states=JSON.stringify(data);
+             var p=states.split(",");
+
+             $("#states").empty();
+             $("#states").append('<option value="">Select State</option>');
+             for(var i=0;i<p.length;i++)
+             {
+              var k=p[i].replace("\[","")
+             var n=k.replace("\]","")
+             var optionText=n.slice(1,n.length-1)
+                $("#states").append(`<option value="${optionText}">
+                                       ${optionText}
+                                  </option>`);
+             }
+             }
+        });
+        });
+        $("#states").on("change",function(){
+        var state=$("#states").val();
+        if(state=="")
+             alert("Select Appropriate State");
+        $.ajax(
+        {
+             type:"get",
+             url:"/Hospital_Selection/city/",
+             data:
+             {
+              city:$("#states").val()
+             },
+             success:function(data)
+             {
+             var states=JSON.stringify(data);
+             var p=states.split(",");
+
+             $("#cities").empty();
+             $("#cities").append(`<option value="Select">
+                                       Select City
+                                  </option>`);
+
+             for(var i=0;i<p.length;i++)
+             {
+             var k=p[i].replace("\[","")
+             var n=k.replace("\]","")
+             var optionText=n.slice(1,n.length-1)
+
+                $("#cities").append(`<option value="${optionText}">
+                                       ${optionText}
+                                  </option>`);
+             }
+             }
+        });
+        });
+        });
+    </script>
+
 
 </head>
 <body>
@@ -103,9 +173,18 @@
             </div>
 
             <div class="form-row" id="hospital_details" {% if independent %} style="display:none;"{% endif %}>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4 editbuttons">
+                    <button type="submit" class="btn btn-primary save_button">Save</button>
+                    <button class="btn btn-danger" type="button" onclick="location.reload()">Reset</button>
+                    <span class="form_feedback"></span>
+                </div>
+                <div class="form-group col-md-4">
                     <label for="HospitalId">Hospital Id</label>
                     <input name="hospitalid" type="number" class="form-control" id="HospitalId" placeholder="Enter Hospital Id" value="{{HospitalId}}">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="HospitalName">Hospital Name</label>
+                    <input type="text" class="form-control" id="HospitalName" placeholder="Hospital Name" value="{{WorksAt}}" disabled>
                 </div>
             </div>
 
@@ -113,35 +192,50 @@
             <div id="clinic_details" {% if independent == False %} style="display:none;"{% endif %}>
             <div class="form-row">
                 <div class="form-group col-md-3">
-                    <label for="Country">Country</label>
-                    <select name="country" id="Country" class="form-control">
-                        <option selected>{{Country}}</option>
-                        {% for gd in AllGenders%}
-                            {% if gd != Country%}
-                            <option>{{gd}}</option>
+                    <label for="countries">Country</label>
+                    <select name="country" id="countries" class="form-control">
+                        <option value="{{Country}}" selected>{{Country}}</option>
+                        {% for c in Countries %}
+                            {% if c != Country%}
+                            <option value="{{c}}">{{c}}</option>
                             {% endif %}
-                        {% endfor %}
+                        {% endfor%}
                     </select>
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="City">City</label>
-                    <select name="city" id="City" class="form-control">
-                        <option selected>{{City}}</option>
-                        {% for gd in AllGenders%}
-                            {% if gd != City%}
-                            <option>{{gd}}</option>
+                    <label for="states">State</label>
+                    <select name="state" id="states" class="form-control">
+                        <option value="{{State}}" selected>{{State}}</option>
+                        {% for s in States %}
+                            {% if s != State %}
+                            <option value="{{s}}">{{s}}</option>
                             {% endif %}
-                        {% endfor %}
+                        {% endfor%}
                     </select>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-3">
+                    <label for="cities">City</label>
+                    <select name="city" id="cities" class="form-control">
+                        <option value="{{City}}" selected>{{City}}</option>
+                        {% for c in Cities %}
+                            {% if c != City%}
+                            <option value="{{c}}">{{c}}</option>
+                            {% endif %}
+                        {% endfor%}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
                     <label for="Area">Area</label>
                     <input name="area" type="text" class="form-control" id="Area" placeholder="Area" value="{{Area}}">
                 </div>
             </div>
 
             <div class="form-row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
+                    <label for="Zip">ZIP</label>
+                    <input type="number" name="zip" class="form-control" id="Zip" placeholder="Zip Code" value="{{Zip}}">
+                </div>
+                <div class="form-group col-md-3">
                 <label for="ClinicName">Clinic Name</label>
                 <input type="text" name="cname" class="form-control" id="ClinicName" placeholder="Clinic Name" value="{{WorksAt}}">
                 </div>
@@ -149,18 +243,21 @@
                 <label for="Fee">Fee (In INR)</label>
                 <input type="number" name="fee" class="form-control" id="Fee" placeholder="Appointment Fee" value="{{Fee}}">
                 </div>
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-3">
                     <label for="ClinicPhoto">Clinic Photo</label>
                     <input name="cphoto" type="file" class="form-control-file" id="ClinicPhoto" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                     <a href="{{InstitutePhotoUrl}}">View Saved Clinic Photo</a>
                 </div>
             </div>
+
+            <div class="form-group col-md-12 editbuttons">
+                <button type="submit" class="btn btn-primary save_button">Save</button>
+                <button class="btn btn-danger" type="button" onclick="location.reload()">Reset</button>
+                <span class="form_feedback"></span>
+            </div>
+
         </div>
-        <div class="form-group col-md-12 editbuttons">
-            <button type="submit" class="btn btn-primary save_button">Save</button>
-            <button class="btn btn-danger">Reset</button>
-            <span class="form_feedback"></span>
-        </div>
+        
         </form>
     </div>
 
@@ -216,38 +313,47 @@
         var experience=document.getElementById('Experience');
         experience.addEventListener("keyup",check);
 
-        var feedback = document.querySelector(".form_feedback");
+        var feedback = document.querySelectorAll(".form_feedback")[0];
+        var feedback2 = document.querySelectorAll(".form_feedback")[1];
         var savebtn = document.querySelectorAll(".save_button")[0];
+        var savebtn2 = document.querySelectorAll(".save_button")[1];
         
         function check()
         {
             savebtn.disabled = true;
+            savebtn2.disabled = true;
             if(myname.value=="")
             {
-                feedback.innerHTML = "*Please Fill The Name Field..."; 
+                feedback.innerHTML = "*Please Fill The Name Field...";
+                feedback2.innerHTML = "*Please Fill The Name Field..."; 
             }
             else
             {
                 if(phone.value.length < 10)
                 {
                     feedback.innerHTML = "*Phone Number Must Be of 10 digits.";
+                    feedback2.innerHTML = "*Phone Number Must Be of 10 digits.";
                 }
                 else
                 {
                     if(experience.value=="")
                     {
-                        feedback.innerHTML = "*Please Fill Experience Field."; 
+                        feedback.innerHTML = "*Please Fill Experience Field.";
+                        feedback2.innerHTML = "*Please Fill Experience Field."; 
                     }
                     else
                     {
                         if(about.value=="")
                         {
                             feedback.innerHTML = "*Please Write Something About Yourself..."; 
+                            feedback2.innerHTML = "*Please Write Something About Yourself..."; 
                         }
                         else
                         {
                             feedback.innerHTML = "";
+                            feedback2.innerHTML = "";
                             savebtn.disabled = false;
+                            savebtn2.disabled = false;
                         }
                     }
                 }
@@ -263,6 +369,9 @@
         var fee=document.getElementById('Fee');
         fee.addEventListener("keyup",checkClinic);
 
+        var zip=document.getElementById('Zip');
+        zip.addEventListener("keyup",checkClinic);
+
         var cphoto = document.getElementById('ClinicPhoto');
         cphoto.addEventListener("keyup",checkClinic);
 
@@ -271,26 +380,35 @@
             if(type.value == "True")
             {
                 savebtn.disabled = true;
+                savebtn2.disabled = true;
                 if(area.value=="")
                 {
-                    feedback.innerHTML = "*Please Enter The Clinic Area/Location."; 
+                    feedback2.innerHTML = "*Please Enter The Clinic Area/Location."; 
                 }
                 else
                 {
                     if(cname.value=="")
                     {
-                        feedback.innerHTML = "*Please Enter Your Clinic Name.";
+                        feedback2.innerHTML = "*Please Enter Your Clinic Name.";
                     }
                     else
                     {
                         if(fee.value=="")
                         {
-                            feedback.innerHTML = "*Please Specify The Appointment Fee for Clinic."; 
+                            feedback2.innerHTML = "*Please Specify The Appointment Fee for Clinic."; 
                         }
                         else
                         {
-                            feedback.innerHTML = "";
-                            savebtn.disabled = false;
+                            if(zip.value=="")
+                            {
+                                feedback2.innerHTML = "*Please Specify The Zip Code of Clinic's Area."; 
+                            }
+                            else
+                            {
+                                feedback2.innerHTML = "";
+                                savebtn.disabled = false;
+                                savebtn2.disabled = false;
+                            }
                         }
                     }
                 }
@@ -305,6 +423,7 @@
             if(type.value == "False")
             {
                 savebtn.disabled = true;
+                savebtn2.disabled = true;
                 if(hid.value=="")
                 {
                     feedback.innerHTML = "*Please Enter Your HospitalId."; 
@@ -313,6 +432,7 @@
                 {
                     feedback.innerHTML = "";
                     savebtn.disabled = false;
+                    savebtn2.disabled = false;
                 }
             }
         }

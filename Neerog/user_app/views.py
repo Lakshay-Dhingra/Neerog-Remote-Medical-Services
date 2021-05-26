@@ -47,7 +47,7 @@ def profile(request, uid):
 
                 return render(request,'user_app/DoctorProfile.html',doctor_data)
             else:
-                return redirect("/Selected/"+str(uid-1))
+                return redirect("/Profile/"+str(uid-1))
         else:
             messages.info(request,"This User Hasn't Completed Registeration yet!")
     else:

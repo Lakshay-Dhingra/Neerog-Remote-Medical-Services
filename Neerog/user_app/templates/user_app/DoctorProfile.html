@@ -56,8 +56,8 @@
                     <span> </span>
                     <i class="fas fa-check-circle" style="font-size:25px; color: #555;"></i>
                     {% endif %}</h2>
-                    <h5>Doctor Specialized in {{SpecializedIn}} At {{WorksAt}}</h5>
-                    <h6><i class="fas fa-map-marker-alt"></i> {{Area}}, {{City}}, {{Country}}</h6>
+                    <h5>Doctor Specialized in {{SpecializedIn|title}} At {{WorksAt}}</h5>
+                    <h6><i class="fas fa-map-marker-alt"></i> {{Area}}, {{City}}</h6>
                 </div>
 
                 <div class="col-lg-7 col-12" style="margin:0 auto;">
@@ -104,15 +104,15 @@
                     <div class="follow_email row">
 
                     {% if Myself %}
-                    <div class="col-5 follow"><a href="{% url 'edit_profile' %}" class="btn btn-info">Edit Profile</a></div>
+                    <div class="col-md-5 follow"><a href="{% url 'edit_profile' %}" class="btn btn-info">Edit Profile</a></div>
                     {% else %}
                         {% if Following %}
-                        <div class="col-5 follow"><a href="{% url 'unfollow' uid=uid %}" class="btn btn-info">Following</a></div>
+                        <div class="col-md-5 follow"><a href="{% url 'unfollow' uid=uid %}" class="btn btn-info">Following</a></div>
                         {% else %}
-                        <div class="col-5 follow"><a href="{% url 'follow' uid=uid %}" class="btn btn-info">Follow</a></div>
+                        <div class="col-md-5 follow"><a href="{% url 'follow' uid=uid %}" class="btn btn-info">Follow</a></div>
                         {% endif %}
                     {% endif %}
-                        <div class="col-7 profileemail"><a href="mailto:{{Email}}" style = "display: inline-block; word-break: break-word; word-wrap: break-word;">{{Email}}</a></div>
+                        <div class="col-md-7 profileemail"><a href="mailto:{{Email}}" style = "display: inline-block; word-break: break-word; word-wrap: break-word;">{{Email}}</a></div>
                     </div>
 
             </div>
@@ -121,20 +121,27 @@
         <section id="profile_body" class="row">
             <section id="left_profile_section" class="col-12 col-lg-3">
                 <div>
-                    <h4>About Me:</h4>
-                    <p class="about_me">{{About}}</p>
+                    
                     <h4>Contact:</h4>
                     <p>{{Phone}}</p>
-                    <h4>Area Of Expertise:</h4>
-                    <p>{{SpecializedIn}}</p>
-                    <h4>Years Of Experience:</h4>
-                    <p>{{Experience}} Years</p>
                     <h4>Gender:</h4>
                     <p>{{Gender}}</p>
+                    <h4>Country:</h4>
+                    <p>{{Country}}</p>
+                    <h4>State:</h4>
+                    <p>{{State}}</p>
+                    <h4>City:</h4>
+                    <p>{{City}}</p>
+                    <h4>Area Of Expertise:</h4>
+                    <p>{{SpecializedIn|title}}</p>
+                    <h4>Years Of Experience:</h4>
+                    <p>{{Experience}} Years</p>
+                    <h4>Number of Followers: </h4>
+                    <p>{{Followers}}</p>
                     <h4>Date Joined:</h4>
                     <p>{{DateJoined}}</p>
-                    <span style="display: block;">
-                    <h4 style="display: inline;">Followers: </h4><span>{{Followers}}</span>
+                    <h4>Verified User:</h4>
+                    <p>{{Verified}}</p>
                     
                 </div>
             </section>
@@ -142,10 +149,14 @@
 
                 <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                    <img class="d-block w-100"  style="height: 750px; border:solid" src="{{InstitutePhotoUrl}}" alt="Doctor's Organization Image">
+                    <div class="carousel-item active big_img">
+                    <img class="d-block w-100" src="{{InstitutePhotoUrl}}" alt="Doctor's Organization Image">
                     </div>
                 </div>
+                </div>
+                <div>
+                    <h4>About Me:</h4>
+                    <p class="about_me">{{About}}</p>
                 </div>
             </section>
         </section>

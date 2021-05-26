@@ -104,6 +104,7 @@ def getDoctorData(uid):
         doctor_data['WorksAt'] = doctorobj.clinic_name
         doctor_data['InstitutePhotoUrl'] = doctorobj.clinic_photo.url
         doctor_data['Country'] = doctorobj.country
+        doctor_data['State'] = doctorobj.state
         doctor_data['City'] = doctorobj.city
         doctor_data['Area'] = doctorobj.area
         doctor_data['Fee'] = doctorobj.clinic_fee

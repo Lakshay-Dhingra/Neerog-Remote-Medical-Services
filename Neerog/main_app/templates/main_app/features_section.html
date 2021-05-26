@@ -22,16 +22,20 @@
               <div class="card-body">
                 <h5 class="card-title"><span><span><i style="font-size: 30px;" class="fas fa-hospital"></i><i class="fas fa-user"></i></span> For All Users and Organizations</h5>
                 <p class="card-text">First, click on <b>Register</b> and then enter your details and password to create an account. Then, you'll recieve a verification link from <strong>neerog.web@gmail.com</strong> on your registered email, follow that link to verify your email. Now, you can <b>Login</b> using your Email and Password. After that you have to enter few more details to complete your account registeration.</p>
-                <a href="{% url 'signup' %}" class="card-link">Register</a>
-                <a href="{% url 'signin' %}" class="card-link">Login</a>
-                <a href="{% url 'signup_redirect' %}" class="card-link">Complete Registeration</a>
-                <a href="{% url 'edit_profile' %}" class="card-link">Edit Profile</a>
 
-                {% if user.is_authenticated %}
-                <a href="{% url 'dashboard' id=user.get_username %}" class="card-link">My Dashboard</a>
-                {% else %}
-                <a href="{% url 'index' %}" class="card-link">My Dashboard</a>
-                {% endif %}
+                <div class="row no-gutters">
+                  <div class="row no-gutters col-lg-3 col-6">
+                    <a class="col-lg-6 col-6" href="{% url 'signup' %}" class="card-link">Register</a>
+                    <a class="col-lg-6 col-6" href="{% url 'signin' %}" class="card-link">Login</a>
+                  </div>
+                  {% if user.is_authenticated %}
+                  <a class="col-lg-3 col-6" href="{% url 'dashboard' id=user.get_username %}" class="card-link">My Dashboard</a>
+                  {% else %}
+                  <a class="col-lg-3 col-md-6" href="{% url 'index' %}" class="card-link">My Dashboard</a>
+                  {% endif %}
+                  <a class="col-lg-4 col-md-6 col-8" href="{% url 'signup_redirect' %}" class="card-link">Complete Registeration</a>
+                  <a class="col-lg-2 col-4" href="{% url 'edit_profile' %}" class="card-link">Edit Profile</a>
+                </div>
               </div>
             </div>
           </div>

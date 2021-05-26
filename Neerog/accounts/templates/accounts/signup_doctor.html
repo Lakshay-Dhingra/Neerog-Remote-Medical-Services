@@ -99,14 +99,16 @@
     <form method="post" id="doctorform" class="login-form" action="{% url 'register_doctor' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <h1>Register - Doctor</h1>
-
+    
+    <div class="textb">
+        <label for="start_time" class="file_label">Availability Time:</label>
+    </div>
     <div class="textb" style="width: 49%; float: left;">
-        <label for="start_time" class="file_label">Available From</label>
         <input type="time" class="time_input" style="height: 60px; width: 100%; padding:0 15px;" name="start_time" value="09:00" required>
     </div>
 
     <div class="textb" style="width: 49%; float: right;">
-        <label for="end_time" class="file_label">Available Till</label>
+        <!-- <label for="end_time" class="file_label"> </label> -->
         <input type="time" class="time_input" style="height: 60px; width: 100%; padding:0 15px;" name="end_time" value="18:00" required>
     </div>
 

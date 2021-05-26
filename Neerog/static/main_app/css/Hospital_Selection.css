@@ -1,13 +1,13 @@
 @media only screen and (max-width: 960px)
           {
+           .container-fluid
+          {
+           font-size:30px !important;
+          }
           #submit_form
           {
             margin-left:300px;
           }
-           b
-           {
-             font-size:25px !important;
-           }
            .col-8
            {
              margin-top:10px!important;
@@ -30,23 +30,18 @@
              }
              .col-lg-4 button
            {
-              width:135px !important;
-              font-size:10px !important;
+              width:340px !important;
+              font-size:20px !important;
            }
            .img1
             {
-               height:200px !important;
+               height:400px !important;
 
                }
-            *
-          {
-           font-size:25px !important;
-          }
-
           }
           @media only screen and (max-width: 500px)
           {
-          *
+          .container-fluid
           {
            font-size:15px !important;
           }
@@ -54,11 +49,6 @@
           {
             margin-left:0px!important;
           }
-
-           b
-           {
-             font-size:15px !important;
-           }
            .col-8
            {
              margin-top:10px!important;
@@ -81,8 +71,8 @@
              }
              .col-lg-4 button
            {
-              width:135px !important;
-              font-size:10px !important;
+              width:154px !important;
+              font-size:12px !important;
            }
            .img1
             {
@@ -102,14 +92,14 @@
                }
            .col-lg-4 button
            {
-              width:192px;
+              width:205px;
               font-size:15px;
            }
            .model
            {
               width:150px;
            }
-           th,td
+           .th1
            {
             padding:2px 2px 2px 10px;
 

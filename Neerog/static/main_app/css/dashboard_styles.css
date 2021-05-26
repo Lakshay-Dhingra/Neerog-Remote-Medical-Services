@@ -3,6 +3,10 @@
     {
       height:600px!important;
     }*/
+    .container-fluid
+    {
+      font-size:25px !important;
+    }
      .col-12 button
      {
        margin-top:10px !important;
@@ -32,15 +36,13 @@
 
        height:100px!important;
     }
-    *
-    {
-      font-size:25px !important
-    }
+
+
     }
     @media only screen and (max-width: 500px) {
-    *
+    .container-fluid
     {
-      font-size:15px !important
+      font-size:15px !important;
     }
     #myDiv
      {
@@ -60,7 +62,7 @@
     {
        width:300px!important;
        margin-left:20px!important;
-       //border-radius:20px!important;
+       /*border-radius:20px!important;*/
     }
     .da
     {
@@ -69,10 +71,7 @@
 
        height:100px!important;
     }
-    th,td
-    {
-      font-size:15px !important
-    }
+
     /*canvas
     {
       height:500px!important;
@@ -94,14 +93,14 @@
     {
        width:400px;
        margin-left:20px;
-       //border-radius:20px;
+       /*border-radius:20px;*/
        height:300px;
     }
     .cha
     {
        width:400px;
        margin-left:20px;
-       //border-radius:20px;
+       /*border-radius:20px;*/
     }
     th
     {
@@ -123,7 +122,7 @@
     {
     background-color:#404040;
     color:white;
-    //border-radius:20px!important;
+    /*border-radius:20px!important;*/
     text-align:center!important;
     }
 
@@ -134,7 +133,8 @@
      }
      body::before
 {
-    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("../images/image9.jpg") no-repeat center;
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("../images/image9.jpeg") no-repeat center;
+    /* background: linear-gradient( rgba(0, 0, 10, 0.2), rgba(0, 0, 0, 0.2) ), url("../images/bg1.jpg") no-repeat center; */
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

@@ -9,14 +9,24 @@
      {% include 'main_app/common_css.html' %}
     <style>
       @media only screen and (max-width: 1024px) {
-        *
+        .container-fluid
         {
-         font-size:25px!important;
+         font-size:30px!important;
         }
         .card
         {
        margin-top:20px;
-       height:80px!important;
+       height:60px!important;
+        }
+        @media only screen and (max-width: 500px) {
+        .container-fluid
+        {
+         font-size:20px!important;
+        }
+        .card
+        {
+       margin-top:20px;
+       height:60px!important;
         }
         }
      .card
@@ -78,7 +88,7 @@
     </script>
 </head>
 {% include 'main_app/navbar.html' %}
-<body  style="width:95%;margin-top:80px;">
+<body  style="margin-top:80px;">
 <div class="container-fluid">
 {% if Hospital_Details %}
 <div class="row">

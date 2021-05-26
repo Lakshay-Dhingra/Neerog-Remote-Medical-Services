@@ -17,6 +17,19 @@
   text-align: center;
 }
 
+@media (max-width: 1140px)
+{
+  .dropdown a:visited
+  {
+    color: whitesmoke !important;
+  }
+  .dropdown-menu
+  {
+    background: rgba(72, 78, 104, 0.8);
+  }
+}
+
+
 .dropdown-menu a:hover
 {
   background: silver;

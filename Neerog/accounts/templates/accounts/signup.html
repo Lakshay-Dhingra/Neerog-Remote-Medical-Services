@@ -22,6 +22,8 @@
     <!-- Navbar -->
     {% include 'main_app/navbar.html' %}
 
+    <div class="signupbg"></div>
+
     <form method="post" class="login-form" action="{% url 'register' %}">
     {% csrf_token %}
     <h1>Sign Up</h1>

@@ -7,7 +7,7 @@
     {% load static %}
     <title>Dashboard</title>
      <meta name="viewport" content="width=device-width, initial-scale=1">
-   {% include "main_app/header.html" %}
+    {% include "main_app/header.html" %}
     {% include 'main_app/chart.html' %}
     <!-- Meta Tags -->
     <!-- Link or CSS Tags -->
@@ -15,7 +15,6 @@
     {% include 'main_app/common_js.html' %}
     <link rel="stylesheet" href="{% static 'main_app/css/dashboard_styles.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
     <script>
         $(document).ready(function()
         {
@@ -246,6 +245,8 @@ var myChart = new Chart(ctx, {
     </div>
 </div>
 </div>
+{% else %}
+          <div style="margin-top:170px;" id="myDiv">
 {% endif %}
 <div id="appointment" style="margin-top:30px;">
     <div class="row">

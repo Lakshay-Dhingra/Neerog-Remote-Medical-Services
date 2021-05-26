@@ -12,6 +12,7 @@
     {% include 'main_app/header.html' %}
    {% include 'main_app/common_css.html' %}
     <link rel="stylesheet" href="{% static 'main_app/css/Hospital_Selection.css' %}">
+
     <script>
         $(document).ready(function()
         {
@@ -114,13 +115,11 @@
         });
         });
     </script>
-    <script src="{% static 'Hospital_Selection.js' %}"></script>
     <script>
         $(document).ready(function(){
         $(".mode").on("click",function(){
         var id1=$(this).attr('id');
         var id2=$('.doctor').attr('id');
-
         var p=id1.split(",")
 
         $(".doctor1").val(p[1]);
@@ -413,17 +412,17 @@
     {% if list_of_hospitals|length > 0 %}
 <div class="row" style="margin-top:50px;">
     {% for i in list_of_hospitals %}
-    <div class="col-lg-3 col-md-6 col-sm-6" style="margin-top:10px;">
+    <div class="col-xl-3 col-lg-3 col-md-12" style="margin-top:10px;">
         <div class="card">
-            <a href='/Selected/{{ i.hospitalid }}'><image src="{{ i.pic1.url }}" width="100%" height=100px  class="img1" alt="{{ i.hospitalid.name }}"></image></a>
+            <a href='/Profile/{{ i.hospitalid }}'><image src="{{ i.pic1.url }}" width="100%" height=100px  class="img1" alt="{{ i.hospitalid.name }}"></image></a>
             <table class="table-stripped">
                 <tr>
-                    <th>Name:</th>
-                    <td>{{ i.hospitalid.name }}</td>
+                    <th class="th1">Name:</th>
+                    <td class="th1">{{ i.hospitalid.name }}</td>
                 </tr>
                 <tr>
-                    <th>City:</th>
-                    <td>{{ i.city }}</td>
+                    <th class="th1">City:</th>
+                    <td class="th1">{{ i.city }}</td>
 
                 </tr>
             </table>
@@ -439,7 +438,7 @@
     {% if list_of_doctors|length > 0 %}
 <div class="row" style="margin-top:50px;">
     {% for i,j in list_of_doctors.items %}
-    <div class="col-lg-4 col-md-6" style="margin-top:10px;">
+    <div class="col-lg-4 col-md-12 col-xl-4" style="margin-top:10px;">
         <div class="card">
             {% if i.clinic_name|length > 0 %}
             <a href='/user/profile/{{ i.doctorid }}'><image src="{{ i.clinic_photo.url }}" width="100%" height=100px class="img1" alt="{{ i.hospitalid.name }}"></image></a>
@@ -453,33 +452,33 @@
             <table class="table-stripped clinics">
                 <tr>
                     {% if i.clinic_name|length > 0 %}
-                    <th>Clinic Name:</th>
-                    <td>{{ i.clinic_name }}</td>
+                    <th class="th1">Clinic Name:</th>
+                    <td class="th1">{{ i.clinic_name }}</td>
                     {% else %}
-                    <th>Hospital Name:</th>
-                    <td>{{ i.hospitalid.hospitalid.name }}</td>
+                    <th class="th1">Hospital Name:</th>
+                    <td class="th1">{{ i.hospitalid.hospitalid.name }}</td>
                     {% endif %}
                 </tr>
                 <input type="text" id="{{ i.doctorid }}" class="doctor" hidden>
                 <tr>
-                    <th>Name:</th>
-                    <td>{{ i.doctorid.name }}</td>
+                    <th class="th1" >Name:</th>
+                    <td class="th1">{{ i.doctorid.name }}</td>
                 </tr>
                 <tr>
-                    <th>City:</th>
-                    <td>{{ i.city }}</td>
+                    <th class="th1">City:</th>
+                    <td class="th1">{{ i.city }}</td>
                 </tr>
                 <tr>
-                    <th>Specialisation:</th>
-                    <td>{{ i.specialization }}</td>
+                    <th class="th1">Specialisation:</th>
+                    <td class="th1">{{ i.specialization }}</td>
                 </tr>
                 <tr>
-                    <th>fee:</th>
-                    <td>&#8377;{{ j }}</td>
+                    <th class="th1">fee:</th>
+                    <td class="th1">&#8377;{{ j }}</td>
                 </tr>
                 <tr>
-                    <td><button class="btn btn-primary mode" id="Online,{{ i.doctorid }}"   data-toggle="modal" data-target="#exampleModal">Book Online Consultation</button></td>
-                <td><button class="btn btn-primary mode"  id="Offline,{{ i.doctorid }}"   data-toggle="modal" data-target="#exampleModal">Book Offline Appointment</button></td>
+                    <td><button class="btn btn-primary mode" id="Online,{{ i.doctorid }}"   data-toggle="modal" data-target="#exampleModal"><b class="bu">Book Online Consultation</b></button></td>
+                    <td><button class="btn btn-primary mode"  id="Offline,{{ i.doctorid }}"   data-toggle="modal" data-target="#exampleModal"><b class="bu">Book Offline Appointment</b></button></td>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -500,8 +499,8 @@
                 <input type="date" name="date" class="form-control" id="Appointment_Date">
       </div>
       <div class="modal-footer">
-        <button type="button"  class="btn btn-danger model"data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary model">Book Appointment</button>
+          <button type="button"  class="btn btn-danger model"data-dismiss="modal"><b class="bu">Close</b></button>
+          <button type="submit" class="btn btn-primary model"><b class="bu">Book Appointment</b></button>
       </div>
          </form>
 
@@ -522,15 +521,15 @@
     {% for i in list_of_testing_labs %}
     <div class="col-lg-3 col-md-6" style="margin-top:10px;">
         <div class="card">
-            <a href='/Selected/{{ i.tlabid }}'><image src="{{ i.lab_photo.url }}" width="100%" height=250px class="img1" alt="{{ i.tlabid.name }}"></image></a>
+            <a href='/Profile/{{ i.tlabid }}'><image src="{{ i.lab_photo.url }}" width="100%" height=250px class="img1" alt="{{ i.tlabid.name }}"></image></a>
             <table class="table-stripped">
                 <tr>
-                    <th>Testing Lab Name:</th>
-                    <td>{{ i.tlabid.name }}</td>
+                    <th class="th1">Testing Lab Name:</th>
+                    <td class="th1">{{ i.tlabid.name }}</td>
                 </tr>
                 <tr>
-                    <th>City:</th>
-                    <td>{{ i.city }}</td>
+                    <th class="th1">City:</th>
+                    <td class="th1">{{ i.city }}</td>
                 </tr>
             </table>
              <button class="btn btn-primary" onclick="location.href='{% url 'Selected' user_id=i.tlabid  %}'">Apply Now</button>

@@ -37,7 +37,7 @@
     <h3 style="color:#3291a8;">Select Doctor </h3>
         <div class="row">
         {% for i in list_of_Doctors %}
-             <div class="col-lg-4 col-12" style="margin-top:10px;">
+             <div class="col-xl-4 col-lg-6 col-12" style="margin-top:10px;">
                  <div class="card">
                      <center>
              {% if i.profile_pic %}
@@ -70,8 +70,8 @@
                         <input type="text" hidden value="{{ i.doctorid }}" name="service_provider_id">
                         <!--<input type="text" hidden value="{{ Hospital_Details.hospitalid }}" name="service_provider_id"-->
                         <input type="text" hidden value="" name="mode" class="mode">
-                    <th><button class="btn btn-primary col-12" style="font-size:14px;" id="Online" type="submit">Book Online Consultation</button></th>
-                <td><button class="btn btn-primary col-12"  style="font-size:14px;" id="Offline" type="submit">Book Offline Appointment</button></td>
+                        <th><button class="btn btn-primary col-12" style="font-size:14px;" id="Online" type="submit"><b class="bu">Book Online Consultation</b></button></th>
+                        <td><button class="btn btn-primary col-12"  style="font-size:14px;" id="Offline" type="submit"><b class="bu">Book Offline Appointment</b></button></td>
                 </form>
                 </tr>
             </table>

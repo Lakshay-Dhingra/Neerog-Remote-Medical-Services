@@ -1,5 +1,5 @@
      @media only screen and (max-width: 960px) {
-     *
+     .container-fluid
      {
      font-size:30px !important;
      }
@@ -19,7 +19,7 @@
      }
      }
      @media only screen and (max-width: 420px) {
-     *
+     .container-fluid
      {
      font-size:15px !important;
      }

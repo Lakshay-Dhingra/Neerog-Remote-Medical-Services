@@ -1,5 +1,6 @@
 from .views import *
 from .models import *;
+from . import domain
 from Neerog import secret_settings,settings
 def Scheduler():
     for i in Appointment_Timings.objects.all():
@@ -26,7 +27,7 @@ def Email_Notifications():
                                                 'doctor_name':user.name,
                                                 'appointment_id':i.appointmentid,
                                                 'time':i.appointment_time,
-                                                'domain': '127.0.0.1:8000',
+                                                'domain': domain.getDomainName(),
                                             })
             else:
                 template = render_to_string('main_app/Email_Notification.html',

@@ -1,9 +1,10 @@
 import time
+from django.contrib.auth import authenticate
 from django.core.mail import send_mail, EmailMessage
 from django.db.models import Sum
 from django.template.loader import render_to_string
-from main_app.models import*;
-from main_app.medical_tests import *;
+from .models import *;
+from .medical_tests import *;
 from .location import *;
 from django.contrib import messages
 import requests
@@ -20,8 +21,7 @@ from Neerog import secret_settings,settings
 import random
 from .medical_speciality import get_specialities
 from .medical_tests import list_of_medical_tests
-from .models import TestingLab
-from . import search_data
+from . import search_data, domain
 
 replace_dictionary={"u0101":"a","u012b":"i","u016b":"u","u0100":"A","u016a":"u"}
 
@@ -1408,7 +1408,7 @@ def cancel_appointments(list_of_appointments,user):
             'user_type_name': user.user_type,
             'appointment_date':str(i.appointment_date.year)+'-'+str(i.appointment_date.month)+'-'+str(i.appointment_date.day),
             'fee': i.amount_paid,
-             'domain': '127.0.0.1:8000',
+             'domain': domain.getDomainName(),
             })
             email = EmailMessage(
                 'Update relating to Appointment',

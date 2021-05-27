@@ -1,11 +1,11 @@
 {% autoescape off %}
 Hi {{name}}!
 
-Thanks for signing up with Neerog! To activate your account, you have to follow this link:
+Thanks for signing up with Neerog! To activate your account, verify your email by following this link:
 
 {{ domain }}{% url 'activate' uidb64=uid token=token %}
 
-Stay Healthy, feel free to contact us with your feedback or suggestions.
+Stay Healthy, feel free to contact us with your feedback or suggestions. If you haven't created an account on Neerog, kindly ignore this mail.
 
 Regards,
 Team Neerog

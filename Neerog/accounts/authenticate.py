@@ -7,7 +7,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from . import tokens
 import sys
-
+from main_app import domain
 
 def sendConfirmEmail(user,name,userEmail):
     template=render_to_string('accounts/email_template.html',
@@ -16,7 +16,7 @@ def sendConfirmEmail(user,name,userEmail):
             'user':user,
             'token':tokens.account_token.make_token(user),
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'domain': '127.0.0.1:8000',
+            'domain': domain.getDomainName(),
         })
     email = EmailMessage(
         "Confirm Your Neerog Account",

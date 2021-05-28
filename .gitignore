@@ -1,7 +1,6 @@
 secret_settings.py
 heroku_settings.py
 Procfile
-heroku_requirements.txt
 runtime.txt
 
 

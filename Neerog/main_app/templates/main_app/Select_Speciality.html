@@ -15,8 +15,9 @@
         }
         .card
         {
-       margin-top:20px;
+        margin-top:20px!important;
        height:60px!important;
+        }
         }
         @media only screen and (max-width: 500px) {
         .container-fluid
@@ -31,7 +32,7 @@
         }
      .card
      {
-       margin-top:20px;
+       margin-top:20px!important;
        height:60px;
      }
     </style>
@@ -41,7 +42,9 @@
         var date=$("#Appointment_Date").val();
         var d=new Date();
         var d1=new Date(date);
-
+        if(d1<d){
+          alert("Please Select Appropriate Date");}
+         else{
          $.ajax(
         {
              type:"get",
@@ -54,7 +57,9 @@
              {
               
              }
+
         });
+        }
         });
         });
     </script>
@@ -126,7 +131,7 @@
 <div class="jumbotron" style="margin-top:50px;">
          <div class="form-group">
              <label for="Appointment_Date" style="color:#3291a8;"><h3>Date Of Appointment:</h3></label>
-                <input type="date" required class="form-control" value="{{ date }}"id="Appointment_Date" name="date">
+                <input type="date" required class="form-control" value="{{ date }}" id="Appointment_Date" name="date">
          </div>
     {% if Hospital_Details %}
          <h3 style="color:#3291a8;"> Select Speciality </h3>

@@ -12,7 +12,13 @@
     $(document).ready(function()
         {
        $("#Appointment_Date").on("change",function(){
-         $("#form1").submit();
+       var date=$("#Appointment_Date").val();
+       var d=new Date();
+        var d1=new Date(date);
+        if(d1<d){
+          alert("Please Select Appropriate Date");}
+         else{
+         $("#form1").submit();}
                                   });
                                   });
     </script>

@@ -497,10 +497,6 @@ def list_of_hospital(request):
                list_of_doctors[i]=i.clinic_fee
            if(len(list_of_hospital)==0 and len(list_of_clinics)==0):
                 messages.info(request,"No Doctor Registered for this Speciality")
-           if city not in list_of_cities1(state):
-               city = "Select"
-           if (state not in get_states(country)):
-               state = "Select"
            return render(request, "main_app/Hospital_Selection.html",
                           context={"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),"search_value":speciality,"filter":filter,"location":location,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality,"list_of_doctors": list_of_doctors,"list_of_hospitals":list_of_hospital,'list_of_countries':lis_of_countries,})
         elif(filter_type=='Test_Name'):
@@ -520,10 +516,6 @@ def list_of_hospital(request):
 
             if (len(p) == 0):
                 messages.info(request, "No Testing Lab Registered for this test")
-            if city not in list_of_cities1(state):
-                city = "Select"
-            if (state not in get_states(country)):
-                state = "Select"
             return render(request, "main_app/Hospital_Selection.html",
                           context={"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),"list_of_testing_labs": p,"location":location,"filter":filter,"search_value":testname, "filter": filter,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality,'list_of_countries': lis_of_countries})
 
@@ -546,10 +538,6 @@ def list_of_hospital(request):
                 list_of_doctors[i] = i.clinic_fee
             if (len(list_of_hospitals) == 0 and len(list_of_testing_labs) == 0 and len(list_of_doctors) == 0):
                 messages.info(request,"No Medical Facility Registered In this Area")
-            if city not in list_of_cities1(state):
-                city = "Select"
-            if (state not in get_states(country)):
-                state = "Select"
             return render(request, "main_app/Hospital_Selection.html",
                           context={"location": location, "list_of_testing_labs": list_of_testing_labs,"list_of_doctors":list_of_doctors,"list_of_hospitals":list_of_hospitals, "filter": filter,
                                    'list_of_countries': lis_of_countries, "list_of_tests": list_of_tests,
@@ -563,10 +551,6 @@ def list_of_hospital(request):
             #print(filter_type)
             if (len(p) == 0):
                 messages.info(request, "No Testing Lab Registered in this Location")
-            if city not in list_of_cities1(state):
-                city = "Select"
-            if (state not in get_states(country)):
-                state = "Select"
             return render(request, "main_app/Hospital_Selection.html",
                           context={"location":location,"list_of_testing_labs": p, "filter": filter,
                                    "country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
@@ -583,10 +567,6 @@ def list_of_hospital(request):
             #print(p)
             if (len(p) == 0):
                 messages.info(request, "No Clinic Registered in this Location")
-            if city not in list_of_cities1(state):
-                city = "Select"
-            if (state not in get_states(country)):
-                state = "Select"
             return render(request, "main_app/Hospital_Selection.html",
                           context={"location":location,"list_of_doctors": list_of_doctors,"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),"filter": filter,
                                    'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
@@ -604,10 +584,6 @@ def list_of_hospital(request):
             #print(p)
             if(len(p)==0):
                 messages.info(request, "No Clinic Registered of this name")
-            if city not in list_of_cities1(state):
-                city = "Select"
-            if (state not in get_states(country)):
-                state = "Select"
             return render(request, "main_app/Hospital_Selection.html",
                           context={"location":location,"list_of_doctors": p,"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),"filter": filter,"search_value":search_value,
                                    'list_of_countries': lis_of_countries, "list_of_tests": list_of_tests,
@@ -631,10 +607,6 @@ def list_of_hospital(request):
                 list_of_doctors[i] = i.clinic_fee
             if (len(list_of_hospitals) == 0 and len(list_of_testing_labs) == 0 and len(list_of_doctors) == 0):
                 messages.info(request,"No Medical Facility Registered In this Area")
-            if city not in list_of_cities1(state):
-                city = "Select"
-            if (state not in get_states(country)):
-                state = "Select"
             return render(request, "main_app/Hospital_Selection.html",
                           context={"location": location, "list_of_testing_labs": list_of_testing_labs,
                                    "list_of_doctors": list_of_doctors, "list_of_hospitals": list_of_hospitals,
@@ -670,10 +642,6 @@ def list_of_hospital(request):
             #print(p,search_value)
             if(len(p)==0):
                 messages.info(request, "No Doctor of this name Registered")
-            if city not in list_of_cities1(state):
-                city = "Select"
-            if (state not in get_states(country)):
-                state = "Select"
             return render(request, "main_app/Hospital_Selection.html",
                           context={"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),"location":location,"list_of_doctors": p,"filter":filter,"search_value":search_value, 'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
         elif(filter_type=='Hospital_Name'):
@@ -692,10 +660,6 @@ def list_of_hospital(request):
             #filter="Hospital"
             if(len(p)==0):
                 messages.info(request,"No Hospital Registered with this Name")
-            if city not in list_of_cities1(state):
-                city = "Select"
-            if (state not in get_states(country)):
-                state = "Select"
             return render(request, "main_app/Hospital_Selection.html",
                           context={"location":location,"list_of_hospitals": p,"search_value":search_value, "filter": filter, 'list_of_countries': lis_of_countries,
                                    "list_of_tests": list_of_tests, "list_of_speciality": list_of_speciality,"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state)})
@@ -712,18 +676,10 @@ def list_of_hospital(request):
             if(len(p)==0):
                 messages.info(request,"No Testing lab registered with this name")
 
-            if city not in list_of_cities1(state):
-                city = "Select"
-            if (state not in get_states(country)):
-                state = "Select"
             return render(request, "main_app/Hospital_Selection.html",
                                   context={"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),"location":location,"list_of_testing_labs": p, "filter": filter,"search_value":search_value,
                                            'list_of_countries': lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
         if(filter!=None):
-            if city not in list_of_cities1(state):
-                city = "Select"
-            if (state not in get_states(country)):
-                state = "Select"
             return render(request,"main_app/Hospital_Selection.html",context={"location":location,"list_of_hospitals":p,"filter":filter,"country":country,"state":state,"city":city,"list_of_states":get_states(country),"list_of_cities":list_of_cities1(state),'list_of_countries':lis_of_countries,"list_of_tests":list_of_tests,"list_of_speciality":list_of_speciality})
         else:
             return redirect("/Hospital_Selection/")

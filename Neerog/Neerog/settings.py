@@ -139,4 +139,4 @@ EMAIL_HOST_PASSWORD = secret_settings.email_host_password
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-from .heroku_settings import *
+#from .heroku_settings import *

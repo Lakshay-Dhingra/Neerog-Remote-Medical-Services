@@ -439,7 +439,7 @@
 
                 </tr>
             </table>
-            <button class="btn btn-primary" onclick="location.href='{% url 'Profile' user_id=i.hospitalid  %}'">Apply Now</button>
+            <button class="btn btn-primary" onclick="location.href='{% url 'Selected' user_id=i.hospitalid  %}'">Apply Now</button>
         </div>
     </div>
     {% endfor %}
@@ -545,7 +545,7 @@
                     <td class="th1">{{ i.city }}</td>
                 </tr>
             </table>
-             <button class="btn btn-primary" onclick="location.href='{% url 'Profile' user_id=i.tlabid  %}'">Apply Now</button>
+             <button class="btn btn-primary" onclick="location.href='{% url 'Selected' user_id=i.tlabid  %}'">Apply Now</button>
 
         </div>
     </div>

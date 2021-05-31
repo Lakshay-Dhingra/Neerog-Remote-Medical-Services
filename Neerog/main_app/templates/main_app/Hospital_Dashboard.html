@@ -1,10 +1,8 @@
 <!-- here Hospital Administration can view Daily
     Appointments,Doctor Dashboard,
     Collect Report Between Any Date Range,Montly Appointment Status -->
-
 <!DOCTYPE html>
 <html lang="en">
-{% load extras %}
 {% load static %}
 <head>
     <meta charset="UTF-8">
@@ -17,19 +15,18 @@
     .cha
     {
      width:95%;
-     margin-left:20px;
+     margin-left:10px;
     }
     .da
     {
        width:300px;
-       margin-left:20px;
+       margin-left:10px;
 
     }
         .card-header
     {
     background-color:#404040;
     color:white;
-
     text-align:center;
     }
     h1
@@ -188,7 +185,7 @@ function validate()
                 </form>
     </div>
     <div class="row" style="margin-top:30px;">
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-12 col-md-6">
         <div class="card da">
         <div class="card-header">
             Appointments This Month
@@ -200,7 +197,7 @@ function validate()
         </div>
     </div>
 </div>
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-12 col-md-6">
         <div class="card da">
         <div class="card-header">
     Appointments Today
@@ -210,7 +207,7 @@ function validate()
         </div>
     </div>
     </div>
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6 col-12">
         <div class="card da">
         <div class="card-header">
     Online Consultations
@@ -220,7 +217,7 @@ function validate()
         </div>
     </div>
     </div>
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6 col-12">
         <div class="card da">
         <div class="card-header">
             Earning this Month
@@ -233,7 +230,7 @@ function validate()
 </div>
 </div>
 <div class="row" style="margin-top:50px;">
-<div class="col-lg-6" style="margin-top:10px;">
+<div class="col-lg-6 col-12" style="margin-top:10px;">
     <div class="card cha">
         <div class="table-responsive">
             <canvas id="myChart" width="100px" height="100px" class="table"></canvas></div></div>
@@ -276,7 +273,7 @@ var myChart = new Chart(ctx, {
 });
 </script>
 </div>
-<div class="col-lg-6 " style="margin-top:10px;" >
+<div class="col-lg-6 col-12" style="margin-top:10px;" >
     <div class="card cha">
     <div class="card-header">Doctor Monitoring</div>
     <div class="table-responsive">

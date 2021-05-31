@@ -18,7 +18,7 @@ class UserDetails(models.Model):
     user_type=models.CharField(max_length=50, choices=USER_TYPE_CHOICES, default=USER_TYPE_DEFAULT)   
     name = models.CharField(max_length=200)
     email=models.EmailField(max_length=254, unique=True, blank=False, null=False)
-    followers = models.PositiveSmallIntegerField(default = 0)
+    followers = models.PositiveIntegerField(default = 0)
     avg_rating = models.DecimalField(default= 0, max_digits=9, decimal_places=1)
     created_at=models.DateTimeField(auto_now=True)
 
@@ -38,7 +38,7 @@ class Patient(models.Model):
     state=models.CharField(max_length=100, blank=True)
     city=models.CharField(max_length=100, blank=True)
     area=models.CharField(max_length=200, blank=True)
-    zip = models.PositiveSmallIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
+    zip = models.PositiveIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
     DEFAULT_GENDER='U'
     GENDER_CHOICES = [
         ('Male', 'Male'),

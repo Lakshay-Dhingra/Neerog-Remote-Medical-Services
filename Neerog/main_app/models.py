@@ -18,7 +18,7 @@ class UserDetails(models.Model):
     user_type=models.CharField(max_length=50, choices=USER_TYPE_CHOICES, default=USER_TYPE_DEFAULT)   
     name = models.CharField(max_length=200)
     email=models.EmailField(max_length=254, unique=True, blank=False, null=False)
-    followers = models.PositiveSmallIntegerField(default = 0)
+    followers = models.PositiveIntegerField(default = 0)
     avg_rating = models.DecimalField(default= 0, max_digits=9, decimal_places=1)
     created_at=models.DateTimeField(auto_now=True)
 
@@ -38,7 +38,7 @@ class Patient(models.Model):
     state=models.CharField(max_length=100, blank=True)
     city=models.CharField(max_length=100, blank=True)
     area=models.CharField(max_length=200, blank=True)
-    zip = models.PositiveSmallIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
+    zip = models.PositiveIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
     DEFAULT_GENDER='U'
     GENDER_CHOICES = [
         ('Male', 'Male'),
@@ -47,7 +47,7 @@ class Patient(models.Model):
         (DEFAULT_GENDER, 'Unknown'),
     ]
     gender=models.CharField(max_length=10, choices=GENDER_CHOICES, default=DEFAULT_GENDER)
-    age=models.PositiveSmallIntegerField(validators=[MaxValueValidator(150),MinValueValidator(0)], null=True)
+    age=models.PositiveIntegerField(validators=[MaxValueValidator(150),MinValueValidator(0)], null=True)
 
     DEFAULT_BLOOD='Unknown'
     BLOOD_CHOICES = [
@@ -92,7 +92,7 @@ class Hospital(models.Model):
     state=models.CharField(max_length=100)
     city=models.CharField(max_length=100)
     area=models.CharField(max_length=200)
-    zip = models.PositiveSmallIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
+    zip = models.PositiveIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
     year_established=models.PositiveIntegerField(validators=[MinValueValidator(1500)], blank=True, null=True)
     hospital_logo=models.ImageField(upload_to="hospital_logo/", null=True, blank=True)
     pic1=models.ImageField(upload_to="hospital_photo/")
@@ -145,7 +145,7 @@ class Doctor(models.Model):
         (DEFAULT_GENDER, 'Unknown'),
     ]
     gender=models.CharField(max_length=10, choices=GENDER_CHOICES, default=DEFAULT_GENDER)
-    experience=models.PositiveSmallIntegerField(validators=[MaxValueValidator(100),MinValueValidator(0)])
+    experience=models.PositiveIntegerField(validators=[MaxValueValidator(100),MinValueValidator(0)])
     profile_pic=models.ImageField(upload_to="doctor_profile_photo/", blank=True, null=True)
     certificate=models.FileField(upload_to="doctor_certificate/")
     start_time = models.CharField(max_length=5,default="09:00")
@@ -160,7 +160,7 @@ class Doctor(models.Model):
     state=models.CharField(max_length=100, blank=True)
     city=models.CharField(max_length=100, blank=True)
     area=models.CharField(max_length=200, blank=True)
-    zip = models.PositiveSmallIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], blank=True, null=True)
+    zip = models.PositiveIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], blank=True, null=True)
     clinic_fee=models.PositiveIntegerField(blank=True, null=True)
     is_independent = models.BooleanField()
     verified = models.CharField(max_length=10, default="No")
@@ -190,7 +190,7 @@ class TestingLab(models.Model):
     state=models.CharField(max_length=100,default="delhi")
     city=models.CharField(max_length=100)
     area=models.CharField(max_length=200, blank=True)
-    zip = models.PositiveSmallIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
+    zip = models.PositiveIntegerField(validators=[MaxValueValidator(999999),MinValueValidator(0)], null=True, blank=True)
     year_established=models.PositiveIntegerField(validators=[MinValueValidator(1700)], null=True, blank=True)
     tlab_logo=models.ImageField(upload_to="testing_lab_logo/", null=True, blank=True)
     lab_photo=models.ImageField(upload_to="testing_lab_photo/", null=True, blank=True)
@@ -272,7 +272,7 @@ class Follow(models.Model):
 class Ratings(models.Model):
     influencerid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, related_name='ratings_influencer')
     raterid = models.ForeignKey(UserDetails, on_delete=models.CASCADE, related_name='rater')
-    rating = models.PositiveSmallIntegerField(validators=[MaxValueValidator(5),MinValueValidator(1)])
+    rating = models.PositiveIntegerField(validators=[MaxValueValidator(5),MinValueValidator(1)])
     def __str__(self):
         return str(self.influencerid)+" "+str(self.rating)
     class Meta:

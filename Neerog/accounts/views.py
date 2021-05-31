@@ -26,32 +26,32 @@ def logout(request):
 def signin(request):
     if(request.user.is_authenticated):
         messages.info(request,"You're Already Logged In.")
-        return redirect("/dashboard/"+str(request.user.id-1))
+        return redirect("/dashboard/"+str(request.session['userid']))
     return render(request,'accounts/signin.html')
 
 def signup(request):
     if(request.user.is_authenticated):
         messages.info(request,"You're Already Logged In.")
-        return redirect("/dashboard/"+str(request.user.id-1))
+        return redirect("/dashboard/"+str(request.session['userid']))
     return render(request,'accounts/signup.html')
 
 def signup_redirect(request):
     if(request.user.is_authenticated):
-        if(user_data.getUserType(request.user.id) == "Doctor"):
+        if(user_data.getUserType(request.session['userid']) == "Doctor"):
             return redirect("/accounts/signup/doctor")
-        elif(user_data.getUserType(request.user.id) == "Patient"):
+        elif(user_data.getUserType(request.session['userid']) == "Patient"):
             return redirect("/accounts/signup/patient")
-        elif(user_data.getUserType(request.user.id) == "Hospital"):
+        elif(user_data.getUserType(request.session['userid']) == "Hospital"):
             return redirect("/accounts/signup/hospital")
-        elif(user_data.getUserType(request.user.id) == "Testing Lab"):
+        elif(user_data.getUserType(request.session['userid']) == "Testing Lab"):
             return redirect("/accounts/signup/testinglab")
     messages.info(request,"Please Log In To Access This Page.")
     return redirect("/accounts/signin/")
 
 def signup_doctor(request):
     if(request.user.is_authenticated):
-        if(user_data.getUserType(request.user.id) == "Doctor"):
-            if(user_data.isVerifiedUser(request.user.id)):
+        if(user_data.getUserType(request.session['userid']) == "Doctor"):
+            if(user_data.isVerifiedUser(request.session['userid'])):
                 messages.info(request,"Your Details Have Already Been Submitted and Verified!")
                 return redirect("/")
             else:
@@ -66,8 +66,8 @@ def signup_doctor(request):
 
 def signup_hospital(request):
     if(request.user.is_authenticated):
-        if(user_data.getUserType(request.user.id) == "Hospital"):
-            if(user_data.isVerifiedUser(request.user.id)):
+        if(user_data.getUserType(request.session['userid']) == "Hospital"):
+            if(user_data.isVerifiedUser(request.session['userid'])):
                 messages.info(request,"You're Details Have Already Been Submitted!")
                 return redirect("/")
             else:
@@ -83,8 +83,8 @@ def signup_hospital(request):
 
 def signup_tlab(request):
     if(request.user.is_authenticated):
-        if(user_data.getUserType(request.user.id) == "Testing Lab"):
-            if(user_data.isVerifiedUser(request.user.id)):
+        if(user_data.getUserType(request.session['userid']) == "Testing Lab"):
+            if(user_data.isVerifiedUser(request.session['userid'])):
                 messages.info(request,"You're Details Have Already Been Submitted!")
                 return redirect("/")
             else:
@@ -99,8 +99,8 @@ def signup_tlab(request):
 
 def signup_patient(request):
     if(request.user.is_authenticated):
-        if(user_data.getUserType(request.user.id) == "Patient"):
-            if(user_data.isVerifiedUser(request.user.id)):
+        if(user_data.getUserType(request.session['userid']) == "Patient"):
+            if(user_data.isVerifiedUser(request.session['userid'])):
                 messages.info(request,"You're Details Have Already Been Submitted!")
                 return redirect("/")
             else:
@@ -126,10 +126,12 @@ def login(request):
     elif(len(password)>50):
         messages.info(request,"Invalid Password! Password can't have more than 50 characters.")
     else:
-        if(authenticate.login(request, email, password)):
-            messages.info(request,'Login Successful!')
+        login_feedback = authenticate.login(request, email, password)
+        if(login_feedback is not None):
             request.session['email']=email
-            request.session['isRegistered'] = user_data.isRegisteredUser(request.user.id)
+            request.session['userid'] = login_feedback
+            request.session['isRegistered'] = user_data.isRegisteredUser(login_feedback)
+            messages.info(request,'Login Successful!')
             return redirect("/")
         else:
             messages.info(request,"Wrong Email or password!")
@@ -224,10 +226,10 @@ def register_doctor(request):
     else:
         phone=int(phone)
         if(request.user.is_authenticated):
-            uid=request.user.id
+            uid=request.session['userid']
             if(authenticate.registerDoctor(uid, start_time, end_time, phone, is_independent, gender, experience, specialization, proof, hospitalid, cname, cphoto, fee, country, state, city, area, zip)):
                 messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
-                request.session['isRegistered'] = user_data.isRegisteredUser(request.user.id)
+                request.session['isRegistered'] = user_data.isRegisteredUser(request.session['userid'])
                 return redirect("/")
             else:
                 messages.info(request,"Registeration Failed!")
@@ -269,9 +271,9 @@ def register_hospital(request):
     else:
         phone=int(phone)
         if(request.user.is_authenticated):
-            uid=request.user.id
+            uid=request.session['userid']
             if(authenticate.registerHospital(uid, phone, country, state, city, zip, area, speciality_pricing, pic1, certificate)):
-                request.session['isRegistered'] = user_data.isRegisteredUser(request.user.id)
+                request.session['isRegistered'] = user_data.isRegisteredUser(request.session['userid'])
                 messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
                 return redirect("/")
             else:
@@ -314,9 +316,9 @@ def register_tlab(request):
     else:
         phone=int(phone)
         if(request.user.is_authenticated):
-            uid=request.user.id
+            uid=request.session['userid']
             if(authenticate.registerTLab(uid, phone, country, state, city, zip, area, test_pricing, pic1, certificate)):
-                request.session['isRegistered'] = user_data.isRegisteredUser(request.user.id)
+                request.session['isRegistered'] = user_data.isRegisteredUser(request.session['userid'])
                 messages.info(request,'Registeration Successful! Your account will be verified soon after review by our team.')
                 return redirect("/")
             else:
@@ -352,9 +354,9 @@ def register_patient(request):
     else:
         phone=int(phone)
         if(request.user.is_authenticated):
-            uid=request.user.id
+            uid=request.session['userid']
             if(authenticate.registerPatient(uid, phone, country, state, city, area, zip, gender, age, disability, profilepic)):
-                request.session['isRegistered'] = user_data.isRegisteredUser(request.user.id)
+                request.session['isRegistered'] = user_data.isRegisteredUser(request.session['userid'])
                 messages.info(request,'Registeration Successful! Your account is fully activated.')
                 return redirect("/")
             else:

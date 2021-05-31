@@ -4,7 +4,7 @@ from accounts import authenticate
 from django.core.files.storage import FileSystemStorage
 
 def getUserType(uid):
-    userobj=UserDetails.objects.get(userid=uid-1)
+    userobj=UserDetails.objects.get(userid=uid)
     return str(userobj.user_type)
 
 #Users which are completely verified.
@@ -12,7 +12,7 @@ def isVerifiedUser(uid):
     user_type=getUserType(uid)
     if(user_type == "Doctor"):
         try:
-            doctorobj=Doctor.objects.get(doctorid=uid-1)
+            doctorobj=Doctor.objects.get(doctorid=uid)
             if(str(doctorobj.verified) == "No"):
                 print(uid)
                 return False
@@ -23,7 +23,7 @@ def isVerifiedUser(uid):
             return False
     elif(user_type == "Hospital"):
         try:
-            hospitalobj=Hospital.objects.get(hospitalid=uid-1)
+            hospitalobj=Hospital.objects.get(hospitalid=uid)
             if(str(hospitalobj.verified) == "No"):
                 return False
             else:
@@ -32,7 +32,7 @@ def isVerifiedUser(uid):
             return False
     elif(user_type == "Patient"):
         try:
-            patientobj=Patient.objects.get(patientid=uid-1)
+            patientobj=Patient.objects.get(patientid=uid)
             return True
         except:
             return False
@@ -42,40 +42,40 @@ def isRegisteredUser(uid):
     user_type=getUserType(uid)
     if(user_type == "Doctor"):
         try:
-            Doctor.objects.get(doctorid=uid-1)
+            Doctor.objects.get(doctorid=uid)
             return True
         except:
             return False
     elif(user_type == "Hospital"):
         try:
-            Hospital.objects.get(hospitalid=uid-1)
+            Hospital.objects.get(hospitalid=uid)
             return True
         except:
             return False
     elif(user_type == "Patient"):
         try:
-            Patient.objects.get(patientid=uid-1)
+            Patient.objects.get(patientid=uid)
             return True
         except:
             return False
     elif(user_type == "Testing Lab"):
         try:
-            TestingLab.objects.get(tlabid=uid-1)
+            TestingLab.objects.get(tlabid=uid)
             return True
         except:
             return False
 
 def isUser(uid):
     try:
-        UserDetails.objects.get(userid=uid-1)
+        UserDetails.objects.get(userid=uid)
         return True
     except:
         return False
 
 def getDoctorData(uid):
     doctor_data = dict()
-    userobj=UserDetails.objects.get(userid=uid-1)
-    doctorobj=Doctor.objects.get(doctorid=uid-1)
+    userobj=UserDetails.objects.get(userid=uid)
+    doctorobj=Doctor.objects.get(doctorid=uid)
 
     doctor_data['uid'] = uid
     doctor_data['Name'] = userobj.name
@@ -136,32 +136,32 @@ def getDoctorData(uid):
     return doctor_data
 
 # def getNumberOfFollowers(uid):
-#     userobj=UserDetails.objects.get(userid=uid-1)
+#     userobj=UserDetails.objects.get(userid=uid)
 #     return userobj.followers
 
 # def getAvgRating(uid):
-#     userobj=UserDetails.objects.get(userid=uid-1)
+#     userobj=UserDetails.objects.get(userid=uid)
 #     return userobj.avg_rating
 
 def isFollowing(influencer, follower):
     try:
-        Follow.objects.get(influencerid=influencer-1, followerid=follower-1)
+        Follow.objects.get(influencerid=influencer, followerid=follower)
         return True
     except:
         return False
 
 def userRating(influencer, rater):
     try:
-        ratingobj = Ratings.objects.get(influencerid=influencer-1, raterid=rater-1)
+        ratingobj = Ratings.objects.get(influencerid=influencer, raterid=rater)
         return ratingobj.rating
     except:
         return 0
 
 def unfollow(influencer, follower):
     try:
-        fobj = Follow.objects.get(influencerid=influencer-1, followerid=follower-1)
+        fobj = Follow.objects.get(influencerid=influencer, followerid=follower)
         fobj.delete()
-        iobj=UserDetails.objects.get(userid=influencer-1)
+        iobj=UserDetails.objects.get(userid=influencer)
         iobj.followers -=1
         iobj.save()
     except:
@@ -169,11 +169,11 @@ def unfollow(influencer, follower):
 
 def follow(influencer, follower):
     try:
-        Follow.objects.get(influencerid=influencer-1, followerid=follower-1)
+        Follow.objects.get(influencerid=influencer, followerid=follower)
         #if already following
     except:
-        iobj=UserDetails.objects.get(userid=influencer-1)
-        fobj=UserDetails.objects.get(userid=follower-1)
+        iobj=UserDetails.objects.get(userid=influencer)
+        fobj=UserDetails.objects.get(userid=follower)
         follow=Follow(influencerid=iobj,followerid=fobj)
         follow.save()
         iobj.followers +=1
@@ -182,21 +182,21 @@ def follow(influencer, follower):
 def rate(influencer, rater, rating):
     try:
         #if already rated
-        ratingobj = Ratings.objects.get(influencerid = influencer-1, raterid = rater-1)
+        ratingobj = Ratings.objects.get(influencerid = influencer, raterid = rater)
         ratingobj.rating = rating
         ratingobj.save()
     except:
         #if rating first time
         sys.exc_info()
-        iobj=UserDetails.objects.get(userid=influencer-1)
-        robj=UserDetails.objects.get(userid=rater-1)
+        iobj=UserDetails.objects.get(userid=influencer)
+        robj=UserDetails.objects.get(userid=rater)
         ratingobj = Ratings(influencerid=iobj,raterid=robj, rating = rating)
         ratingobj.save()
 
 def getFreeSlots(uid, mydate):
     slots = []
-    service_provider=UserDetails.objects.get(userid=uid-1)
-    t = Appointment_Timings.objects.filter(service_provider_id=uid-1).filter(date=mydate)
+    service_provider=UserDetails.objects.get(userid=uid)
+    t = Appointment_Timings.objects.filter(service_provider_id=uid).filter(date=mydate)
     if len(t) > 0:
         if (t[0].available == False):
             # messages.info(request, "Doctor not availaible on this date")
@@ -213,7 +213,7 @@ def getFreeSlots(uid, mydate):
                 # messages.info(request, "Doctor not availaible on this date")
                 return None
     else:
-        p13 = UserDetails.objects.get(userid=uid-1)
+        p13 = UserDetails.objects.get(userid=uid)
         print(p13.user_type)
         if (p13.user_type == "Doctor"):
             d1 = Doctor.objects.get(doctorid=service_provider)
@@ -247,16 +247,16 @@ def getFreeSlots(uid, mydate):
     return slots
 
 def getHospitalId(uid):
-    doctorobj=Doctor.objects.get(doctorid=uid-1)
+    doctorobj=Doctor.objects.get(doctorid=uid)
     return doctorobj.hospitalid
 
 def editPatient(request, uid, name, phone, gender, age, blood, about, country, state, city, area, zip, disability):
     success=True
-    userobj=UserDetails.objects.get(userid=uid-1)
+    userobj=UserDetails.objects.get(userid=uid)
     userobj.name = name
     userobj.save()
 
-    pobj=Patient.objects.get(patientid=uid-1)
+    pobj=Patient.objects.get(patientid=uid)
 
     if(pobj.phone != phone):
         if(authenticate.hasRegisteredPhone(phone, "Patient")):
@@ -285,11 +285,11 @@ def editPatient(request, uid, name, phone, gender, age, blood, about, country, s
 
 def editDoctor(request, uid, name, phone, gender, experience, is_independent, specialization, about, hospitalid, country, city, area, cname, fee):
     success=True
-    userobj=UserDetails.objects.get(userid=uid-1)
+    userobj=UserDetails.objects.get(userid=uid)
     userobj.name = name
     userobj.save()
 
-    doctorobj=Doctor.objects.get(doctorid=uid-1)
+    doctorobj=Doctor.objects.get(doctorid=uid)
 
     if(doctorobj.phone != phone):
         if(authenticate.hasRegisteredPhone(phone, "Doctor")):
@@ -324,11 +324,11 @@ def editDoctor(request, uid, name, phone, gender, experience, is_independent, sp
 
 def editHospital(request, uid, name, phone, year, about, country, state, city, area, zip):
     success=True
-    userobj=UserDetails.objects.get(userid=uid-1)
+    userobj=UserDetails.objects.get(userid=uid)
     userobj.name = name
     userobj.save()
 
-    hobj=Hospital.objects.get(hospitalid=uid-1)
+    hobj=Hospital.objects.get(hospitalid=uid)
 
     if(hobj.phone != phone):
         if(authenticate.hasRegisteredPhone(phone, "Hospital")):
@@ -361,11 +361,11 @@ def editHospital(request, uid, name, phone, year, about, country, state, city, a
     return success
 
 def editHospitalSpeciality(uid, speciality_pricing):
-    hsobjs = HospitalSpeciality.objects.filter(hospitalid = uid-1)
+    hsobjs = HospitalSpeciality.objects.filter(hospitalid = uid)
     if hsobjs is not None:
         hsobjs.delete()
     try:
-        hobj=Hospital.objects.get(hospitalid=uid-1)
+        hobj=Hospital.objects.get(hospitalid=uid)
         for sp in speciality_pricing:
             hospitalspeciality = HospitalSpeciality(hospitalid=hobj, speciality = sp, price=speciality_pricing[sp])
             hospitalspeciality.save()
@@ -375,11 +375,11 @@ def editHospitalSpeciality(uid, speciality_pricing):
 
 def editTLab(request, uid, name, phone, year, about, country, state, city, area, zip):
     success=True
-    userobj=UserDetails.objects.get(userid=uid-1)
+    userobj=UserDetails.objects.get(userid=uid)
     userobj.name = name
     userobj.save()
 
-    tobj=TestingLab.objects.get(tlabid=uid-1)
+    tobj=TestingLab.objects.get(tlabid=uid)
 
     if(tobj.phone != phone):
         if(authenticate.hasRegisteredPhone(phone, "Testing Lab")):
@@ -406,11 +406,11 @@ def editTLab(request, uid, name, phone, year, about, country, state, city, area,
     return success
 
 def editTestPricing(uid, speciality_pricing):
-    tpobjs = TestPricing.objects.filter(tlabid = uid-1)
+    tpobjs = TestPricing.objects.filter(tlabid = uid)
     if tpobjs is not None:
         tpobjs.delete()
     try:
-        tobj=TestingLab.objects.get(tlabid=uid-1)
+        tobj=TestingLab.objects.get(tlabid=uid)
         for sp in speciality_pricing:
             testpricing = TestPricing(tlabid=tobj, testname = sp, price=speciality_pricing[sp])
             testpricing.save()
@@ -419,8 +419,8 @@ def editTestPricing(uid, speciality_pricing):
 
 def getHospitalData(uid):
     hp_data = dict()
-    userobj=UserDetails.objects.get(userid=uid-1)
-    hpobj=Hospital.objects.get(hospitalid=uid-1)
+    userobj=UserDetails.objects.get(userid=uid)
+    hpobj=Hospital.objects.get(hospitalid=uid)
 
     hp_data['uid'] = uid
     hp_data['Name'] = userobj.name
@@ -469,8 +469,8 @@ def getHospitalData(uid):
 
 def getTestingLabData(uid):
     tl_data = dict()
-    userobj=UserDetails.objects.get(userid=uid-1)
-    tobj=TestingLab.objects.get(tlabid=uid-1)
+    userobj=UserDetails.objects.get(userid=uid)
+    tobj=TestingLab.objects.get(tlabid=uid)
 
     tl_data['uid'] = uid
     tl_data['Name'] = userobj.name
@@ -506,8 +506,8 @@ def getTestingLabData(uid):
         
 def getPatientData(uid):
     pt_data = dict()
-    userobj=UserDetails.objects.get(userid=uid-1)
-    pobj=Patient.objects.get(patientid=uid-1)
+    userobj=UserDetails.objects.get(userid=uid)
+    pobj=Patient.objects.get(patientid=uid)
 
     pt_data['uid'] = uid
     pt_data['Name'] = userobj.name

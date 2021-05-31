@@ -5,12 +5,12 @@ import datetime
 
 
 def profile(request, uid):
-    uid= int(uid)+1
+    uid= int(uid)
     if(user_data.isUser(uid)):
         user_type=user_data.getUserType(uid)
         if(user_data.isRegisteredUser(uid)):
             if(user_type == "Patient"):
-                return redirect("/Profile/"+str(uid-1))
+                return redirect("/Profile/"+str(uid))
             elif(user_type == "Doctor"):
                 doctor_data = user_data.getDoctorData(uid)
                 if doctor_data['Fee'] is None:
@@ -33,7 +33,7 @@ def profile(request, uid):
                 doctor_data['SelectedMode'] = mode
                 if(request.user.is_authenticated):
                     #User is logged in
-                    fid=request.user.id
+                    fid=request.session['userid']
                     doctor_data['Following']=user_data.isFollowing(uid, fid)
                     doctor_data['MyRating']=user_data.userRating(uid, fid)
                     if(uid == fid):
@@ -47,7 +47,7 @@ def profile(request, uid):
 
                 return render(request,'user_app/DoctorProfile.html',doctor_data)
             else:
-                return redirect("/Profile/"+str(uid-1))
+                return redirect("/Profile/"+str(uid))
         else:
             messages.info(request,"This User Hasn't Completed Registeration yet!")
     else:
@@ -57,7 +57,7 @@ def profile(request, uid):
 def edit_profile(request):
     if(request.user.is_authenticated):
         #User is logged in
-        uid=request.user.id
+        uid=request.session['userid']
         user_type=user_data.getUserType(uid)
         if(user_data.isRegisteredUser(uid)):
             if(user_type == "Doctor"):
@@ -105,10 +105,10 @@ def edit_profile(request):
 def unfollow(request, uid):
     if(request.user.is_authenticated):
         #User is logged in
-        fid=request.user.id
+        fid=request.session['userid']
         user_data.unfollow(uid, fid)
         messages.info(request,"Unfollowed Successfully!")
-        return redirect("/user/profile/"+str(uid-1))
+        return redirect("/user/profile/"+str(uid))
     else:
         #User not logged in
         messages.info(request,"You are not Logged In!")
@@ -117,9 +117,9 @@ def unfollow(request, uid):
 def follow(request, uid):
     if(request.user.is_authenticated):
         #User is logged in
-        fid=request.user.id
+        fid=request.session['userid']
         user_data.follow(uid, fid)
-        return redirect("/user/profile/"+str(uid-1))
+        return redirect("/user/profile/"+str(uid))
     else:
         #User not logged in
         messages.info(request,"You are not Logged In!")
@@ -128,10 +128,10 @@ def follow(request, uid):
 def rate(request, uid, rating):
     if(request.user.is_authenticated):
         #User is logged in
-        rid=request.user.id
+        rid=request.session['userid']
         user_data.rate(uid, rid, rating)
         messages.info(request,"Your Rating Updated!")
-        return redirect("/user/profile/"+str(uid-1))
+        return redirect("/user/profile/"+str(uid))
     else:
         #User not logged in
         messages.info(request,"You are not Logged In!")
@@ -139,11 +139,11 @@ def rate(request, uid, rating):
 
 def setDate(request, uid):
     request.session['date'] = request.POST['date']
-    return redirect("/user/profile/"+str(uid-1)+"#free_timing")
+    return redirect("/user/profile/"+str(uid)+"#free_timing")
 
 def setMode(request, uid):
     request.session['mode'] = request.POST['mode']
-    return redirect("/user/profile/"+str(uid-1)+"#free_timing")
+    return redirect("/user/profile/"+str(uid)+"#free_timing")
 
 def edit_patient(request):
     name=request.POST['name']
@@ -177,7 +177,7 @@ def edit_patient(request):
     else:
         phone = int(phone)
         if(request.user.is_authenticated):
-            uid=request.user.id
+            uid=request.session['userid']
             if(user_data.editPatient(request, uid, name, phone, gender, age, blood, about, country, state, city, area, zip, disability)):
                 messages.info(request,'Profile Updated Successfully!')
                 return redirect("/user/profile/edit/")
@@ -225,7 +225,7 @@ def edit_doctor(request):
         messages.info(request,"Invalid Phone Number! Phone Number can't have more than 10 characters.")
     else:
         if(request.user.is_authenticated):
-            uid=request.user.id
+            uid=request.session['userid']
             if(user_data.editDoctor(request, uid, name, int(phone), gender, int(experience), is_independent, specialization, about, hospitalid, country, city, area, cname, fee)):
                 messages.info(request,'Profile Updated Successfully!')
                 return redirect("/user/profile/edit/")
@@ -260,7 +260,7 @@ def edit_hospital(request):
         messages.info(request,"Invalid Phone Number! Phone Number can't have more than 10 characters.")
     else:
         if(request.user.is_authenticated):
-            uid=request.user.id
+            uid=request.session['userid']
             if(user_data.editHospital(request, uid, name, int(phone), year, about, country, state, city, area, zip)):
                 messages.info(request,'Profile Updated Successfully!')
                 return redirect("/user/profile/edit/")
@@ -278,7 +278,7 @@ def edit_hospital_speciality(request):
         speciality_pricing[sp]=request.POST[sp]
 
     if(request.user.is_authenticated):
-        uid=request.user.id
+        uid=request.session['userid']
         user_data.editHospitalSpeciality(uid, speciality_pricing)
         messages.info(request,'Profile Updated Successfully!')
         return redirect("/user/profile/edit/")
@@ -311,7 +311,7 @@ def edit_testinglab(request):
         messages.info(request,"Invalid Phone Number! Phone Number can't have more than 10 characters.")
     else:
         if(request.user.is_authenticated):
-            uid=request.user.id
+            uid=request.session['userid']
             if(user_data.editTLab(request, uid, name, int(phone), year, about, country, state, city, area, zip)):
                 messages.info(request,'Profile Updated Successfully!')
                 return redirect("/user/profile/edit/")
@@ -329,7 +329,7 @@ def edit_testpricing(request):
         speciality_pricing[sp]=request.POST[sp]
 
     if(request.user.is_authenticated):
-        uid=request.user.id
+        uid=request.session['userid']
         user_data.editTestPricing(uid, speciality_pricing)
         messages.info(request,'Profile Updated Successfully!')
         return redirect("/user/profile/edit/")

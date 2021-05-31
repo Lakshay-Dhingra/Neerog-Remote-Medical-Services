@@ -33,15 +33,15 @@ def login(request,email, password):
     except:
         userobj=None
     if userobj is None:
-        return False
+        return None
     else:
         username=userobj.userid
         user=auth.authenticate(username=username, password=password)
         if user is not None:
             auth.login(request,user)
-            return True
+            return username
         else:
-            return False
+            return None
 
 def register(name,user_type,password,email):
     try:
@@ -58,7 +58,7 @@ def register(name,user_type,password,email):
 
 def registerDoctor(uid, start_time, end_time, phone, is_independent, gender, experience, specialization, proof, hospitalid, cname, cphoto, fee, country, state, city, area, zip):
     try:
-        userobj=UserDetails.objects.get(userid=uid-1)
+        userobj=UserDetails.objects.get(userid=uid)
         if hospitalid is not None:
             hospitalid=Hospital.objects.get(hospitalid=hospitalid)
 
@@ -71,7 +71,7 @@ def registerDoctor(uid, start_time, end_time, phone, is_independent, gender, exp
 
 def registerHospital(uid, phone, country, state, city, zip, area, speciality_pricing, pic1, certificate):
     try:
-        userobj=UserDetails.objects.get(userid=uid-1)
+        userobj=UserDetails.objects.get(userid=uid)
         hospital=Hospital(hospitalid=userobj, phone=phone, country=country, state=state, city=city, zip=zip, area=area, pic1=pic1, certificate=certificate)
         hospital.save()
         for sp in speciality_pricing:
@@ -85,7 +85,7 @@ def registerHospital(uid, phone, country, state, city, zip, area, speciality_pri
 
 def registerTLab(uid, phone, country, state, city, zip, area, test_pricing, pic1, certificate):
     try:
-        userobj=UserDetails.objects.get(userid=uid-1)
+        userobj=UserDetails.objects.get(userid=uid)
         tlab=TestingLab(tlabid=userobj, phone=phone, country=country, state=state, city=city, zip=zip, area=area, lab_photo=pic1, certificate=certificate)
         tlab.save()
         for sp in test_pricing:
@@ -98,7 +98,7 @@ def registerTLab(uid, phone, country, state, city, zip, area, test_pricing, pic1
 
 def registerPatient(uid, phone, country, state, city, area, zip, gender, age, disability, profilepic):
     try:
-        userobj=UserDetails.objects.get(userid=uid-1)
+        userobj=UserDetails.objects.get(userid=uid)
         patient=Patient(patientid=userobj, phone=phone, country=country,state=state, city=city, area=area, zip=zip, gender=gender, age=age, disability=disability, profile_pic=profilepic)
         patient.save()
         return True

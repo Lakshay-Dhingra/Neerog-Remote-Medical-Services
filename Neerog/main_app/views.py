@@ -748,7 +748,10 @@ def submit_Prescription(request):
         b1=Appointments.objects.get(appointmentid=int(Appointment_Id))
         b1.Prescription=prescription
         b1.save()
-        return redirect("/profile")
+        email=request.session['email']
+        user1=UserDetails.objects.get(email=email)
+        p="/dashboard/"+str(user1.userid)
+        return redirect(p)
     except:
         messages.info(request, "You Can not Access this Page")
         return redirect("/")

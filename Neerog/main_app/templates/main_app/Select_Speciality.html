@@ -42,9 +42,7 @@
         var date=$("#Appointment_Date").val();
         var d=new Date();
         var d1=new Date(date);
-        if(d1<d){
-          alert("Please Select Appropriate Date");}
-         else{
+
          $.ajax(
         {
              type:"get",
@@ -59,7 +57,7 @@
              }
 
         });
-        }
+
         });
         });
     </script>
@@ -69,7 +67,8 @@
         var date=document.getElementById("Appointment_Date").value;
         var d=new Date();
         var d1=new Date(date);
-        if(!Date.parse(date)){
+        alert(d1<d);
+        if(!Date.parse(date) ||  d1 < d){
          alert('Please Select Appropriate Date');
             return false;
         }
@@ -82,6 +81,18 @@
            var month=dt.getMonth()+1;
            var day=dt.getDate()+1;
            var year=dt.getFullYear();
+           var lastday=new Date(year, month +1, 0).getDate()
+           if(day >lastday && month==12)
+           {
+           month=1;
+           day=1;
+           year=1;
+           }
+           else if(day>lastday)
+           {
+           month+=1;
+           day=1;
+           }
            if(month < 10)
                month='0'+month.toString();
            if(day < 10)

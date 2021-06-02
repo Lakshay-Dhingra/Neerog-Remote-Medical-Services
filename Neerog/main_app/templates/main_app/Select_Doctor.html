@@ -22,8 +22,10 @@
 <div class="container-fluid">
 <div style="margin-top:10px;">
     <div>
+        {% if Hospital_Details.hospital_logo %}
         <image src="{{ Hospital_Details.hospital_logo.url }}" style="width:100px;height:40px;"><h3>{{ Hospital_Details.hospitalid.name }}</h3></image>
-
+        {% else %}
+        {% endif %}
     </div>
     <div style="margin-top:10px;">
   <ol class="breadcrumb">

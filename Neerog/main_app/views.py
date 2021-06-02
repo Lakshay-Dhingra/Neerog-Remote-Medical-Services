@@ -191,7 +191,7 @@ def profile(request,id):
         elif (user.user_type == 'Doctor'):
             if(user23.user_type=="Hospital"):
                 doctor=Doctor.objects.get(doctorid=id)
-                if(doctor.hospitalid!=user23.userid):
+                if(doctor.hospitalid.hospitalid.userid!=user23.userid):
                     messages.info(request, "You are not authorised to access this page")
                     k7="/dashboard/"+str(user23.userid)
                     return redirect(k7);
@@ -1475,15 +1475,20 @@ def report(request):
             l23 = Appointments.objects.filter(appointment_date__range=[start,end]).filter(doctoremail=i.doctorid.email)
             for i in l23:
                 Appointments1.append(i)
+        p=list(list_of_speciality.values())
+        min1=min(p)
+        max1=max(p)
         #print(list_of_speciality)
         data={"speciality": speciality, "list_of_Appointments": Appointments1,
         "doctors_data": doctors_data,
+        "max":max1,"min":min1,
         "start":start,"end":end,
         "list_of_speciality": json.dumps(list(list_of_speciality.keys())),
         "list_of_speciality_appointments": list(list_of_speciality.values()),
         "Online_consultations_today": Online_consultations_today,
         "appointments_this_month": appointments_this_month, "earning_this_month": earning_this_month,
         "appointments_today": appointments_today}
+        print(data)
         return render(request, "main_app/Report_Hospital.html", context=data)
     except:
         messages.info(request, "You Can not Access this Page")

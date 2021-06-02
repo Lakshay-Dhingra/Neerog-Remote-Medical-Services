@@ -9,6 +9,15 @@
     {% include 'main_app/common_css.html' %}
     {% include 'main_app/chart.html' %}
     <style>
+    @media only screen and (max-width: 520px)
+    {
+    .da
+    {
+       width:350px!important;
+
+       margin-top:20px;
+    }
+    }
     .cha
     {
      width:95%;
@@ -16,7 +25,7 @@
     }
     .da
     {
-       border-radius:20px;
+
        width:400px;
        margin-left:20px;
     }
@@ -24,7 +33,6 @@
     {
     background-color:#404040;
     color:white;
-    border-radius:20px;
     text-align:center;
     }
     h1
@@ -38,7 +46,7 @@
 <body style="margin-top:150px;">
     <h2 style="text-align:center;">Report <span style="font-size:15px;">(From {{ start }} to {{ end }})</span></h2>
     <div class="row" style="margin-top:20px;">
-    <div class="col-lg-4 col-md-4 col-sm-4">
+    <div class="col-lg-4 col-md-6 col-sm-6 col-12">
         <div class="card da">
         <div class="card-header">
             Total Appointments
@@ -50,7 +58,7 @@
         </div>
     </div>
 </div>
-    <div class="col-lg-4 col-md-4 col-sm-4">
+    <div class="col-lg-4 col-md-6 col-12">
         <div class="card da">
         <div class="card-header">
     Online Consultations
@@ -60,7 +68,7 @@
         </div>
     </div>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-4">
+    <div class="col-lg-4 col-md-6 col-sm-12">
         <div class="card da">
         <div class="card-header">
             Total Earning
@@ -72,8 +80,9 @@
         </div>
 </div>
 </div>
+
 <div class="row" style="margin-top:50px;">
-<div class="col-lg-6">
+<div class="col-lg-6" style="margin-top:20px;">
     <div class="card cha">
         <canvas id="myChart" width="100px" height="100px"></canvas></div>
 <script>
@@ -83,20 +92,30 @@ var myChart = new Chart(ctx, {
     data: {
         labels:{{ list_of_speciality|safe }},
         datasets: [{
-            label: 'Total No Of Appointments ',
+            label: 'No Of Appointments This Month',
             data: {{ list_of_speciality_appointments }},
-            ],
+            backgroundColor:'rgba(255, 99, 71, 0.5)',
             borderWidth: 1
         }]
     },
     options: {
     maintainAspectRatio: true,
     responsive: true,
+    legend: {
+                labels: {
+                     fontSize: 18
+                }
+            },
         scales: {
+        xAxes: [{
+                   ticks: {
+                    fontSize: 18
+                   }
+                  }],
             yAxes: [{
                 ticks: {
-                    suggestedMin: 10,
-                    suggestedMax: 50,
+                    suggestedMin: {{ min }},
+                    suggestedMax: {{ max }},
                     beginAtZero: true
                 }
             }]
@@ -105,7 +124,7 @@ var myChart = new Chart(ctx, {
 });
 </script>
 </div>
-<div class="col-lg-6 " >
+<div class="col-lg-6" style="margin-top:20px;">
     <div class="card cha">
     <div class="card-header">Doctor Data</div>
     <div class="table-responsive">

@@ -90,7 +90,7 @@
 <div class="container-fluid" style="margin-top:10px;">
   <ol class="breadcrumb">
     {% if User_Profile.clinic_name|length > 0 %}
-      <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/Hospital_Selection">{{ User_Profile.clinic_name }} </a></li>
+      <li class="breadcrumb-item"><a href='/Hospital_Selection/'>{{ User_Profile.clinic_name }} </a></li>
     {% elif User_Profile.tlabid %}
       <li class="breadcrumb-item"><a href="{% url 'Selected' user_id=User_Profile.tlabid %}">{{ User_Profile.tlabid.name }} </a></li>
     <li class="breadcrumb-item"><a href="{% url 'select_speciality' service_provider_id=User_Profile.tlabid %}">Speciality</a></li>

@@ -33,6 +33,6 @@ urlpatterns = [
     path("edit_time/<int:id>",views.edit_time,name="edit_time"),
     path("search/", views.search, name="search")
 ]
-import main_app.jobs  # NOQA @isort:skip
+import main_app.jobs,main_app.jobs1  # NOQA @isort:skip
 import logging
 logging.basicConfig(level="DEBUG")

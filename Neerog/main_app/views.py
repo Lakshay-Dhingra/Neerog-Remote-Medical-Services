@@ -332,7 +332,6 @@ def Hospitals(request):
                 request.session['country']=d1.country.strip()
                 request.session['city'] = d1.city.strip()
                 request.session['state'] = d1.state.strip()
-
             elif(user.user_type == 'Doctor'):
                 d1 = Doctor.objects.get(doctorid=user.userid)
                 list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=d1.country).filter(city=d1.city)
@@ -371,6 +370,21 @@ def Hospitals(request):
                 request.session['country'] = d1.country.strip()
                 request.session['city'] = d1.city.strip()
                 request.session['state'] = d1.state.strip()
+            else:
+                country = "India"
+                city = "Delhi"
+                list_of_hospitals = Hospital.objects.filter(verified="Yes").filter(country=country).filter(city=city)
+                list_of_testing_labs = TestingLab.objects.filter(verified="Yes").filter(country=country).filter(
+                    city=city)
+                p = Doctor.objects.filter(verified="Yes").filter(country=country).filter(city=city).exclude(
+                    clinic_name='')
+                for i in p:
+                    list_of_doctors[i] = i.clinic_fee
+                location = city + ',NCT' + ',' + country
+                request.session['country'] = country
+                request.session['city'] = city
+                request.session['state'] = "NCT"
+
         except:
             country="India"
             city="Delhi"

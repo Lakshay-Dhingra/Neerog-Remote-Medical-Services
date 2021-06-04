@@ -74,7 +74,7 @@
         {% for k in j %}
           <tr>
               {% ifequal i "Hospital" %}
-              <td><a href='/selected/{{ k.hospitalid }}'>{{ k.hospitalid }}</a></td>
+              <td><a href='/Profile/{{ k.hospitalid }}'>{{ k.hospitalid }}</a></td>
             <td>{{  k.hospitalid.name }}</td>
             <td>{{  k.hospitalid.email }}</td>
                <td>Hospital</td>
@@ -104,7 +104,7 @@
               {% endifequal %}
                {% endifequal %}
                {% ifequal i "Testing_Lab" %}
-              <td><a href='/selected/{{ k.tlabid }}'>{{ k.tlabid }}</a></td>
+              <td><a href='/Profile/{{ k.tlabid }}'>{{ k.tlabid }}</a></td>
             <td>{{  k.tlabid.name }}</td>
             <td>{{  k.tlabid.email }}</td>
               <td>Testing Lab</td>

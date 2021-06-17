@@ -1,6 +1,6 @@
  <!-- Here Doctor/Testing Lab can see there list of Appointments,Monthly Data of appointments-->
 
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -359,11 +359,12 @@ var myChart = new Chart(ctx, {
                   {% else %}
                   <th>Prescription</th>
                   {% endif %}
+                  <th>Receipt</th>
               </tr>
            <tbody>
         {% for i,j in list_of_Appointments.items %}
           <tr>
-              <td><a href='{% url "Appointment_Details" appointment_id=i.appointmentid %}'>{{ i.appointmentid }}</a></td>
+              <td>{{ i.appointmentid }}</td>
             <td>{{ i.patientname }}</td>
             {% if User_Details.doctorid %}
             <td>{{ i.patientemail }}</td>
@@ -424,6 +425,7 @@ var myChart = new Chart(ctx, {
                {% endifequal %}
                 {% endif %}
             </td>
+              <td><a href='{% url "Appointment_Details" appointment_id=i.appointmentid %}'>View Receipt</a></td>
           </tr>
         {% endfor %}
         </tbody>

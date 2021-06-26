@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     {% load static %}
+    {% load extras %}
     <title>Dashboard</title>
      <meta name="viewport" content="width=device-width, initial-scale=1">
     {% include "main_app/header.html" %}
@@ -15,6 +16,53 @@
     {% include 'main_app/common_js.html' %}
     <link rel="stylesheet" href="{% static 'main_app/css/dashboard_styles.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    .checked{
+      color:orange;
+        }
+    .checked1{
+      color:grey;
+        }
+</style>
+    <script>
+        $(document).ready(function()
+        {
+        var aid;
+        $(".rater").mouseleave(function(){
+        var k2=$(".rater").attr("id");
+        if(k2!=aid+"added")
+        {
+        $(".ra").removeClass("checked");
+        }
+        });
+        $(".ra").hover(function(){
+
+           aid=$(this).attr("class").split(" ")[0];
+           var p=$(this).attr("id");
+           $(".ra").removeClass("checked");
+           for(var i=100;i<=p/aid;i++)
+           {
+              var k="#"+(aid*i);
+              $(k).addClass("checked");
+           }
+        });
+        $(".ra").on("click",function(){
+        aid=$(this).attr("class").split(" ")[0];
+        var p=$(this).attr("id")/aid;
+        for(var i=100;i<=p/aid;i++)
+           {
+              var k="#"+aid*i;
+              $(k).addClass("checked");
+           }
+        var p1=aid+"added"
+        $(".rater").attr("id",p1);
+        $("#aid1").val(aid);
+        $("#rating").val(p-99);
+        $("#form7").submit();
+        });
+        });
+    </script>
     <script>
         $(document).ready(function()
         {
@@ -354,6 +402,9 @@ var myChart = new Chart(ctx, {
                   {% else %}
                 <th>Meeting url</th>
                   {% endif %}
+                  {% if User_Details.patientid %}
+                  <th>Rating</th>
+                  {% endif %}
                   {% if User_Details.tlabid %}
                   <th>Test Report</th>
                   {% else %}
@@ -364,7 +415,7 @@ var myChart = new Chart(ctx, {
            <tbody>
         {% for i,j in list_of_Appointments.items %}
           <tr>
-              <td>{{ i.appointmentid }}</td>
+              <td id="aid">{{ i.appointmentid }}</td>
             <td>{{ i.patientname }}</td>
             {% if User_Details.doctorid %}
             <td>{{ i.patientemail }}</td>
@@ -394,9 +445,57 @@ var myChart = new Chart(ctx, {
               <td><a href="{{ i.meeting_url }}">{{ i.meeting_url }}</a></td>
               {% endifequal %}
               {% endif %}
+              {% if User_Details.patientid %}
+            <td>
+                {% if i.rating %}
+                <div  style="width:100px;">
+                {% for k in dummy %}
+                {% if forloop.counter <= i.rating_value %}
+                <span class="fa fa-star checked" aria-disabled="true"></span>
+                {% else %}
+                <span class="fa fa-star checked1" aria-disabled="true"></span>
+                {% endif %}
+                {% endfor %}
+                </div>
+                {% else %}
+                {% if "Upload Prescription" in j %}
+                {% if "review" in j %}
+                <div class="rater" style="width:100px;">
+                <span class="{{ i.appointmentid }} ra fa fa-star" id="{{ i.appointmentid|multiply:100 }}"></span>
+                <span class="{{ i.appointmentid }} ra fa fa-star" id="{{ i.appointmentid|multiply:101 }}"></span>
+                <span class="{{ i.appointmentid }} ra fa fa-star" id="{{ i.appointmentid|multiply:102 }}"></span>
+                <span class="{{ i.appointmentid }} ra fa fa-star" id="{{ i.appointmentid|multiply:103 }}"></span>
+                <span class="{{ i.appointmentid }} ra fa fa-star" id="{{ i.appointmentid|multiply:104 }}"></span>
+                </div>
+                {% else %}
+                <div style="width:100px;">
+                {% for k in dummy %}
+                    <span class="fa fa-star checked1" aria-disabled="true"></span>
+                {% endfor %}
+                {% endif %}
+                </div>
+                {% else %}
+                <!---button type="button" class="btn btn-primary">Rate Service Provider</button-->
+                <div class="rater" style="width:100px;">
+                <span class="{{ i.appointmentid }} ra fa fa-star" id="{{ i.appointmentid|multiply:100 }}"></span>
+                <span class="{{ i.appointmentid }} ra fa fa-star" id="{{ i.appointmentid|multiply:101 }}"></span>
+                <span class="{{ i.appointmentid }} ra fa fa-star" id="{{ i.appointmentid|multiply:102 }}"></span>
+                <span class="{{ i.appointmentid }} ra fa fa-star" id="{{ i.appointmentid|multiply:103 }}"></span>
+                <span class="{{ i.appointmentid }} ra fa fa-star" id="{{ i.appointmentid|multiply:104 }}"></span>
+                </div>
+                {% endif %}
+                {% endif%}
+
+                <form action="{% url 'rate' %}" id="form7" method="post">
+                    {% csrf_token %}
+                    <input type="text" id="aid1" name="aid" hidden>
+                    <input type="text" id="rating" name="rating" hidden>
+                </form>
+            </td>
+              {% endif %}
             <td>
                 {% if User_Details.doctorid %}
-                {% ifequal j "Upload Prescription" %}
+                {% if "Upload Prescription" in j %}
                 <form action="{% url 'prescription' %}" method="post">
                     {% csrf_token %}
                     <input type="text" name="id" hidden value="{{ i.appointmentid }}">
@@ -405,9 +504,9 @@ var myChart = new Chart(ctx, {
                    </form>
                 {% else %}
                 <button class="btn btn-success"><a href='{{ j.Prescription.url }}' style="color:white;" download> Download Prescription</a></button>
-               {% endifequal %}
+               {% endif %}
                 {% elif User_Details.tlabid %}
-                {% ifequal j "Upload Prescription" %}
+                {% if "Upload Prescription" in j %}
                 <form action="{% url 'prescription' %}" method="post">
                     {% csrf_token %}
                     <input type="text" name="id" hidden value="{{ i.appointmentid }}">
@@ -416,13 +515,13 @@ var myChart = new Chart(ctx, {
                    </form>
                 {% else %}
                 <button class="btn btn-success"><a href='{{ j.Prescription.url }}' style="color:white;" download> Download Report</a></button>
-               {% endifequal %}
+               {% endif %}
                 {% else %}
-                {% ifequal j "Upload Prescription" %}
+                {% if "Upload Prescription" in j%}
                 <button  class="btn btn-success"> No Prescription Uploaded</button>
                 {% else %}
                 <button class="btn btn-success"><a href='{{ j.Prescription.url }}' style="color:white;" download> Download Prescription</a></button>
-               {% endifequal %}
+               {% endif %}
                 {% endif %}
             </td>
               <td><a href='{% url "Appointment_Details" appointment_id=i.appointmentid %}'>View Receipt</a></td>

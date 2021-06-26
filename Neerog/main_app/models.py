@@ -102,7 +102,8 @@ class Hospital(models.Model):
     verified = models.CharField(max_length=10, default="No")
     start_time = models.CharField(max_length=5,default="09:00")
     end_time = models.CharField(max_length=5,default="18:00")
-
+    rating=models.CharField(default=0,max_length=10000)
+    no_of_raters=models.PositiveIntegerField(default=0)
     nullable_strings=[about]
     nullable_non_strings=[hospital_logo, pic2, pic3, year_established, zip]
 
@@ -167,6 +168,8 @@ class Doctor(models.Model):
 
     nullable_strings=[about, country,hospitalid, state, city, area, clinic_name]
     nullable_non_strings=[profile_pic, clinic_photo, clinic_fee, zip]
+    rating=models.CharField(default=0,max_length=10000)
+    no_of_raters=models.PositiveIntegerField(default=0)
 
     def save(self, *args, **kwargs):
         for i in self.nullable_non_strings:
@@ -198,7 +201,8 @@ class TestingLab(models.Model):
     verified = models.CharField(max_length=10, default="No")
     start_time = models.CharField(max_length=5,default="09:00")
     end_time = models.CharField(max_length=5,default="18:00")
-
+    rating = models.CharField(default=0,max_length=10000)
+    no_of_raters = models.PositiveIntegerField(default=0)
     nullable_strings=[about]
     nullable_non_strings=[tlab_logo, zip, year_established]
 
@@ -240,6 +244,8 @@ class Appointments(models.Model):
    amount_paid = models.PositiveIntegerField()
    appointment_date=models.DateField(blank=False, null=False)
    appointment_time=models.TimeField(blank=False, null=False)
+   rating=models.BooleanField(default=False)
+   rating_value=models.PositiveIntegerField(default=0)
    DEFAULT_MODE_OF_MEETING = 'Offline'
    MEETING_CHOICES = [
        ('Online', 'Online'),

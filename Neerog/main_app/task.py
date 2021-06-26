@@ -13,7 +13,6 @@ def Email_Notifications():
     for i in Appointments.objects.filter(appointment_date=dt):
         p = i.appointment_time
         p1 = i.appointment_date
-        dt = datetime.datetime.now()
         dt1 = datetime.datetime(int(p1.strftime("%Y")), int(p1.strftime("%m")), int(p1.strftime("%d")),
                                 int(p.strftime("%H")), int(p.strftime("%M")), int(p.strftime("%S")))
         k = dt1 - dt

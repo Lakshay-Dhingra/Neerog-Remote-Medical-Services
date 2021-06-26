@@ -31,7 +31,8 @@ urlpatterns = [
     path("add_news/<str:id>",views.add_news,name='add_news'),
     path("submit_news",views.submit_news,name="submit_news"),
     path("edit_time/<int:id>",views.edit_time,name="edit_time"),
-    path("search/", views.search, name="search")
+    path("search/", views.search, name="search"),
+    path("rate/",views.rate,name="rate"),
 ]
 import main_app.jobs,main_app.jobs1  # NOQA @isort:skip
 import logging

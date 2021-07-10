@@ -131,48 +131,13 @@ MEDIA_URL = '/media/'
 
 #Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-MAILER_EMAIL_BACKEND = EMAIL_BACKEND
-EMAIL_HOST = 'smtp.gmail.com'
+MAILER_EMAIL_BACKEND = EMAIL_BACKEND  
+EMAIL_HOST = 'smtp-mail.outlook.com'
 EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 EMAIL_PORT = 587
 EMAIL_HOST_USER = secret_settings.email_host_user
 EMAIL_HOST_PASSWORD = secret_settings.email_host_password
-
-
-
-"""PWA_APP_NAME = 'geeksforgeeks'
-PWA_APP_DESCRIPTION = "GeeksForGeeks PWA"
-PWA_APP_THEME_COLOR = '#000000'
-PWA_APP_BACKGROUND_COLOR = '#ffffff'
-PWA_APP_DISPLAY = 'standalone'
-PWA_APP_SCOPE = '/'
-PWA_APP_ORIENTATION = 'any'
-PWA_APP_START_URL = '/'
-PWA_APP_STATUS_BAR_COLOR = 'default'
-PWA_APP_ICONS = [
-	{
-		'src': 'static/main_app/images/NeerogLogo3.png',
-        'sizes': '177x74'
-
-	}
-]
-PWA_APP_ICONS_APPLE = [
-	{
-		'src': 'static/main_app/images/NeerogLogo3.png',
-        'sizes': '177x74'
-
-	}
-]
-PWA_APP_SPLASH_SCREEN = [
-	{
-		'src': 'static/main_app/images/NeerogLogo3.png',
-'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
-
-	}
-]
-PWA_APP_DIR = 'ltr'
-PWA_APP_LANG = 'en-US'
-"""
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)

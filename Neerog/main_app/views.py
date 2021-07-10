@@ -1561,66 +1561,102 @@ def edit_time(request,id):
         return redirect("/")
 
 def rate(request):
-    aid=request.POST['aid']
-    rating=request.POST['rating']
-    email=request.session['email']
-    user=UserDetails.objects.get(email=email)
-    a1=Appointments.objects.get(appointmentid=aid)
-    if(a1.doctoremail==None):
-        p=a1.TestingLabId.tlabid;
-        k=Ratings.objects.filter(influencerid=p).filter(raterid=user.userid).count();
-        if(k==0):
-            r=Ratings();
-            r.influencerid=p;
-            r.raterid=user;
-            r.rating=rating;
-            r.save()
+    try:
+        aid=request.POST['aid']
+        rating=request.POST['rating']
+        email=request.session['email']
+        user=UserDetails.objects.get(email=email)
+        a1=Appointments.objects.get(appointmentid=aid)
+        if(a1.doctoremail==None):
+            p=a1.TestingLabId.tlabid;
+            k=Ratings.objects.filter(influencerid=p).filter(raterid=user.userid).count();
+            if(k==0):
+                r=Ratings();
+                r.influencerid=p;
+                r.raterid=user;
+                r.rating=rating;
+                r.save()
+            else:
+                r=Ratings.objects.filter(raterid=user.userid).filter(influencerid=p)
+                r.update(rating=rating);
+            doctor1 = TestingLab.objects.get(tlabid=p)
+            try:
+                rat = Ratings.objects.filter(influencerid=doctor1.tlabid).aggregate(Avg('rating'))
+                doctor1.rating = round(rat['rating__avg'], 1);
+            except:
+                net_ratings_data=Ratings.objects.filter(influencerid=doctor1.tlabid)
+                net_numbers=Ratings.objects.filter(influencerid=doctor1.tlabid).count()
+                n12=0;
+                for i in net_ratings_data:
+                    n12+=i.rating;
+                rat=n12/net_numbers
+                doctor1.rating = round(rat, 1);
+            no_of_raters1 = Ratings.objects.filter(influencerid=doctor1.tlabid).count();
+            # total_rat=doctor1.rating*doctor1.no_of_raters+int(rating)
+            # rat=total_rat/(doctor1.no_of_raters+1)
+
+            doctor1.no_of_raters = no_of_raters1
+            doctor1.save();
         else:
-            r=Ratings.objects.filter(raterid=user.userid).filter(influencerid=p)
-            r.update(rating=rating);
-        doctor1 = TestingLab.objects.get(tlabid=p)
-        rat = Ratings.objects.filter(influencerid=doctor1.tlabid).aggregate(Avg('rating'))
-        no_of_raters1 = Ratings.objects.filter(influencerid=doctor1.tlabid).count();
-        # total_rat=doctor1.rating*doctor1.no_of_raters+int(rating)
-        # rat=total_rat/(doctor1.no_of_raters+1)
-        doctor1.rating = round(rat['rating__avg'],1);
-        doctor1.no_of_raters = no_of_raters1
-        doctor1.save();
-    else:
-        doctor =UserDetails.objects.get(email=a1.doctoremail)
-        k = Ratings.objects.filter(influencerid=doctor.userid).filter(raterid=user.userid).count();
-        if (k == 0):
-            r = Ratings();
-            r.influencerid = doctor;
-            r.raterid = user;
-            r.rating = rating;
-            r.save()
-        else:
-            r = Ratings.objects.filter(raterid=user.userid).filter(influencerid=doctor.userid)
-            r.update(rating = rating);
-        doctor1=Doctor.objects.get(doctorid=doctor.userid)
-        rat=Ratings.objects.filter(influencerid=doctor.userid).aggregate(Avg('rating'))
-        no_of_raters1=Ratings.objects.filter(influencerid=doctor.userid).count();
-        #total_rat=doctor1.rating*doctor1.no_of_raters+int(rating)
-        #rat=total_rat/(doctor1.no_of_raters+1)
-        doctor1.rating=round(rat['rating__avg'],1);
-        doctor1.no_of_raters=no_of_raters1
-        doctor1.save();
-        if(True):
-            hid=doctor1.hospitalid;
-            no_of_doctors=Doctor.objects.filter(hospitalid=hid).count();
-            ratings=Doctor.objects.filter(hospitalid=hid).aggregate(Sum('no_of_raters'));
-            h=Hospital.objects.get(hospitalid=hid)
-            total_rat=Doctor.objects.filter(hospitalid=hid).aggregate(Sum('rating'))['rating__sum'];
-            h.rating=round(total_rat/no_of_doctors,1)
-            h.no_of_raters=ratings['no_of_raters__sum']
-            print(h.rating,total_rat,no_of_doctors)
-            h.save()
-        else:
-            pass
-    a1.rating=True;
-    a1.rating_value=rating;
-    a1.save();
-    k="/dashboard/"+str(user.userid);
-    messages.info(request,"Rating Added Successfully")
-    return redirect(k)
+            doctor =UserDetails.objects.get(email=a1.doctoremail)
+            k = Ratings.objects.filter(influencerid=doctor.userid).filter(raterid=user.userid).count();
+            if (k == 0):
+                r = Ratings();
+                r.influencerid = doctor;
+                r.raterid = user;
+                r.rating = rating;
+                r.save()
+            else:
+                r = Ratings.objects.filter(raterid=user.userid).filter(influencerid=doctor.userid)
+                r.update(rating = rating);
+            doctor1=Doctor.objects.get(doctorid=doctor.userid)
+            try:
+
+                rat = Ratings.objects.filter(influencerid=doctor1.doctorid).aggregate(Avg('rating'))
+                doctor1.rating = round(rat['rating__avg'], 1);
+            except:
+                net_ratings_data = Ratings.objects.filter(influencerid=doctor1.doctorid)
+                net_numbers = Ratings.objects.filter(influencerid=doctor1.doctorid).count()
+                n12 = 0;
+                for i in net_ratings_data:
+                    n12 += i.rating;
+                rat = n12 / net_numbers
+                doctor1.rating = round(rat, 1);
+            no_of_raters1 = Ratings.objects.filter(influencerid=doctor1.doctorid).count();
+            # total_rat=doctor1.rating*doctor1.no_of_raters+int(rating)
+            # rat=total_rat/(doctor1.no_of_raters+1)
+            doctor1.no_of_raters = no_of_raters1
+            doctor1.save();
+            if(True):
+                hid=doctor1.hospitalid;
+                no_of_doctors=Doctor.objects.filter(hospitalid=hid).count();
+                h=Hospital.objects.get(hospitalid=hid)
+                try:
+                    ratings=Doctor.objects.filter(hospitalid=hid).aggregate(Sum('no_of_raters'));
+                    h.no_of_raters = ratings['no_of_raters__sum']
+                except:
+                    ratings = Doctor.objects.filter(hospitalid=hid).count();
+                    h.no_of_raters = ratings;
+                try:
+                    total_rat=Doctor.objects.filter(hospitalid=hid).aggregate(Sum('rating'))['rating__sum'];
+                    h.rating=round(total_rat/no_of_doctors,1)
+                except:
+                    total_rat1 = Doctor.objects.filter(hospitalid=hid)
+                    total_rat=0;
+                    for i in total_rat1:
+                        total_rat+=i.rating;
+                    h.rating = round(total_rat / no_of_doctors, 1)
+                #h.no_of_raters=ratings['no_of_raters__sum']
+                h.save()
+            else:
+                pass
+        a1.rating=True;
+        a1.rating_value=rating;
+        a1.save();
+        k="/dashboard/"+str(user.userid);
+        messages.info(request,"Rating Added Successfully")
+        return redirect(k)
+    except:
+        k = "/dashboard/" + str(user.userid);
+        messages.info(request, "No Such Service Provider exists")
+        return redirect(k)

@@ -131,12 +131,14 @@ MEDIA_URL = '/media/'
 
 #Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-MAILER_EMAIL_BACKEND = EMAIL_BACKEND  
+MAILER_EMAIL_BACKEND = EMAIL_BACKEND
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True 
+EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = secret_settings.email_host_user
 EMAIL_HOST_PASSWORD = secret_settings.email_host_password
+
+
 
 """PWA_APP_NAME = 'geeksforgeeks'
 PWA_APP_DESCRIPTION = "GeeksForGeeks PWA"

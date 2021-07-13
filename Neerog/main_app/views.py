@@ -1627,7 +1627,7 @@ def rate(request):
             # rat=total_rat/(doctor1.no_of_raters+1)
             doctor1.no_of_raters = no_of_raters1
             doctor1.save();
-            if(True):
+            try:
                 hid=doctor1.hospitalid;
                 no_of_doctors=Doctor.objects.filter(hospitalid=hid).count();
                 h=Hospital.objects.get(hospitalid=hid)
@@ -1648,7 +1648,7 @@ def rate(request):
                     h.rating = round(total_rat / no_of_doctors, 1)
                 #h.no_of_raters=ratings['no_of_raters__sum']
                 h.save()
-            else:
+            except:
                 pass
         a1.rating=True;
         a1.rating_value=rating;

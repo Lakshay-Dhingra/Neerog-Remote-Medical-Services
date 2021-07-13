@@ -1581,6 +1581,7 @@ def rate(request):
                 r.update(rating=rating);
             doctor1 = TestingLab.objects.get(tlabid=p)
             try:
+
                 rat = Ratings.objects.filter(influencerid=doctor1.tlabid).aggregate(Avg('rating'))
                 doctor1.rating = round(rat['rating__avg'], 1);
             except:
@@ -1644,7 +1645,7 @@ def rate(request):
                     total_rat1 = Doctor.objects.filter(hospitalid=hid)
                     total_rat=0;
                     for i in total_rat1:
-                        total_rat+=i.rating;
+                        total_rat+=float(i.rating);
                     h.rating = round(total_rat / no_of_doctors, 1)
                 #h.no_of_raters=ratings['no_of_raters__sum']
                 h.save()
